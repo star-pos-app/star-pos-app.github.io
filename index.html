@@ -788,6 +788,143 @@ tbody tr{transition:background-color .15s ease}
 #lgin .panel.shake{animation:shake .38s ease}
 .appmark img{animation:logoin .7s cubic-bezier(.2,.8,.3,1.2) both}
 }
+.stabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}.stabs .btn{flex:1 1 auto}.stabs .btn.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.stabs[data-st="usr"]~[data-sec]:not([data-sec="usr"]),.stabs[data-st="pers"]~[data-sec]:not([data-sec="pers"]),.stabs[data-st="tick"]~[data-sec]:not([data-sec="tick"]),.stabs[data-st="prog"]~[data-sec]:not([data-sec="prog"]){display:none}
+nav a.wa svg{fill:currentColor;stroke:none;color:#25D366}
+</style>
+<style id="pack5">
+/* ===== PACK v5 · ventanas bonitas y animaciones ===== */
+:root{--ease:cubic-bezier(.2,.8,.3,1);--spring:cubic-bezier(.34,1.56,.64,1)}
+/* --- ventanas (modales) --- */
+.scrim{background:rgba(14,10,35,.48);-webkit-backdrop-filter:blur(7px) saturate(1.15);backdrop-filter:blur(7px) saturate(1.15)}
+.dlg{border:0;border-radius:20px;padding:20px;gap:14px;overflow:hidden;box-shadow:0 34px 90px -24px rgba(20,10,60,.6),0 0 0 1px var(--line)}
+.dlg>.hd:first-child{margin:-20px -20px 2px;padding:14px 16px 14px 20px;background:linear-gradient(120deg,var(--accent-soft),transparent 85%);border-bottom:1px solid var(--line)}
+.dlg>.hd h3{display:flex;align-items:center;gap:10px;font-size:17px}
+.dlg .hi{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:18px;background:var(--surface);box-shadow:0 0 0 1px var(--line),0 6px 14px -8px var(--accent);flex:none}
+.dlg .x{width:34px;height:34px;border-radius:50%;border:0;background:transparent;color:var(--muted);font-size:16px;line-height:1;display:grid;place-items:center;padding:0;transition:background .15s,color .15s,transform .2s var(--spring)}
+.dlg .x:hover{background:var(--bad-bg);color:var(--bad);transform:rotate(90deg)}
+.dlg>.ft:last-child{margin:6px -20px -20px;padding:12px 20px;background:var(--surface2);border-top:1px solid var(--line)}
+.dlg .ft .btn{min-height:42px;padding-inline:18px}
+.dlg .ft .btn.bad{background:var(--bad);color:var(--bg);border-color:var(--bad)}
+.dlg .ft .btn.bad:hover{filter:brightness(1.08)}
+.dlg .ft .btn.pri{box-shadow:0 8px 18px -10px var(--accent)}
+.dlg .sec{border-top:1px dashed var(--line);padding-top:12px}
+.dlg .hint,.hint{margin:0;font-size:12.5px;color:var(--muted);background:var(--surface2);border-radius:10px;padding:9px 12px;line-height:1.45}
+.dlg .warnbox{background:var(--bad-bg);color:var(--bad);border-radius:12px;padding:12px 14px;line-height:1.5}
+.dlg .warnbox ul{margin:6px 0 0;padding-left:18px;color:var(--fg);font-size:13px;display:grid;gap:3px}
+.dlg .warnbox b{font-size:15px}
+.dlg.shake{animation:shake .38s ease}
+/* confirmar */
+.cfm{text-align:center;display:grid;gap:6px;justify-items:center;padding:6px 4px 0}
+.cfm h3{font-size:18px}.cfm p{margin:0;color:var(--muted);line-height:1.5}
+.cfm .cfi{width:62px;height:62px;border-radius:20px;display:grid;place-items:center;font-size:30px;background:var(--accent-soft)}
+.cfm.dg .cfi{background:var(--bad-bg)}
+/* campo de PIN con ojo */
+.pw{position:relative;display:block}.pw input{padding-right:44px;letter-spacing:.2em}
+.pw .eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:34px;height:32px;border:0;background:transparent;border-radius:8px;font-size:15px;opacity:.65;padding:0}
+.pw .eye:hover{opacity:1;background:var(--surface2)}
+/* ok / cargando */
+.okwrap{display:grid;justify-items:center;gap:6px;text-align:center;padding:6px 0}
+.okwrap h3{font-size:19px}.okwrap p{margin:0}
+.okm{width:76px;height:76px}
+.okm circle{stroke:var(--ok);stroke-dasharray:152;stroke-dashoffset:152;fill:var(--ok-bg)}
+.okm path{stroke:var(--ok);stroke-dasharray:44;stroke-dashoffset:44}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.stats>div{background:var(--surface2);border-radius:12px;padding:10px 12px;text-align:center}
+.stats b{display:block;font-family:var(--font-head);font-size:22px}.stats span{font-size:12px;color:var(--muted);font-weight:600}
+.ldw{display:flex;align-items:center;gap:14px;padding:18px 4px}
+.ld{width:26px;height:26px;border-radius:50%;border:3px solid var(--accent-soft);border-top-color:var(--accent);flex:none}
+/* importar: asignación de columnas */
+.impinfo{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.impinfo select{width:auto;min-height:32px;padding:3px 8px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.mgrid select.hit{border-color:var(--ok);background:color-mix(in srgb,var(--ok-bg) 55%,var(--surface))}
+.pv{max-height:210px;overflow:auto;margin-top:8px}.pv table{font-size:12px}.pv th,.pv td{padding:5px 9px;max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.ptools[open] summary{margin-bottom:4px}
+/* panel Datos */
+.panel.dat{display:grid;gap:12px}
+.dathd{display:flex;gap:14px;align-items:center}.dathd h3{font-size:17px}
+.dic{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;font-size:25px;background:var(--accent-soft);flex:none}
+.bkstat{display:flex;gap:10px;align-items:center;border-radius:12px;padding:10px 14px;font-size:13px}
+.bkstat.ok{background:var(--ok-bg);color:var(--ok)}.bkstat.warn{background:var(--warn-bg);color:var(--warn)}
+.btn.big{min-height:46px;padding-inline:20px;font-size:15px}
+.dz{border:2px dashed var(--line);border-radius:14px;padding:16px;text-align:center;color:var(--muted);font-weight:600;cursor:pointer;transition:border-color .2s,background .2s,transform .2s var(--spring)}
+.dz:hover,.dz.over{border-color:var(--accent);background:var(--accent-soft);color:var(--fg)}.dz.over{transform:scale(1.015)}
+.steps{margin:0;padding-left:20px;display:grid;gap:4px;font-size:13px;color:var(--muted)}.steps b{color:var(--fg)}
+/* perfil del administrador */
+.panel.prof{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.prof .avt{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-head);font-weight:700;font-size:26px;color:var(--accent-fg);background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#ff7ac8));box-shadow:0 10px 22px -10px var(--accent);flex:none}
+.prof .pinfo{flex:1 1 220px;min-width:0}.prof .pinfo h3{font-size:18px;overflow-wrap:anywhere}
+.prof .pact{display:flex;gap:8px;flex-wrap:wrap}
+/* avisos (toast) con icono */
+.toast{display:flex;align-items:center;gap:10px;text-align:left}
+.toast .ti{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none;background:rgba(255,255,255,.22)}
+.toast.out{opacity:0;transform:translateY(8px) scale(.96);transition:opacity .24s ease,transform .24s ease}
+/* ripple en botones */
+.btn,.tile,.tcard{position:relative;overflow:hidden}
+.rip{position:absolute;border-radius:50%;pointer-events:none;background:currentColor;opacity:.18;transform:scale(0)}
+/* ghost de cierre */
+#modalGhost{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 12px 16px;overflow:hidden;pointer-events:none}
+/* pestañas de ajustes con Datos */
+.stabs[data-st="dat"]~[data-sec]:not([data-sec="dat"]){display:none}
+/* hoja inferior en celulares */
+@media(max-width:560px){
+  .dlg{margin:auto 0 0;max-width:none;border-radius:22px 22px 0 0;padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}
+  #modal,#modalGhost{padding-inline:0;padding-bottom:0}
+  .dlg>.ft:last-child{flex-wrap:nowrap}.dlg>.ft:last-child .btn{flex:1}
+  .prof .pact .btn{flex:1}
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+.tile:active{transform:scale(.965)}
+.stabs .btn.on{box-shadow:0 8px 18px -10px var(--accent)}
+@media(prefers-reduced-motion:no-preference){
+  .dlg{animation:dlgin .36s var(--spring) both}
+  .scrim{animation:fadein .22s ease both}
+  .dlg>*{animation:dlgkid .38s var(--ease) both}
+  .dlg>*:nth-child(2){animation-delay:.04s}.dlg>*:nth-child(3){animation-delay:.07s}.dlg>*:nth-child(4){animation-delay:.1s}.dlg>*:nth-child(n+5){animation-delay:.13s}
+  .dlg>.hd:first-child{animation:none}
+  #modalGhost .scrim{animation:fadeout .2s ease both}
+  #modalGhost .dlg{animation:dlgout .2s ease both}
+  #modalGhost .dlg>*{animation:none}
+  @media(max-width:560px){.dlg{animation:sheetin .36s var(--ease) both}#modalGhost .dlg{animation:sheetout .22s ease both}}
+  .dlg .hi{animation:hipop .5s var(--spring) .12s both}
+  .cfm .cfi{animation:hipop .55s var(--spring) .1s both}
+  .toast{animation:toastin .34s var(--spring) both}
+  .rip{animation:rip .6s ease-out forwards}
+  .okm circle{animation:okc .55s ease-out .1s forwards}.okm path{animation:okp .4s ease-out .55s forwards}
+  .okwrap{animation:okpop .5s var(--spring) both}
+  .ld{animation:spin .8s linear infinite}
+  .stabs~[data-sec]{animation:vin .32s var(--ease) both}
+  .stabs .btn{transition:background-color .2s,color .2s,box-shadow .25s,transform .15s}.stabs .btn:active{transform:scale(.96)}
+  #view.vin .tblw tbody tr{animation:rowin .36s var(--ease) both}
+  #view.vin .tblw tbody tr:nth-child(2){animation-delay:.03s}#view.vin .tblw tbody tr:nth-child(3){animation-delay:.06s}#view.vin .tblw tbody tr:nth-child(4){animation-delay:.09s}#view.vin .tblw tbody tr:nth-child(5){animation-delay:.12s}#view.vin .tblw tbody tr:nth-child(6){animation-delay:.15s}#view.vin .tblw tbody tr:nth-child(7){animation-delay:.18s}#view.vin .tblw tbody tr:nth-child(8){animation-delay:.21s}#view.vin .tblw tbody tr:nth-child(n+9){animation-delay:.24s}
+  #view.vin .grid .tile{animation:tilein .4s var(--spring) both}
+  #view.vin .grid .tile:nth-child(2){animation-delay:.03s}#view.vin .grid .tile:nth-child(3){animation-delay:.06s}#view.vin .grid .tile:nth-child(4){animation-delay:.09s}#view.vin .grid .tile:nth-child(5){animation-delay:.12s}#view.vin .grid .tile:nth-child(6){animation-delay:.15s}#view.vin .grid .tile:nth-child(7){animation-delay:.18s}#view.vin .grid .tile:nth-child(8){animation-delay:.21s}#view.vin .grid .tile:nth-child(n+9){animation-delay:.24s}
+  .tile:hover{transform:translateY(-3px);box-shadow:0 12px 24px -14px var(--accent)}
+  .panel:hover{box-shadow:0 10px 30px -14px rgba(30,25,80,.3)}
+  .chip{transition:background-color .25s,color .25s,transform .15s}.chip:active{transform:scale(.94)}
+  .pill{transition:background-color .25s,color .25s}
+  tbody tr.click{transition:background-color .15s,transform .15s}tbody tr.click:hover{transform:translateX(2px)}
+  .cart .big,.tot .big,.due{transition:color .2s}
+  .bkstat{animation:okpop .5s var(--spring) both}
+  .prof .avt{animation:hipop .6s var(--spring) both}
+}
+@keyframes dlgin{from{opacity:0;transform:translateY(26px) scale(.93)}to{opacity:1;transform:none}}
+@keyframes dlgout{to{opacity:0;transform:translateY(14px) scale(.96)}}
+@keyframes dlgkid{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes sheetin{from{transform:translateY(100%)}to{transform:none}}
+@keyframes sheetout{to{transform:translateY(100%)}}
+@keyframes fadeout{to{opacity:0}}
+@keyframes hipop{from{opacity:0;transform:scale(.4) rotate(-14deg)}to{opacity:1;transform:none}}
+@keyframes toastin{from{opacity:0;transform:translateY(16px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+@keyframes okc{to{stroke-dashoffset:0}}
+@keyframes okp{to{stroke-dashoffset:0}}
+@keyframes okpop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@keyframes rowin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+@keyframes tilein{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.okm circle,.okm path{stroke-dashoffset:0}}
+.paymodes{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}.paymodes .btn{padding-inline:8px}
 </style>
 
 
@@ -798,7 +935,6 @@ tbody tr{transition:background-color .15s ease}
     <div class="brand"><img id="logo" alt="" width="34" height="34" style="border-radius:8px;display:none"><span id="bname">Mi negocio</span></div>
     <button id="netChip" class="chip" type="button" data-act="netToggle"></button>
     <button id="cloudChip" class="chip" type="button" data-act="cloudOpen">☁ Nube</button>
-    <button id="waWebBtn" class="chip ok" type="button" data-act="waWeb" title="Abrir WhatsApp Web en una ventana al lado"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.52.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016c-1.77 0-3.524-.48-5.055-1.38l-.36-.214-3.75.975 1.005-3.645-.239-.375c-.99-1.576-1.516-3.391-1.516-5.26 0-5.445 4.455-9.885 9.942-9.885 2.654 0 5.145 1.035 7.021 2.91 1.875 1.859 2.909 4.35 2.909 6.99-.004 5.444-4.46 9.885-9.935 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/></svg> WhatsApp</button>
     <button id="syncBtn" class="chip" type="button" data-act="syncNow" title="Sincronizar ahora"><span id="syncIc">🔄</span> Sincronizar</button>
     <button id="bell" class="bellbtn" type="button" data-act="bell" aria-label="Avisos">🔔<i class="dot" id="bellDot"></i></button><button id="cajaChip" class="chip" type="button">Caja</button>
     <span class="muted small" id="clock"></span>
@@ -959,19 +1095,17 @@ function identWarn(tipo,id){return (tipo==='cedula'&&!cedulaOk(id))||(tipo==='ru
 /* ===================== ui base ===================== */
 let view='venta';
 const VIEWS=[['venta','Venta'],['historial','Historial'],['productos','Productos'],['inventario','Inventario'],['clientes','Clientes'],['creditos','Créditos'],['cobrados','Cobrados'],['proveedores','Proveedores'],['caja','Caja'],['ahorros','Ahorros'],['reportes','Reportes'],['promos','Promos'],['ajustes','Ajustes']];
-function toast(msg,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.textContent=msg;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),bad?4200:2400)}
-function modal(html,wide){const m=$('#modal');m.innerHTML=`<div class="scrim" data-act="closeModal"></div><div class="dlg ${wide?'wide':''}" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;setTimeout(()=>{const f=$('[autofocus]',m);if(f){f.focus();f.select&&f.select()}},30)}
-function closeModal(){pendingAdd=false;const m=$('#modal');m.hidden=true;m.innerHTML='';if(view==='venta'&&curMode()==='pc')setTimeout(()=>$('#q')&&$('#q').focus(),30)}
+function toast(msg,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.innerHTML='<span class="ti">'+(bad?'!':'✓')+'</span><span></span>';t.lastChild.textContent=msg;const w=$('#toasts');while(w.children.length>=4)w.firstChild.remove();w.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},bad?4200:2400);if(bad&&!$('#modal').hidden){try{shakeDlg()}catch(e){}}}
+function modal(html,wide){const m=$('#modal'),gh=document.getElementById('modalGhost');if(gh)gh.remove();m.innerHTML=`<div class="scrim" data-act="closeModal"></div><div class="dlg ${wide?'wide':''}" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;setTimeout(()=>{const f=$('[autofocus]',m);if(f){f.focus();f.select&&f.select()}},30)}
+function closeModal(){pendingAdd=false;const m=$('#modal');
+  if(!m.hidden&&m.firstElementChild&&!matchMedia('(prefers-reduced-motion:reduce)').matches){try{const o=document.getElementById('modalGhost');o&&o.remove();const g=m.cloneNode(true);g.id='modalGhost';g.removeAttribute('hidden');g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));g.querySelectorAll('[autofocus]').forEach(e=>e.removeAttribute('autofocus'));g.querySelectorAll('[data-act]').forEach(e=>e.removeAttribute('data-act'));document.body.appendChild(g);setTimeout(()=>g.remove(),240)}catch(e){}}
+  m.hidden=true;m.innerHTML='';if(view==='venta'&&curMode()==='pc')setTimeout(()=>$('#q')&&$('#q').focus(),30)}
 let confirmCb=null,pendingAdd=false;
-function confirmBox(msg,cb,label,danger){confirmCb=cb;modal(`<div class="hd"><h3>Confirmar</h3></div><p style="margin:0">${msg}</p><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn ${danger?'bad':'pri'}" data-act="confirmYes" autofocus>${label||'Confirmar'}</button></div>`)}
-function dlgHead(t){return `<div class="hd"><h3>${t}</h3><button class="btn sm" data-act="closeModal" aria-label="Cerrar">Cerrar</button></div>`}
+function confirmBox(msg,cb,label,danger){confirmCb=cb;modal(`<div class="cfm ${danger?'dg':''}"><div class="cfi" aria-hidden="true">${danger?'⚠️':'❓'}</div><h3>${danger?'¿Está seguro?':'Confirmar'}</h3><p>${msg}</p></div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn ${danger?'bad':'pri'}" data-act="confirmYes" autofocus>${label||'Confirmar'}</button></div>`)}
+function dlgHead(t){const p=String(t).replace(/<[^>]*>/g,'');const ic=(dlgHead.IC.find(x=>x[0].test(p))||[0,'✨'])[1];return `<div class="hd"><h3><span class="hi" aria-hidden="true">${ic}</span><span>${t}</span></h3><button class="x" data-act="closeModal" aria-label="Cerrar">✕</button></div>`}
+dlgHead.IC=[[/importa/i,'📥'],[/exporta/i,'📤'],[/pin|contrase/i,'🔐'],[/mi nombre|perfil/i,'🪪'],[/eliminar|quitar|borrar/i,'🗑️'],[/respaldo|copia/i,'💾'],[/producto/i,'📦'],[/cliente/i,'🧑'],[/pago|cobr|cr[eé]dito|abono/i,'💵'],[/stock|inventario|ingreso/i,'📋'],[/caja/i,'🧮'],[/precio/i,'💲'],[/ticket|recibo|comprobante|proforma|copie/i,'🧾'],[/espera/i,'⏸️'],[/nube/i,'☁️'],[/vendedor|atiende|usuario/i,'🧑‍💼']];
 function empty(t){return `<div class="empty">${t}</div>`}
 
-async function saveFile(filename,data,textFallback){
-  try{const c=window.claude&&claude.use?await claude.use('downloads'):null;
-    if(c){await c.save({filename,data});toast('Archivo listo: '+filename);return}}catch(e){if(e&&e.code==='declined')return}
-  if(typeof data==='string'){modal(dlgHead('Copie el contenido')+`<p class="muted small" style="margin:0">La descarga no está disponible aquí. Copie este texto y péguelo en un archivo ${esc(filename)}.</p><textarea id="fb" rows="12" readonly>${esc(data)}</textarea><div class="ft"><button class="btn pri" data-act="copyFb">Copiar</button></div>`,1)}
-  else toast('La descarga no está disponible en esta vista.',1)}
 const csvCell=v=>{v=v==null?'':String(v);return /[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
 const toCSV=rows=>'﻿'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
 async function saveTable(base,rows,sheetName){
@@ -991,7 +1125,8 @@ reportes:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
 promos:'<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
 ajustes:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'};
 const ico=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||''}</svg>`;
-function nav(){const cv=VIEWS.find(v=>v[0]===view);$('#menuBtn').textContent='☰ '+(cv?cv[1]:'Menú');$('#nav').innerHTML=VIEWS.filter(v=>v[0]!=='ahorros'||isOwner()).map(([k,n])=>`<a href="#${k}" title="${n}" class="${k===view?'on':''}">${ico(k)}<span>${n}</span></a>`).join('')}
+const WA_LINK=`<a href="#" data-act="waWeb" class="wa" title="Abrir WhatsApp Web en una ventana al lado"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.52.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016c-1.77 0-3.524-.48-5.055-1.38l-.36-.214-3.75.975 1.005-3.645-.239-.375c-.99-1.576-1.516-3.391-1.516-5.26 0-5.445 4.455-9.885 9.942-9.885 2.654 0 5.145 1.035 7.021 2.91 1.875 1.859 2.909 4.35 2.909 6.99-.004 5.444-4.46 9.885-9.935 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/></svg><span>WhatsApp</span></a>`;
+function nav(){const cv=VIEWS.find(v=>v[0]===view);$('#menuBtn').textContent='☰ '+(cv?cv[1]:'Menú');$('#nav').innerHTML=VIEWS.filter(v=>v[0]!=='ahorros'||isOwner()).map(([k,n])=>`<a href="#${k}" title="${n}" class="${k===view?'on':''}">${ico(k)}<span>${n}</span></a>`).join('')+WA_LINK}
 function route(){menuOpen=false;const h=location.hash.slice(1);view=VIEWS.some(v=>v[0]===h)?h:'venta';nav();render();viewAnim()}
 const curMode=()=>S.cfg.ui==='pc'||S.cfg.ui==='movil'?S.cfg.ui:(innerWidth<860?'movil':'pc');
 let LOGO='';
@@ -1640,33 +1775,6 @@ function impGuess(H){const used=new Set(),g={},hs=H.map(nk);
   for(const [k,,syn] of IMPF){const i=hs.findIndex((h,i)=>!used.has(i)&&syn.some(x=>nk(x)===h));if(i>=0){g[k]=i;used.add(i)}}
   for(const [k,,syn] of IMPF){if(g[k]!=null)continue;const i=hs.findIndex((h,i)=>!used.has(i)&&h&&syn.some(x=>{x=nk(x);return x.length>=4&&h.includes(x)}));if(i>=0){g[k]=i;used.add(i)}}
   return g}
-async function importFile(file){
-  if(!window.XLSX)return toast('No se pudo cargar el lector de Excel. Revise su conexión.',1);
-  try{const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});const aoa=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:null,blankrows:false});
-    const hi=aoa.findIndex(r=>r.filter(c=>c!=null&&String(c).trim()!=='').length>=2);if(hi<0)return toast('El archivo está vacío.',1);
-    const H=aoa[hi].map((h,i)=>h==null||String(h).trim()===''?'Columna '+(i+1):String(h).trim());
-    const R=aoa.slice(hi+1).filter(r=>r.some(c=>c!=null&&String(c).trim()!==''));if(!R.length)return toast('No hay filas de productos.',1);
-    window._impR=R;const g=impGuess(H);
-    modal(`${dlgHead('Importar productos')}<p class="muted small" style="margin:0">Se leyeron <b>${R.length}</b> filas. Indique qué columna de su archivo corresponde a cada dato; ya elegimos las que reconocimos. Lo que deje en "no importar" no se modifica.</p><div class="fgrid">${IMPF.map(([k,l])=>`<label class="f">${l}<select id="im_${k}"><option value="">— no importar —</option>${H.map((h,i)=>`<option value="${i}" ${g[k]===i?'selected':''}>${esc(h)}</option>`).join('')}</select></label>`).join('')}</div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="impMap">Continuar</button></div>`,1)}
-  catch(e){toast('No se pudo leer el archivo.',1)}}
-function impMap(){
-  const m={};for(const [k] of IMPF)m[k]=$('#im_'+k).value;
-  if(m.code===''||m.name==='')return toast('Indique la columna de código y la de descripción.',1);
-  const T=v=>v===true||/^(true|si|sí|s|1|x|verdadero|activo|habilitado)$/i.test(String(v).trim());
-  const g=(r,k)=>m[k]===''?undefined:r[+m[k]],N=(r,k)=>{const v=g(r,k);return v==null?null:numX(v)};const out=[];
-  for(const r of window._impR){const code=String(g(r,'code')??'').trim(),name=String(g(r,'name')??'').trim();if(!code||!name||code==='PRUEBA'||code.startsWith('@'))continue;
-    const iv=g(r,'iva'),tr=g(r,'track'),ac=g(r,'active');
-    out.push({code,name:name.toUpperCase(),line:String(g(r,'line')??'').trim(),cost:N(r,'cost'),p:['p0','p1','p2','p3','p4','p5'].map(k=>N(r,k)),iva:iv==null?null:T(iv),track:tr==null?null:T(tr),active:ac==null?null:T(ac),stock:N(r,'stock'),min:N(r,'min'),sup:String(g(r,'sup')??'').trim(),bulto:Math.max(0,Math.floor(N(r,'bulto')||0)),dn:Math.max(0,Math.floor(N(r,'dn')||0)),cn:Math.max(0,Math.floor(N(r,'cn')||0)),box:String(g(r,'box')??'').trim()})}
-  if(!out.length)return toast('No se encontraron filas con código y descripción.',1);
-  const exist=new Set(S.products.map(p=>p.code.toLowerCase()));const nu=out.filter(o=>!exist.has(o.code.toLowerCase())).length;
-  window._imp=out;modal(`${dlgHead('Importar productos')}<p style="margin:0">Se leyeron <b>${out.length}</b> productos: <b>${nu}</b> nuevos y <b>${out.length-nu}</b> que ya existen (se actualizarán solo los datos que eligió).</p>
-    <label class="ck"><input type="checkbox" id="imp_stock"> Reemplazar también el stock de los productos que ya existen</label><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="impDo">Importar</button></div>`)}
-function impDo(){const rs=$('#imp_stock').checked;let nu=0,up=0;
-  for(const o of window._imp){const sid=o.sup?supByName(o.sup):'';const p=S.products.find(x=>x.code.toLowerCase()===o.code.toLowerCase());
-    if(p){p.name=o.name;if(o.line)p.line=o.line;if(o.cost!=null)p.cost=o.cost;if(o.dn>0)p.dn=o.dn;if(o.cn>0)p.cn=o.cn;o.p.forEach((v,i)=>{if(v==null)return;if(i===5&&!(p.cn>0))return;p.p[i]=v});if(o.iva!=null)p.iva=o.iva;if(o.active!=null)p.active=o.active;if(o.track!=null)p.track=o.track;if(sid)p.supplier=sid;if(o.bulto>0)p.bulto=o.bulto;if(o.box)p.boxCode=o.box;if(o.min!=null)p.min=o.min;if(rs&&o.stock!=null&&p.track)p.stock=o.stock;up++}
-    else{S.products.push({id:'p'+uid(),code:o.code,name:o.name,line:o.line||'',cost:o.cost||0,p:o.p.map((v,i)=>i===5&&!(o.cn>0)?0:(v||0)),dn:o.dn||0,cn:o.cn||0,iva:!!o.iva,track:o.track!=null?o.track:o.stock!=null,stock:o.stock>0?o.stock:0,min:o.min||0,active:o.active!=null?o.active:true,bulto:o.bulto||0,boxCode:o.box||'',supplier:sid});nu++}}
-  window._imp=null;save(true);closeModal();toast(`Importación lista: ${nu} nuevos, ${up} actualizados.`);render()}
-
 /* ===================== INVENTARIO ===================== */
 const IF={all:false};
 function vInventario(){
@@ -1907,26 +2015,27 @@ function printerPanel(){const c=S.cfg,P=prn(),N=(k,l,v,st,mn,mx)=>`<label class=
   <label class="ck" style="margin-top:10px"><input type="checkbox" data-cfg="pBold" data-t="b" ${c.pBold!==false?'checked':''}> Letra en negrita (se lee mejor en papel térmico)</label>
   <p class="muted small" style="margin:8px 0 0">«Líneas en blanco al final»: súbalo si la impresora corta antes de terminar el mensaje de agradecimiento. En el cuadro de impresión del navegador deje <b>Márgenes: Ninguno</b>, <b>Escala: 100 %</b> y desactive «Encabezados y pies de página».</p>
   <div class="ft" style="justify-content:flex-start;margin-top:12px"><button class="btn pri" data-act="printTest">Imprimir ticket de prueba</button><button class="btn" data-act="printerReset">Restablecer (H-58B)</button></div></div>`}
+let SETTAB='usr';
 function vAjustes(){const c=S.cfg;const T2=k=>`<input type="number" step="1" min="1" data-cfg="${k}" data-t="n" value="${c[k]}"> unidades`;const T=(k,l,t)=>`<label class="f">${l}<input data-cfg="${k}" data-t="${t||'s'}" value="${esc(c[k])}" ${t==='n'?'type="number" step="1"':''}></label>`;
-  $('#view').innerHTML=`<div class="bar"><h2>Ajustes</h2></div>
-  <div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Datos del negocio</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div style="width:64px;height:64px;border:1px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface2)">${c.logo?`<img src="${c.logo}" alt="" style="max-width:100%;max-height:100%">`:'<span class="muted small">Sin logo</span>'}</div><div><b>Logo de su negocio</b><div class="muted small" style="margin-bottom:6px">Sale junto al nombre y en sus comprobantes.</div><button class="btn sm" data-act="logoPick">${c.logo?'Cambiar logo':'Subir logo'}</button>${c.logo?' <button class="btn sm bad" data-act="logoDel">Quitar</button>':''}</div></div><div class="fgrid">${T('name','Nombre comercial')}${T('ruc','RUC')}${T('addr','Dirección')}${T('tel','Teléfono')}
+  $('#view').innerHTML=`<div class="bar"><h2>Ajustes</h2></div><div class="stabs" data-st="${SETTAB}">${[['usr','👥 Usuarios'],['pers','🎨 Personalización'],['tick','🧾 Tickets'],['dat','💾 Datos'],['prog','⚙️ Ajustes del programa']].filter(x=>x[0]!=='dat'||isOwner()).map(([k,n])=>`<button class="btn sm${SETTAB===k?' on':''}" data-act="setTab" data-t="${k}">${n}</button>`).join('')}</div>
+  <div class="panel" data-sec="pers" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Datos del negocio</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div style="width:64px;height:64px;border:1px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface2)">${c.logo?`<img src="${c.logo}" alt="" style="max-width:100%;max-height:100%">`:'<span class="muted small">Sin logo</span>'}</div><div><b>Logo de su negocio</b><div class="muted small" style="margin-bottom:6px">Sale junto al nombre y en sus comprobantes.</div><button class="btn sm" data-act="logoPick">${c.logo?'Cambiar logo':'Subir logo'}</button>${c.logo?' <button class="btn sm bad" data-act="logoDel">Quitar</button>':''}</div></div><div class="fgrid">${T('name','Nombre comercial')}${T('ruc','RUC')}${T('addr','Dirección')}${T('tel','Teléfono')}
    <label class="f">Régimen<select data-cfg="regimen" data-t="s">${['RIMPE Negocio Popular','RIMPE Emprendedor','Régimen General','Persona natural no obligada'].map(x=>`<option ${c.regimen===x?'selected':''}>${x}</option>`).join('')}</select></label>
    <label class="f">Tipo de comprobante<select data-cfg="docType" data-t="s">${['Nota de venta','Factura','Ticket de venta'].map(x=>`<option ${c.docType===x?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
-  <div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Impuestos y numeración</h3><div class="fgrid">${T('ivaRate','Tarifa de IVA (%)','n')}${T('estab','Establecimiento')}${T('pto','Punto de emisión')}${T('seq','Próximo secuencial','n')}${T('cfLimit','Límite consumidor final ($)','n')}</div>
+  <div class="panel" data-sec="prog" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Impuestos y numeración</h3><div class="fgrid">${T('ivaRate','Tarifa de IVA (%)','n')}${T('estab','Establecimiento')}${T('pto','Punto de emisión')}${T('seq','Próximo secuencial','n')}${T('cfLimit','Límite consumidor final ($)','n')}</div>
    <div style="display:grid;gap:8px;margin-top:12px"><label class="ck"><input type="checkbox" data-cfg="incIva" data-t="b" ${c.incIva?'checked':''}> Los precios de venta ya incluyen IVA (los productos con IVA se desglosan al cobrar)</label>
    <label class="f" style="max-width:260px">Papel de impresión<select data-cfg="paper" data-t="s">${paperOpts()}</select></label><label class="f" style="max-width:260px">Zoom de la pantalla en PC (%)<select data-cfg="zoom" data-t="n">${[60,70,80,90,100,110,125].map(z=>`<option value="${z}" ${(c.zoom||80)===z?'selected':''}>${z}%</option>`).join('')}</select></label><label class="ck"><input type="checkbox" data-cfg="waAuto" data-t="b" ${c.waAuto?'checked':''}> Al cobrar, abrir WhatsApp con el comprobante si el cliente tiene teléfono</label><label class="ck"><input type="checkbox" data-cfg="requireCaja" data-t="b" ${c.requireCaja?'checked':''}> Exigir caja abierta para cobrar</label><label class="ck"><input type="checkbox" data-cfg="allowNeg" data-t="b" ${c.allowNeg?'checked':''}> Permitir vender sin stock disponible (el stock queda en negativo)</label></div></div>
-  <div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:4px">💲 Sus 6 precios</h3><p class="muted" style="margin:0 0 12px">Cada producto puede tener hasta 6 precios: unidad, por mayor, docena, bulto, caja y aliado. Aquí les pone nombre; las unidades de la docena, la caja y el bulto se configuran en cada producto. El resto es automático al vender.</p>
+  <div class="panel" data-sec="prog" style="margin-bottom:16px"><h3 style="margin-bottom:4px">💲 Sus 6 precios</h3><p class="muted" style="margin:0 0 12px">Cada producto puede tener hasta 6 precios: unidad, por mayor, docena, bulto, caja y aliado. Aquí les pone nombre; las unidades de la docena, la caja y el bulto se configuran en cada producto. El resto es automático al vender.</p>
    <div class="plr">${[['Precio normal. Se usa por defecto desde 1 unidad.',''],['Se usa desde',T2('t2')],['Se usa desde esta cantidad cuando el producto no tiene su propia cantidad de docena (cada producto puede tener la suya).',T2('t3')],['Se usa al llevar un bulto completo (las unidades se ponen en cada producto).',''],['Solo para clientes marcados como ⭐ Aliado: se les cobra el precio más bajo de cada producto.',''],['Se usa al llevar una caja completa (las unidades se ponen en cada producto).','']].map(([r,x],i)=>`<div class="plr-i"><span class="plr-n">${i+1}</span><div class="grow"><input data-cfglist="${i}" value="${esc(c.listNames[i])}" aria-label="Nombre del precio ${i+1}"><small>${r}${x}</small></div></div>`).join('')}</div></div>
-<div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🎨 Apariencia</h3><p class="muted" style="margin:0 0 12px">Elija un tema o arme sus propios colores. La pantalla se queda igual, solo cambian colores y estilo.</p>
+<div class="panel" data-sec="pers" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🎨 Apariencia</h3><p class="muted" style="margin:0 0 12px">Elija un tema o arme sus propios colores. La pantalla se queda igual, solo cambian colores y estilo.</p>
    <h4 class="tsec">🎨 Colores</h4><div class="themes">${[...THEMES.filter(t=>!t.fx),CUSTOMT].map(tcard).join('')}</div><h4 class="tsec">✨ Temas con estilo</h4><div class="themes">${THEMES.filter(t=>t.fx).map(tcard).join('')}</div>
    ${true?`<div style="margin-top:12px"><div class="muted small" style="margin-bottom:6px">Modo (claro / oscuro) para cualquier tema</div><div class="seg">${[['auto','Del tema'],['light','☀ Claro'],['dark','🌙 Oscuro']].map(([k,n])=>`<button class="${(c.mode||'auto')===k?'on':''}" data-act="setMode" data-m="${k}">${n}</button>`).join('')}</div></div>`:''}
    <div style="margin-top:14px"><div class="muted small" style="margin-bottom:8px">Colores personalizados (al cambiar uno se activa «Personalizado»)</div><div class="cust">${[['accent','Color principal'],['bg','Fondo'],['surface','Tarjetas'],['fg','Texto']].map(([k,n])=>`<label><input type="color" data-cust="${k}" value="${(c.custom||CUSTOM_DEF)[k]||CUSTOM_DEF[k]}">${n}</label>`).join('')}</div></div></div>
-  <div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🧾 Contenido del ticket y de WhatsApp</h3><p class="muted" style="margin:0 0 12px">Marque lo que quiere que aparezca. Los datos del negocio salen de «Datos del negocio» (si un dato está vacío, no se muestra).</p>
+  <div class="panel" data-sec="tick" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🧾 Contenido del ticket y de WhatsApp</h3><p class="muted" style="margin:0 0 12px">Marque lo que quiere que aparezca. Los datos del negocio salen de «Datos del negocio» (si un dato está vacío, no se muestra).</p>
    <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:start" class="tkwrap"><div><div class="tkgrid">${TK_OPTS.map(([k,n])=>`<label class="ck"><input type="checkbox" data-tk="${k}" ${tk(k)?'checked':''}> ${n}</label>`).join('')}</div>
    <label class="f" style="margin-top:12px">💬 Mensaje de agradecimiento (sale en el ticket, A4 y WhatsApp)<textarea rows="3" data-inp="tkLive" placeholder="¡Gracias por su compra!">${esc(c.footer)}</textarea></label><label class="ck" style="margin-top:10px"><input type="checkbox" data-cfg="tkLogo" data-t="b" ${c.tkLogo?'checked':''}> Imprimir el logo en el ticket <span class="muted small">(solo si su impresora de 58 mm imprime imágenes; si sale mal o no sale, déjelo apagado)</span></label><label class="f" style="margin-top:12px">Texto de la leyenda<input data-cfg="legal" data-t="s" value="${esc(c.legal||'')}" placeholder="${esc(LEGAL_DEF)}"></label></div>
    <div><div class="muted small" style="margin-bottom:6px">Vista previa</div><div class="tkprev" id="tkPrev">${receiptHTML(sampleSale())}</div></div></div></div>
-  ${printerPanel()}${pinPanel()}${isOwner()?netPanel()+bancoPanel()+perfilPanel():''}<div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:6px">Respaldo de datos</h3><p class="muted" style="margin:0 0 12px">Sus datos se guardan en este navegador. Descargue un respaldo seguido y guárdelo en otro lugar (incluye productos, clientes, créditos y ventas).</p><div class="ft" style="justify-content:flex-start"><button class="btn pri" data-act="backup">Descargar respaldo</button><button class="btn" data-act="restore">Restaurar respaldo</button><button class="btn" data-act="snapNow">☁ Respaldar en la nube ahora</button><button class="btn" data-act="snapList">☁ Restaurar desde la nube</button><button class="btn bad" data-act="resetSalesAsk">Borrar ventas y movimientos</button></div></div>
-  <div class="panel"><h3 style="margin-bottom:6px">Facturación electrónica SRI</h3><p class="muted" style="margin:0">Este programa emite comprobantes internos y no se conecta al SRI. Si debe emitir facturas electrónicas autorizadas, use su facturador o el sistema gratuito del SRI y apóyese en Reportes → Exportar ventas, que incluye identificación del cliente, subtotales, IVA y forma de pago según la tabla del SRI.</p></div>`}
+  <div data-sec="tick">${printerPanel()}</div><div data-sec="usr">${isOwner()?miPerfilPanel():''}${isOwner()?bancoPanel():''}${pinPanel()}${isOwner()?perfilPanel():''}</div><div data-sec="prog">${isOwner()?netPanel():''}</div>${datosPanels()}
+  <div class="panel" data-sec="prog"><h3 style="margin-bottom:6px">Facturación electrónica SRI</h3><p class="muted" style="margin:0">Este programa emite comprobantes internos y no se conecta al SRI. Si debe emitir facturas electrónicas autorizadas, use su facturador o el sistema gratuito del SRI y apóyese en Reportes → Exportar ventas, que incluye identificación del cliente, subtotales, IVA y forma de pago según la tabla del SRI.</p></div>`}
 
 /* ===================== acciones ===================== */
 const A={
@@ -1970,7 +2079,7 @@ const A={
   editProd(el){editProd(el.dataset.id)},saveProd(el){saveProd(el.dataset.id)},
   delProd(el){const id=el.dataset.id;confirmBox('¿Eliminar este producto? Las ventas ya registradas conservan su detalle. Para ocultarlo sin borrarlo, desactive "Disponible para la venta".',()=>{S.products=S.products.filter(p=>p.id!==id);markDel('products',id);S.cart.lines=S.cart.lines.filter(l=>l.pid!==id);save(true);render()},'Eliminar',1)},
   bulk:bulkModal,bulkDo(el){bulkDo(el.dataset.k)},
-  importXlsx(){const i=document.createElement('input');i.type='file';i.accept='.xlsx,.xls,.csv';i.onchange=()=>i.files[0]&&importFile(i.files[0]);i.click()},impDo,
+  importXlsx(){},impDo(){},
   exportProducts(){saveTable('productos-starpos',[IMPHEAD,...S.products.map((p,i)=>[i+1,p.code,p.name,p.line,p.cost,p.p[0],p.p[1],p.p[2],p.p[3],p.p[4]||0,p.iva,p.track,p.stock,p.min||0,p.active,supName(p.supplier),p.bulto||0,p.boxCode||'',p.p[5]||0,p.dn||0,p.cn||0])],'Productos')},
   adjust(el){adjustModal(el.dataset.id)},adjustDo(el){adjustDo(el.dataset.id)},
   purchase:purchaseModal,puAdd(el){puAdd(prod(el.dataset.id));const q=$('#pu_q');q.value='';puRender();q.focus()},puRm(el){PU.splice(+el.dataset.i,1);puRender()},purchaseDo,
@@ -2028,6 +2137,7 @@ A.bell=()=>{const p=$('#bellpop');if(p.hidden){bellDraw();p.hidden=false}else p.
 A.bellDo=el=>{const x=(window._nt||[])[+el.dataset.i];$('#bellpop').hidden=true;if(x&&x.a&&A[x.a])A[x.a]()};
 A.hrng=el=>{const k=el.dataset.k,t=today();H.auto=false;H.q='';H.t=t;H.f=k==='hoy'?t:k==='ayer'?(H.t=addDays(t,-1),addDays(t,-1)):k==='7'?addDays(t,-6):k==='mes'?t.slice(0,8)+'01':'2000-01-01';vHistorial()};
 A.trackToggle=el=>{const p=prod(el.dataset.id);if(!p)return;p.track=!p.track;save(true);toast(p.track?'Control de stock activado.':'Control de stock desactivado.');render()};
+A.setTab=el=>{SETTAB=el.dataset.t;const b=document.querySelector('.stabs');if(b){b.dataset.st=SETTAB;b.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.t===SETTAB))}};
 A.waWeb=()=>{const w=Math.min(480,screen.availWidth),h=screen.availHeight,l=(screen.availLeft||0)+screen.availWidth-w,t=screen.availTop||0;const win=window.open('https://web.whatsapp.com/','star_whatsapp','popup=yes,width='+w+',height='+h+',left='+l+',top='+t);if(!win)return toast('El navegador bloqueó la ventana. Permita las ventanas emergentes para este sitio.',1);win.focus()};
 A.netToggle=()=>{S.cfg.offline=!S.cfg.offline;save(true);headState();toast(S.cfg.offline?'Modo sin internet: no se usará la red.':'Se usará internet cuando haya conexión.')};
 window.addEventListener('online',()=>headState());window.addEventListener('offline',()=>headState());
@@ -2057,8 +2167,8 @@ function sRows(rows){const sy=S.sync;let ch=0;
       for(const n of x.data.list||[])if(!S.sellers.includes(n)&&!(M[n]&&M[n].d)){S.sellers.push(n);ch++}
       for(const n in rm){const l=M[n],r=rm[n];if(l&&l.t>=r.t)continue;M[n]=r;const i=S.sellers.indexOf(n);
         if(r.d){if(i>=0){S.sellers.splice(i,1);S.cfg.recentSellers=(S.cfg.recentSellers||[]).filter(y=>y!==n);if(S.cfg.cur===n)S.cfg.cur='';ch++}}else if(i<0){S.sellers.push(n);ch++}}
-      if(x.data.pins){const P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{},rt=x.data.pinT||{};for(const k in x.data.pins){if(!(k in P)||(rt[k]||0)>(T[k]||0)){if(P[k]!==x.data.pins[k])ch++;P[k]=x.data.pins[k];T[k]=rt[k]||0}}}if(x.data.bancoUsers)S.cfg.bancoUsers=Object.assign({},S.cfg.bancoUsers,x.data.bancoUsers);if(x.data.prof&&(x.data.prof.t||0)>((S.cfg.prof||{}).t||0)){S.cfg.prof=x.data.prof;ch++}sy.h['sellers:all']=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},M,S.cfg.bancoUsers||{},S.cfg.prof||{}])}
-    ch+=sRowsLg(rows);
+      if(x.data.pins){const P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{},rt=x.data.pinT||{};for(const k in x.data.pins){if(!(k in P)||(rt[k]||0)>(T[k]||0)){if(P[k]!==x.data.pins[k])ch++;P[k]=x.data.pins[k];T[k]=rt[k]||0}}}if(x.data.bancoUsers)S.cfg.bancoUsers=Object.assign({},S.cfg.bancoUsers,x.data.bancoUsers);if(x.data.prof&&(x.data.prof.t||0)>((S.cfg.prof||{}).t||0)){S.cfg.prof=x.data.prof;ch++}if(x.data.alias)S.cfg.alias=Object.assign({},x.data.alias,S.cfg.alias||{});sy.h['sellers:all']=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},M,S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{}])}
+    ch+=sRowsLg(rows);try{ch+=applyAlias()}catch(e){}
   return ch}
 /* 6B-2: libro y cierres, solo se AGREGAN por id (nunca se sobrescribe ni se borra) */
 function sRowsLg(rows){const sy=S.sync;let ch=0;sy.lg=sy.lg||{};if(!Array.isArray(S.ledger))S.ledger=[];
@@ -2100,7 +2210,7 @@ async function sPush(){
   const sy=S.sync,out=[];
   for(const k of SK)for(const o of S[k]){const key=k+':'+o.id,h=hsh(o,k==='products');if(sy.h[key]!==h)out.push({key,h,row:{id:key,kind:k,data:o,u:o._u||o.ts||0,dev:DEV}})}
   for(const key in (sy.del||{})){if(sy.h[key]==='del')continue;const p=key.indexOf(':'),k=key.slice(0,p),id=key.slice(p+1);out.push({key,h:'del',row:{id:key,kind:k,data:{id,_del:1},u:sy.del[key],dev:DEV}})}
-  const sh=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},S.cfg.sellMeta||{},S.cfg.bancoUsers||{},S.cfg.prof||{}]);if(sy.h['sellers:all']!==sh)out.push({key:'sellers:all',h:sh,row:{id:'sellers:all',kind:'sellers',data:{list:S.sellers,pins:S.cfg.pins||{},pinT:S.cfg.pinT||{},meta:S.cfg.sellMeta||{},bancoUsers:S.cfg.bancoUsers||{},prof:S.cfg.prof||{}},u:Date.now(),dev:DEV}});
+  const sh=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},S.cfg.sellMeta||{},S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{}]);if(sy.h['sellers:all']!==sh)out.push({key:'sellers:all',h:sh,row:{id:'sellers:all',kind:'sellers',data:{list:S.sellers,pins:S.cfg.pins||{},pinT:S.cfg.pinT||{},meta:S.cfg.sellMeta||{},bancoUsers:S.cfg.bancoUsers||{},prof:S.cfg.prof||{},alias:S.cfg.alias||{}},u:Date.now(),dev:DEV}});
   for(let i=0;i<out.length;i+=25){const c=out.slice(i,i+25);
     const r=await sFetch(S.cfg.syncUrl+'/rest/v1/records?on_conflict=id',{method:'POST',headers:{...sHdr(),Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(c.map(x=>x.row))});
     if(!r.ok)throw new Error('envío '+r.status);
@@ -2254,7 +2364,7 @@ function perfilPanel(){const p=S.cfg.prof||{},on=!!p.share;
   return `<div class="panel" style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div><h3 style="margin:0">👥 Compartir perfil de administrador</h3><div class="muted small">Con Sí, varias personas atienden con el mismo perfil y la misma caja. Se elige quién atiende al vender y su nombre sale en el comprobante.</div></div><button class="btn sm ${on?'pri':''}" data-act="shareSet">${on?'Sí':'No'}</button></div>${on?`<div style="display:grid;gap:6px;margin-top:10px">${(p.att||[]).map(n=>`<div style="display:flex;justify-content:space-between;align-items:center"><span>🧑‍💼 ${esc(n)}</span><button class="btn sm" data-act="attDel" data-n="${esc(n)}">Quitar</button></div>`).join('')||'<span class="muted small">Aún no hay personas.</span>'}<div style="display:flex;gap:6px"><input id="att_n" placeholder="Nombre de quien atiende" autocomplete="off"><button class="btn sm pri" data-act="attAdd">Agregar</button></div></div>`:''}</div>`}
 function attRep(){const f=lgFrom(),o={};for(const v of S.sales)if(v.status==='ok'&&v.ts>=f){const k=v.seller||'(sin nombre)';(o[k]=o[k]||{n:0,t:0});o[k].n++;o[k].t=r2(o[k].t+v.total)}
   const K=Object.keys(o);if(K.length<1)return '';return `<div class="panel" style="margin-top:12px"><h3 style="margin:0 0 6px">🧑‍💼 Ventas por quien atendió</h3><table><tbody>${K.map(k=>`<tr><td>${esc(k)}</td><td class="r">${o[k].n} venta(s)</td><td class="r money">${money(o[k].t)}</td></tr>`).join('')}</tbody></table></div>`}
-function bancoPanel(){const me=cUser();return `<div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:4px">👤 Usuarios</h3><p class="muted" style="margin:0 0 10px">Cada usuario tiene su caja y su PIN. El administrador ve todo; el empleado no aprueba transferencias ni ve las cajas de otros. «Con Banco» incluye el Banco en su caja.</p><div style="display:grid;gap:8px">${S.sellers.map(n=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>${esc(n)}${n===me?' <span class="muted small">(usted)</span>':''}</span><span style="display:flex;gap:6px"><button class="btn sm" data-act="roleSet" data-n="${esc(n)}">${roleOf(n)==='dueno'?'Administrador':'Empleado'}</button><button class="btn sm ${userBanco(n)?'pri':''}" data-act="bancoUser" data-n="${esc(n)}">${userBanco(n)?'Con Banco':'Sin Banco'}</button>${n!==me?`<button class="btn sm bad" data-act="userDel" data-n="${esc(n)}" aria-label="Quitar ${esc(n)}">✕</button>`:''}</span></div>`).join('')}</div><h4 class="tsec">Agregar usuario</h4><div class="fgrid"><label class="f">Nombre<input id="nu_n" autocomplete="off"></label><label class="f">PIN (4 a 6 números)<input id="nu_p" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></label><label class="f">Perfil<select id="nu_r"><option value="empleado">Empleado</option><option value="dueno">Administrador</option></select></label></div><button class="btn pri" data-act="userAdd" style="margin-top:8px">Agregar</button></div>`}
+function bancoPanel(){const me=cUser();return `<div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:4px">👤 Usuarios</h3><p class="muted" style="margin:0 0 10px">Cada usuario tiene su caja y su PIN. El administrador ve todo; el empleado no aprueba transferencias ni ve las cajas de otros. «Con Banco» incluye el Banco en su caja.</p><div style="display:grid;gap:8px">${S.sellers.map(n=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>${esc(n)}${n===me?' <span class="muted small">(usted)</span>':''}</span><span style="display:flex;gap:6px"><button class="btn sm" data-act="roleSet" data-n="${esc(n)}">${roleOf(n)==='dueno'?'Administrador':'Empleado'}</button><button class="btn sm ${userBanco(n)?'pri':''}" data-act="bancoUser" data-n="${esc(n)}">${userBanco(n)?'Con Banco':'Sin Banco'}</button>${n!==me?`<button class="btn sm bad" data-act="userDel" data-n="${esc(n)}" aria-label="Eliminar ${esc(n)}" title="Eliminar usuario">🗑 Eliminar</button>`:''}</span></div>`).join('')}</div><h4 class="tsec">Agregar usuario</h4><div class="fgrid"><label class="f">Nombre<input id="nu_n" autocomplete="off"></label><label class="f">PIN (4 a 6 números)<input id="nu_p" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></label><label class="f">Perfil<select id="nu_r"><option value="empleado">Empleado</option><option value="dueno">Administrador</option></select></label></div><button class="btn pri" data-act="userAdd" style="margin-top:8px">Agregar</button></div>`}
 function pinPanel(){const P=S.cfg.pins||{},me=cUser(),row=n=>`<div style="display:flex;gap:6px;align-items:center;justify-content:space-between"><span>${esc(n)} ${P[n]?'<span class="pill ok">con PIN</span>':'<span class="pill">sin PIN</span>'}</span><button class="btn sm" data-act="pinSet" data-k="${esc(n)}">${P[n]?'Cambiar':'Poner PIN'}</button></div>`;
   return `<div class="panel" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🔐 PIN</h3><p class="muted" style="margin:0 0 10px">Cada usuario tiene su PIN. Se pide solo al abrir el programa o al cambiar de usuario. Quienes comparten un perfil usan el mismo PIN.</p><div style="display:grid;gap:8px">${(isOwner()?S.sellers:S.sellers.filter(n=>n===me)).map(row).join('')}</div></div>`}
 A.pinSet=el=>{const k=el.dataset.k;if(k!==cUser()&&!isOwner())return toast('Solo puede cambiar su propio PIN.',1);window._pk=k;modal(`${dlgHead('Nuevo PIN'+(k!==cUser()?' · '+esc(k):''))}<label class="f">4 a 6 números<input id="pn_i" type="password" inputmode="numeric" maxlength="6" autocomplete="off" autofocus></label><label class="f">Repita el PIN<input id="pn_j" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></label><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="pinSave">Guardar</button></div>`)};
@@ -2371,17 +2481,20 @@ A.lgUndo=el=>guard('Anular movimiento',()=>{const e=S.ledger.find(x=>x.id===el.d
 A.lgExp=el=>{expRoll();expModal(el.dataset.p)};
 A.cierreDet=el=>cierreDet(el.dataset.id);
 /* ===== campos: números válidos y MAYÚSCULAS automáticas ===== */
-const CAPS_SKIP=/^(q|pk_q|pu_q|cq|cq2|iq|hq|sl_q|rf|rt|pin_i|pn_i|pn_j|lg_p|lg_p2|lg_a|nu_p|sy_.*|ab_f|ex_d)$/;
+const CAPS_SKIP=/^(rf|rt|pin_i|pn_i|pn_j|lg_p|lg_p2|lg_a|nu_p|sy_.*|ab_f|ex_d)$/,CAPS_CFG=/^(name|addr|legal)$/;
+function capsOK(el){const ty=(el.getAttribute('type')||'text').toLowerCase();if(!(el.tagName==='TEXTAREA'||(el.tagName==='INPUT'&&ty==='text')))return false;
+  if(el.getAttribute('inputmode')||el.dataset.nocaps!==undefined||el.dataset.tk||el.dataset.cust||el.dataset.cfglist||CAPS_SKIP.test(el.id||''))return false;
+  return !el.dataset.cfg||CAPS_CFG.test(el.dataset.cfg)}
 function fixField(el){
   if(!el||el.tagName==='SELECT')return;
   const ty=(el.getAttribute('type')||'text').toLowerCase(),im=(el.getAttribute('inputmode')||'').toLowerCase();
   if(el.tagName==='INPUT'&&ty==='text'&&(im==='decimal'||im==='numeric')){
     const v=el.value;let o=v.replace(/[^0-9.,]/g,'');const k=o.search(/[.,]/);if(k>=0)o=o.slice(0,k+1)+o.slice(k+1).replace(/[.,]/g,'');
     if(o!==v){const p=el.selectionStart-(v.length-o.length);el.value=o;try{el.setSelectionRange(p,p)}catch(e){}}return}
-  if(!(el.tagName==='TEXTAREA'||(el.tagName==='INPUT'&&ty==='text')))return;
-  if(im||el.dataset.nocaps!==undefined||el.dataset.cfg||el.dataset.tk||el.dataset.cust||el.dataset.cfglist||el.dataset.inp==='tkLive'||CAPS_SKIP.test(el.id||''))return;
+  if(!capsOK(el))return;
   const v=el.value,u=v.toUpperCase();if(u!==v){const a=el.selectionStart,b=el.selectionEnd;el.value=u;try{el.setSelectionRange(a,b)}catch(e){}}}
 document.addEventListener('input',e=>fixField(e.target),true);
+document.addEventListener('focusin',e=>{const el=e.target;if(el&&el.tagName&&capsOK(el))el.setAttribute('autocapitalize','characters')},true);
 /* ===== respaldo en la nube ===== */
 async function snapPush(manual){if(!S.cfg.syncUrl||S.cfg.offline||!navigator.onLine)return manual&&toast('Falta configurar la nube o internet.',1);
   const d=JSON.parse(JSON.stringify(S));delete d.sync;d.cart=newCart();
@@ -2453,7 +2566,7 @@ const APP_LOGO='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPm
 (function(){const m=document.getElementById('appMark');if(m)m.src=APP_LOGO})();
 function viewAnim(){const v=document.getElementById('view');if(!v)return;v.classList.remove('vin');void v.offsetWidth;v.classList.add('vin');clearTimeout(viewAnim.t);viewAnim.t=setTimeout(()=>v.classList.remove('vin'),450)}
 /* ===== INICIO DE SESIÓN (PIN obligatorio, se pide al abrir el programa) ===== */
-const LGN={sel:'',cancel:false,fails:0,until:0,sig:''};
+const LGN={sel:'',cancel:false,fails:0,until:0,sig:'',mode:''};
 const pinOk4=v=>/^\d{4,6}$/.test(v);
 function anyAdminPin(){const P=S.cfg.pins||{};return !!P['*']||S.sellers.some(n=>roleOf(n)==='dueno'&&P[n])}
 function adminAuth(v){const P=S.cfg.pins||{},h=phash(v);return (P['*']&&P['*']===h)||S.sellers.some(n=>roleOf(n)==='dueno'&&P[n]&&P[n]===h)}
@@ -2468,17 +2581,20 @@ function loginDraw(){const e=lgEl(),U=S.sellers.slice(),P=S.cfg.pins||{};
   LGN.sig=JSON.stringify([U,Object.keys(P).filter(k=>P[k])]);
   const fld=(id,l,ph)=>`<label class="f">${l}<input id="${id}" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="${ph||''}"></label>`;
   let b='',t='Iniciar sesión';
-  if(!U.length){t='Crear administrador';b=`<p class="muted small" style="margin:0">Primera vez en este equipo. Cree el usuario administrador con su PIN (4 a 6 números).</p><label class="f">Nombre de su negocio<input id="lg_b" autocomplete="off" autofocus></label><label class="f">Su nombre<input id="lg_n" autocomplete="off"></label>${fld('lg_p','PIN')}${fld('lg_p2','Repita el PIN')}<button class="btn pri" data-act="lgFirst" data-enter>Crear y entrar</button><div style="border-top:1px solid var(--line);padding-top:10px;text-align:center"><div class="muted small" style="margin-bottom:6px">¿Ya tiene un respaldo de STAR POS?</div><button class="btn" data-act="bkPick">Restaurar respaldo</button></div><div style="text-align:center"><div class="muted small" style="margin-bottom:6px">¿Ya usa la nube (Supabase)?</div><button class="btn" data-act="cloudOpen">☁ Conectar a la nube</button></div>`}
+  if(!U.length&&!LGN.mode){t='Bienvenido';b=`<p class="muted small" style="margin:0;text-align:center">Elija cómo va a usar este equipo.</p><button class="btn pri" data-act="lgMode" data-m="dueno" style="padding:14px;text-align:left"><b>🏪 Soy el dueño</b><div class="small" style="font-weight:400;opacity:.9">Crear mi negocio por primera vez</div></button><button class="btn" data-act="lgMode" data-m="emp" style="padding:14px;text-align:left"><b>🧑‍💼 Soy empleado</b><div class="muted small" style="font-weight:400">Entrar a un negocio que ya existe</div></button>`}
+  else if(!U.length&&LGN.mode==='emp'){t='Entrar como empleado';b=`<p class="muted small" style="margin:0">Para entrar necesita conectar este equipo al negocio:</p><ol class="small" style="margin:0;padding-left:20px;display:grid;gap:6px"><li>Pida al dueño su <b>código de conexión</b> (en su equipo: Ajustes → Ajustes del programa → Nube → «Copiar mi código»).</li><li>Toque el botón de abajo y pegue el código en «Código de conexión».</li><li>Cuando termine de sincronizar, elija su nombre e ingrese su PIN.</li></ol><button class="btn pri" data-act="cloudOpen">☁ Conectar a la nube</button><button class="btn" data-act="lgMode" data-m="">Atrás</button>`}
+  else if(!U.length){t='Crear administrador';b=`<p class="muted small" style="margin:0">Primera vez en este equipo. Cree el usuario administrador con su PIN (4 a 6 números).</p><label class="f">Nombre de su negocio<input id="lg_b" autocomplete="off" autofocus></label><label class="f">Su nombre<input id="lg_n" autocomplete="off"></label>${fld('lg_p','PIN')}${fld('lg_p2','Repita el PIN')}<button class="btn pri" data-act="lgFirst" data-enter>Crear y entrar</button><div style="border-top:1px solid var(--line);padding-top:10px;text-align:center"><div class="muted small" style="margin-bottom:6px">¿Ya tiene un respaldo de STAR POS?</div><button class="btn" data-act="bkPick">Restaurar respaldo</button></div><button class="btn" data-act="lgMode" data-m="">Atrás</button>`}
   else if(!LGN.sel){b=`<p class="muted small" style="margin:0">¿Quién va a usar el programa?</p><div style="display:grid;gap:8px">${U.map(n=>`<button class="btn" data-act="lgPick" data-n="${esc(n)}" style="text-align:left;display:flex;justify-content:space-between;gap:8px;padding:12px 14px"><span>🧑‍💼 ${esc(n)}</span><span class="muted small">${roleOf(n)==='dueno'?'Administrador':'Empleado'}</span></button>`).join('')}</div>${LGN.cancel?'<button class="btn" data-act="lgCancel">Volver sin cambiar</button>':''}`}
   else if(!P[LGN.sel]){const adm=roleOf(LGN.sel)==='dueno'&&anyAdminPin();t='Crear su PIN';
     b=`<p class="muted small" style="margin:0">Hola <b>${esc(LGN.sel)}</b>. Este usuario aún no tiene PIN y ahora es obligatorio.</p>${adm?fld('lg_a','PIN de un administrador (para autorizar)'):''}${fld('lg_p','Nuevo PIN (4 a 6 números)')}${fld('lg_p2','Repita el PIN')}<button class="btn pri" data-act="lgSetup" data-enter>Guardar y entrar</button><button class="btn" data-act="lgBack">Atrás</button>`}
   else{b=`<p class="muted small" style="margin:0">Usuario: <b>${esc(LGN.sel)}</b></p>${fld('lg_p','PIN')}<button class="btn pri" data-act="lgEnter" data-enter>Entrar</button><button class="btn" data-act="lgBack">Atrás</button>`}
   e.innerHTML=`<div class="panel" style="width:100%;max-width:400px;margin:auto;display:grid;gap:12px"><div style="text-align:center"><img src="${APP_LOGO}" alt="STAR POS" width="84" height="84" style="border-radius:20px;box-shadow:0 8px 24px rgba(83,3,198,.35)"><h2 style="margin:6px 0 0;letter-spacing:.08em">STAR POS</h2><div class="muted small">Punto de Venta · ${t}</div></div>${b}</div>`;
   setTimeout(()=>{const f=e.querySelector('#lg_n,#lg_a,#lg_p');f&&f.focus()},30)}
-function lgOk(n){S.cfg.cur=n;S.cfg.recentSellers=[n,...(S.cfg.recentSellers||[]).filter(x=>x!==n)].slice(0,5);LGN.sel='';LGN.cancel=false;LGN.fails=0;
+function lgOk(n){S.cfg.cur=n;if(!S.caja){try{openCajaCore(lgBal('caja'),n)}catch(e){}}S.cfg.recentSellers=[n,...(S.cfg.recentSellers||[]).filter(x=>x!==n)].slice(0,5);LGN.sel='';LGN.cancel=false;LGN.fails=0;
   const e=document.getElementById('lgin');if(e){e.id='lgin-out';e.style.transition='opacity .22s ease';e.style.opacity='0';setTimeout(()=>e.remove(),230)}save(true);closeModal();render();
   if(shareOn()&&attList().length)setTimeout(()=>A.attPick(),60)}
 A.lgPick=el=>{LGN.sel=el.dataset.n;loginDraw()};
+A.lgMode=el=>{LGN.mode=el.dataset.m||'';loginDraw()};
 A.lgBack=()=>{LGN.sel='';loginDraw()};
 A.lgCancel=()=>{LGN.cancel=false;const e=document.getElementById('lgin');e&&e.remove()};
 A.lgOut=()=>loginShow(true);
@@ -2525,16 +2641,15 @@ const bkStamp=()=>today()+'-'+new Date().toTimeString().slice(0,5).replace(':','
 function bkStats(o){const cl=(o.customers||[]).filter(c=>c&&c.id!=='cf'),cr=(o.sales||[]).filter(s=>s&&s.status==='ok'&&s.credit&&(+s.balance||0)>0);
   return {prod:(o.products||[]).length,cli:cl.length,ven:(o.sales||[]).length,cred:cr.length,deuda:r2(cr.reduce((a,s)=>a+(+s.balance||0),0)),usr:(o.sellers||[]).length}}
 const bkHasData=()=>S.products.length>0||S.sales.length>0||S.customers.length>1;
-function bkDownload(name){S.cfg.lastBackup=Date.now();save(true);const d=Object.assign({_app:'STAR POS',_ts:Date.now()},S);delete d.sync;saveFile(name,JSON.stringify(d));headState()}
-function bkPick(){const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
-  i.onchange=async()=>{const f=i.files&&i.files[0];if(!f)return;let o;
+
+function bkPick(){pickFile('.json,application/json,.txt',bkFile)}
+async function bkFile(f){let o;
     try{o=JSON.parse(await f.text())}catch(e){return toast('Ese archivo no se puede leer. ¿Es un respaldo de STAR POS?',1)}
     if(!o||typeof o!=='object'||!Array.isArray(o.products)||!o.cfg||typeof o.cfg!=='object')return toast('El archivo no es un respaldo válido (faltan productos o configuración).',1);
     const k=bkStats(o),when=o._ts?fmtDT(o._ts):(o.cfg.lastBackup?fmtDT(o.cfg.lastBackup):'fecha desconocida');window._bk=o;
-    confirmBox(`<b>Este respaldo contiene:</b><br>• ${k.prod} producto(s)<br>• ${k.cli} cliente(s)<br>• ${k.cred} crédito(s) pendiente(s)${k.cred?' por '+money(k.deuda):''}<br>• ${k.ven} venta(s) en el historial<br>• ${k.usr} usuario(s)<br><span class="muted small">Guardado: ${when}</span><br><br>Se reemplazarán los datos de este equipo. ${bkHasData()?'Antes se descargará una copia de lo que hay ahora.':''}`,bkApply,'Restaurar',1)};
-  i.click()}
+    confirmBox(`<b>Este respaldo contiene:</b><br>• ${k.prod} producto(s)<br>• ${k.cli} cliente(s)<br>• ${k.cred} crédito(s) pendiente(s)${k.cred?' por '+money(k.deuda):''}<br>• ${k.ven} venta(s) en el historial<br>• ${k.usr} usuario(s)<br><span class="muted small">Guardado: ${when}</span><br><br>Se reemplazarán los datos de este equipo. ${bkHasData()?'Antes se descargará una copia de lo que hay ahora.':''}`,bkApply,'Restaurar',1)}
 function bkApply(){const o=window._bk;window._bk=null;if(!o)return;
-  try{if(bkHasData())bkDownload('antes-de-restaurar-'+bkStamp()+'.json');
+  try{if(bkHasData())bkDownload('antes-de-restaurar-'+bkStamp()+'.json',true);
     const k0=bkStats(o);delete o._app;delete o._ts;delete o.sync;
     S=normalize(o);lgMigrate();lgTag();cajaWire();S.sync=null;S.cfg.cur='';save(true);
     const chk=JSON.parse(localStorage.getItem(KEY)||'null'),k1=chk?bkStats(chk):null;
@@ -2545,6 +2660,209 @@ function bkApply(){const o=window._bk;window._bk=null;if(!o)return;
 A.bkPick=bkPick;
 /* el render también refresca el logo del negocio */
 {const _r2=render;render=function(){_r2.apply(this,arguments);try{setBizLogo()}catch(e){}}}
+/* ===================== PACK v5 ===================== */
+/* ---- selector de archivos fiable (el input queda en el documento: necesario en iOS/Safari) ---- */
+function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.style.cssText='position:fixed;left:-9999px;top:0;opacity:0;width:1px;height:1px';document.body.appendChild(i);
+  i.addEventListener('change',()=>{const f=i.files&&i.files[0];setTimeout(()=>i.remove(),800);if(f)cb(f)});i.addEventListener('cancel',()=>setTimeout(()=>i.remove(),300));i.click()}
+/* ---- lector de tablas: Excel (.xlsx/.xls/.ods) y CSV/TXT con detección de separador y acentos ---- */
+function parseCSV(t){t=t.replace(/^﻿/,'');const first=t.split(/\r?\n/,1)[0]||'',cnt=c=>first.split(c).length-1;
+  const d=[';',',','\t','|'].reduce((b,c)=>cnt(c)>cnt(b)?c:b,',');const rows=[];let r=[],f='',q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;
+    else if(c===d){r.push(f);f=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;r.push(f);f='';rows.push(r);r=[]}
+    else f+=c}
+  if(f!==''||r.length){r.push(f);rows.push(r)}
+  return rows.map(x=>x.map(v=>v===''?null:v)).filter(x=>x.some(v=>v!=null))}
+async function readText(file){const buf=await file.arrayBuffer();let t=new TextDecoder('utf-8').decode(buf);if(t.includes('�'))t=new TextDecoder('windows-1252').decode(buf);return t}
+async function readSheets(file){const ext=(file.name.split('.').pop()||'').toLowerCase();
+  if(['csv','txt','tsv'].includes(ext))return [{name:file.name,aoa:parseCSV(await readText(file))}];
+  if(!window.XLSX)throw new Error('xlsx');
+  const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+  return wb.SheetNames.map(n=>({name:n,aoa:XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:null,blankrows:false})}))}
+/* ---- descargas reales (Blob) ---- */
+async function saveFile(filename,data,textFallback,quiet){
+  try{const c=window.claude&&claude.use?await claude.use('downloads'):null;
+    if(c){await c.save({filename,data});if(!quiet)toast('Archivo listo: '+filename);return true}}catch(e){if(e&&e.code==='declined')return false}
+  try{const type=/\.xlsx$/i.test(filename)?'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':/\.json$/i.test(filename)?'application/json':/\.csv$/i.test(filename)?'text/csv;charset=utf-8':'application/octet-stream';
+    const blob=new Blob([data],{type}),ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    if(ios&&navigator.canShare&&window.File){try{const f=new File([blob],filename,{type});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],title:filename});if(!quiet)toast('Archivo listo: '+filename);return true}}catch(e){if(e&&e.name==='AbortError')return false}}
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();
+    setTimeout(()=>{a.remove();URL.revokeObjectURL(url)},5000);if(!quiet)toast('Descargado: '+filename);return true}catch(e){}
+  if(typeof data==='string'){modal(dlgHead('Copie el contenido')+`<p class="muted small" style="margin:0">La descarga no está disponible en este navegador. Copie este texto y péguelo en un archivo ${esc(filename)}.</p><textarea id="fb" rows="12" readonly>${esc(data)}</textarea><div class="ft"><button class="btn pri" data-act="copyFb">Copiar</button></div>`,1)}
+  else toast('La descarga no está disponible en este navegador.',1)}
+const okIcon=()=>'<svg class="okm" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24" stroke-width="3"/><path fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M15 27l8 8 14-16"/></svg>';
+/* ---- copia de seguridad ---- */
+async function bkDownload(name,quiet){S.cfg.lastBackup=Date.now();save(true);const d=Object.assign({_app:'STAR POS',_ts:Date.now()},S);delete d.sync;const txt=JSON.stringify(d);
+  if(quiet){saveFile(name,txt,0,true);return true}
+  const r=await saveFile(name,txt,0,true);if(r===false)return false;
+  headState();const e=$('#bkLast');if(e)e.textContent=fmtDT(S.cfg.lastBackup);bkDone(name);return true}
+function bkDone(name){const k=bkStats(S);
+  modal(`${dlgHead('Copia de seguridad lista')}<div class="okwrap">${okIcon()}<h3>¡Copia descargada!</h3><p class="muted">Archivo: <b>${esc(name)}</b><br>Búsquelo en la carpeta de <b>Descargas</b>.</p></div>
+  <div class="stats"><div><b>${k.prod}</b><span>Productos</span></div><div><b>${k.cli}</b><span>Clientes</span></div><div><b>${k.ven}</b><span>Ventas</span></div></div>
+  <p class="hint">Guárdela también fuera de este equipo (correo, Drive, WhatsApp o una memoria USB). Para recuperar sus datos use «Restaurar copia».</p><div class="ft"><button class="btn pri" data-act="closeModal" autofocus>Entendido</button></div>`)}
+/* ---- importar productos (Excel / CSV de otros programas) ---- */
+{const X={code:['cod','codigo de barra','barcode','bar code','codigo barra','default code','internal reference','referencia interna','cod producto','codigo articulo','cod articulo','item code','part number','gtin','mpn','codigo item','codigo del producto'],
+ name:['nombre articulo','nombre del articulo','descripcion producto','descripcion del producto','product name','product','product description','articulo descripcion','detalle producto','nombre item'],
+ cost:['costo compra','p compra','precio costo','standard price','costo ult compra','ultimo costo','costo actual','cost price','costo ultimo'],
+ p0:['p v p','p v p 1','precio venta 1','list price','precio lista','precio normal','precio unit','pvp unitario','unit price','retail price','precio detal','precio al detal','precio detalle','precio venta unitario'],
+ p1:['precio mayorista','precio por mayor','mayor 1','precio mayoreo'],
+ line:['clasificacion','seccion','tipo producto','product category','categoria producto'],
+ stock:['existencias','stock actual','cantidad disponible','qty available','stock disponible','cant','cantidad en stock','existencia actual'],
+ sup:['proveedor principal','supplier name','nombre proveedor'],
+ min:['minimo stock','min stock','stock de seguridad','stock minimo'],
+ iva:['tarifa iva','iva %','impuestos','grava iva','tiene iva']};
+ for(const r of IMPF)if(X[r[0]])r[2].push(...X[r[0]]);
+ const c=IMPF.find(r=>r[0]==='code');if(c)c[1]='Código de barras / SKU';const n=IMPF.find(r=>r[0]==='name');if(n)n[1]='Descripción (obligatoria)'}
+const impBlank=c=>c==null||String(c).trim()==='';
+function impHeaderRow(aoa){let bi=-1,bs=0;for(let i=0;i<Math.min(aoa.length,15);i++){const r=aoa[i];if(r.filter(c=>!impBlank(c)).length<2)continue;const s=Object.keys(impGuess(r.map(h=>h==null?'':String(h)))).length;if(s>bs){bs=s;bi=i}}
+  return bi>=0?bi:aoa.findIndex(r=>r.filter(c=>!impBlank(c)).length>=2)}
+let IMPS={sheets:[],i:0,name:'',H:[]};
+async function importFile(file){
+  if(!isOwner())return toast('Solo el administrador puede importar productos.',1);
+  modal(`${dlgHead('Importar productos')}<div class="ldw"><div class="ld"></div><div>Leyendo <b>${esc(file.name)}</b>…</div></div>`);
+  let sheets;
+  try{sheets=await readSheets(file)}catch(e){closeModal();return toast(e&&e.message==='xlsx'?'No se pudo cargar el lector de Excel (sin internet). Guarde su archivo como CSV e inténtelo de nuevo.':'No se pudo leer el archivo. Use Excel (.xlsx, .xls) o CSV.',1)}
+  sheets=sheets.filter(s=>s.aoa.some(r=>r.filter(c=>!impBlank(c)).length>=2));
+  if(!sheets.length){closeModal();return toast('El archivo está vacío o no tiene columnas.',1)}
+  let b=0;sheets.forEach((s,i)=>{if(s.aoa.length>sheets[b].aoa.length)b=i});
+  IMPS={sheets,i:b,name:file.name,H:[]};impShow()}
+function impShow(){const s=IMPS.sheets[IMPS.i],hi=impHeaderRow(s.aoa);
+  const H=s.aoa[hi].map((h,i)=>impBlank(h)?'Columna '+(i+1):String(h).trim());
+  const R=s.aoa.slice(hi+1).filter(r=>r.some(c=>!impBlank(c)));
+  if(!R.length){if(IMPS.sheets.length<2){closeModal();return toast('No hay filas de productos debajo de los títulos.',1)}}
+  window._impR=R;IMPS.H=H;const g=impGuess(H),nrec=Object.keys(g).length;
+  const cell=v=>esc(v==null?'':String(v).slice(0,26));
+  modal(`${dlgHead('Importar productos')}
+  <div class="impinfo"><span class="pill">📄 ${esc(IMPS.name)}</span>${IMPS.sheets.length>1?`<select id="im_sheet" data-chg="impSheet" aria-label="Hoja del archivo">${IMPS.sheets.map((x,i)=>`<option value="${i}" ${i===IMPS.i?'selected':''}>Hoja: ${esc(x.name)}</option>`).join('')}</select>`:''}<span class="pill ok">${R.length} fila(s)</span><span class="pill ${nrec>=2?'ok':'warn'}">${nrec} columna(s) reconocida(s)</span></div>
+  <p class="muted small" style="margin:0">Revise que cada dato apunte a la columna correcta de <b>su archivo</b>. Las que reconocimos ya están marcadas en verde. Lo que deje en «no importar» no se modifica.</p>
+  <div class="mgrid">${IMPF.map(([k,l])=>`<label class="f"><span>${l}</span><select id="im_${k}" class="${g[k]!=null?'hit':''}"><option value="">— no importar —</option>${H.map((h,i)=>`<option value="${i}" ${g[k]===i?'selected':''}>${esc(h)}</option>`).join('')}</select></label>`).join('')}</div>
+  <details class="ptools"><summary>👁 Ver las primeras filas de su archivo</summary><div class="tblw pv"><table><thead><tr>${H.map(h=>`<th>${cell(h)}</th>`).join('')}</tr></thead><tbody>${R.slice(0,5).map(r=>`<tr>${H.map((_,i)=>`<td>${cell(r[i])}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>
+  <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="impMap">Continuar →</button></div>`,1)}
+CH.impSheet=el=>{IMPS.i=+el.value;impShow()};
+function impMap(){
+  const m={};for(const [k] of IMPF){const e=$('#im_'+k);m[k]=e?e.value:''}
+  if(m.name==='')return toast('Indique la columna de la descripción (nombre del producto).',1);
+  const T=v=>{if(v===true)return true;if(v===false)return false;const s=String(v).trim().toLowerCase();if(/^(true|si|sí|s|x|verdadero|activo|habilitado|yes|y|iva|gravado)/.test(s))return true;const n=parseFloat(s.replace('%','').replace(',','.'));return isNaN(n)?false:n>0};
+  const g=(r,k)=>m[k]===''?undefined:r[+m[k]],N=(r,k)=>{const v=g(r,k);return v==null||String(v).trim()===''?null:Math.max(0,numX(v))};const out=[];let skip=0,noCode=0;
+  for(const r of window._impR){const code=String(g(r,'code')??'').trim(),name=String(g(r,'name')??'').trim();if(!name||code==='PRUEBA'||code.startsWith('@')){skip++;continue}
+    if(!code)noCode++;
+    const iv=g(r,'iva'),tr=g(r,'track'),ac=g(r,'active');
+    out.push({code,name:name.toUpperCase(),line:String(g(r,'line')??'').trim(),cost:N(r,'cost'),p:['p0','p1','p2','p3','p4','p5'].map(k=>N(r,k)),iva:iv==null?null:T(iv),track:tr==null?null:T(tr),active:ac==null?null:T(ac),stock:N(r,'stock'),min:N(r,'min'),sup:String(g(r,'sup')??'').trim(),bulto:Math.max(0,Math.floor(N(r,'bulto')||0)),dn:Math.max(0,Math.floor(N(r,'dn')||0)),cn:Math.max(0,Math.floor(N(r,'cn')||0)),box:String(g(r,'box')??'').trim()})}
+  if(!out.length)return toast('No se encontraron filas con descripción.',1);
+  const seenC=new Set(S.products.map(p=>p.code.toLowerCase())),seenN=new Set(S.products.map(p=>nk(p.name)));let nu=0,up=0;
+  for(const o of out){const hit=o.code?seenC.has(o.code.toLowerCase()):seenN.has(nk(o.name));if(hit)up++;else{nu++;if(o.code)seenC.add(o.code.toLowerCase());seenN.add(nk(o.name))}}
+  window._imp=out;window._impSkip=skip;const f=out.slice(0,5);
+  modal(`${dlgHead('Importar productos')}<div class="stats"><div><b>${nu}</b><span>Nuevos</span></div><div><b>${up}</b><span>Se actualizan</span></div><div><b>${skip}</b><span>Omitidas</span></div></div>
+  <div class="tblw pv"><table><thead><tr><th>Código</th><th>Descripción</th><th class="r">Costo</th><th class="r">Precio</th><th class="r">Stock</th></tr></thead><tbody>${f.map(o=>`<tr><td>${esc(o.code||'(automático)')}</td><td>${esc(o.name)}</td><td class="r">${o.cost==null?'—':money(o.cost)}</td><td class="r">${o.p[0]==null?'—':money(o.p[0])}</td><td class="r">${o.stock==null?'—':o.stock}</td></tr>`).join('')}</tbody></table></div>
+  ${noCode?`<p class="hint">${noCode} producto(s) no traen código: se les asignará un código interno y, si ya existen, se buscarán por nombre.</p>`:''}${skip?`<p class="hint">${skip} fila(s) se omitieron por no tener descripción.</p>`:''}
+  <label class="ck"><input type="checkbox" id="imp_stock"> Reemplazar también el stock de los productos que ya existen</label>
+  <div class="ft"><button class="btn" data-act="impBack">← Atrás</button><button class="btn pri" data-act="impDo">Importar ${out.length} producto(s)</button></div>`,1)}
+function impDo(){if(!isOwner())return;const rs=$('#imp_stock').checked;let nu=0,up=0;
+  for(const o of window._imp){const sid=o.sup?supByName(o.sup):'';
+    const p=o.code?S.products.find(x=>x.code.toLowerCase()===o.code.toLowerCase()):S.products.find(x=>nk(x.name)===nk(o.name));
+    if(p){p.name=o.name;if(o.line)p.line=o.line;if(o.cost!=null)p.cost=o.cost;if(o.dn>0)p.dn=o.dn;if(o.cn>0)p.cn=o.cn;o.p.forEach((v,i)=>{if(v==null)return;if(i===5&&!(p.cn>0))return;p.p[i]=v});if(o.iva!=null)p.iva=o.iva;if(o.active!=null)p.active=o.active;if(o.track!=null)p.track=o.track;if(sid)p.supplier=sid;if(o.bulto>0)p.bulto=o.bulto;if(o.box)p.boxCode=o.box;if(o.min!=null)p.min=o.min;if(rs&&o.stock!=null&&p.track)p.stock=o.stock;up++}
+    else{const np={id:'p'+uid(),code:o.code||nextInternalCode(),name:o.name,line:o.line||'',cost:o.cost||0,p:o.p.map((v,i)=>i===5&&!(o.cn>0)?0:(v||0)),dn:o.dn||0,cn:o.cn||0,iva:!!o.iva,track:o.track!=null?o.track:o.stock!=null,stock:o.stock>0?o.stock:0,min:o.min||0,active:o.active!=null?o.active:true,bulto:o.bulto||0,boxCode:o.box||'',supplier:sid};S.products.push(np);
+      if(np.track&&np.stock)S.moves.push({id:uid(),ts:Date.now(),pid:np.id,name:np.name,type:'ajuste',qty:np.stock,ref:'Importación'});nu++}}
+  window._imp=null;save(true);render();
+  modal(`${dlgHead('Importación lista')}<div class="okwrap">${okIcon()}<h3>¡Productos importados!</h3></div><div class="stats"><div><b>${nu}</b><span>Nuevos</span></div><div><b>${up}</b><span>Actualizados</span></div><div><b>${S.products.length}</b><span>En total</span></div></div><div class="ft"><button class="btn pri" data-act="closeModal" autofocus>Listo</button></div>`)}
+A.impBack=impShow;
+A.importXlsx=()=>pickFile('.xlsx,.xls,.xlsm,.ods,.csv,.txt,.tsv',importFile);
+A.impMap=impMap;A.impDo=impDo;
+A.impTemplate=async()=>{const rows=[IMPHEAD,['','7861234567890','COLA 600ML','BEBIDAS',0.35,0.5,0.45,0.42,0.4,0.38,'NO','SI',24,5,'SI','',12,'7861234567999',0.36,12,24],['','7861234567891','GALLETAS DE SAL','SNACKS',0.2,0.3,0.28,0.26,0.25,0.24,'SI','SI',60,10,'SI','',24,'',0,0,0]];
+  const ins=[['Cómo llenar la plantilla'],[''],['1. Escriba un producto por fila en la hoja «Productos». Puede borrar las filas de ejemplo.'],['2. Solo es obligatoria la columna «descripcion». Si deja «codigo» vacío, el programa crea uno.'],['3. Si el código ya existe, ese producto se actualiza; si no, se crea uno nuevo.'],['4. Precios y costos con punto o coma decimal. Las columnas que no use puede dejarlas vacías o borrarlas.'],['5. «pagaIva», «stockeable» y «habilitado» aceptan SI / NO.'],['6. También puede importar el archivo de cualquier otro programa: el sistema reconoce las columnas más comunes y usted las puede ajustar.']];
+  if(window.XLSX){try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Productos');XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ins),'Instrucciones');return saveFile('plantilla-productos.xlsx',XLSX.write(wb,{type:'array',bookType:'xlsx'}))}catch(e){}}
+  return saveFile('plantilla-productos.csv',toCSV(rows))};
+/* ---- restaurar ---- */
+/* ---- panel Ajustes > Datos ---- */
+function datosPanels(){if(!isOwner())return '';const lb=S.cfg.lastBackup,old=!lb||Date.now()-lb>7*864e5;
+  return `<div class="panel dat" data-sec="dat" style="margin-bottom:16px"><div class="dathd"><div class="dic">💾</div><div><h3>Copia de seguridad</h3><p class="muted small" style="margin:2px 0 0">Todo su negocio en un solo archivo: productos, clientes, créditos, ventas, caja y ajustes.</p></div></div>
+  <div class="bkstat ${old?'warn':'ok'}"><span>${old?'⚠️':'✅'}</span><span>Última copia: <b id="bkLast">${lb?fmtDT(lb):'nunca'}</b>${old?' · le recomendamos descargar una ahora':''}</span></div>
+  <div class="ft" style="justify-content:flex-start"><button class="btn pri big" data-act="backup">⬇ Descargar copia de seguridad</button><button class="btn big" data-act="restore">⬆ Restaurar copia</button></div>
+  <div class="dz" data-kind="bk" data-act="restore">…o arrastre aquí su archivo de copia (.json)</div>
+  <details class="ptools"><summary>☁ Copias en la nube y borrado de ventas</summary><div class="ft" style="justify-content:flex-start;margin-top:8px"><button class="btn" data-act="snapNow">☁ Respaldar en la nube ahora</button><button class="btn" data-act="snapList">☁ Restaurar desde la nube</button><button class="btn bad" data-act="resetSalesAsk">Borrar ventas y movimientos</button></div></details></div>
+  <div class="panel dat" data-sec="dat" style="margin-bottom:16px"><div class="dathd"><div class="dic">📦</div><div><h3>Productos: importar y exportar</h3><p class="muted small" style="margin:2px 0 0">Pase todo su catálogo desde Excel en un minuto, o llévelo a otro programa.</p></div></div>
+  <ol class="steps"><li><b>Descargue la plantilla</b> o use el Excel/CSV de su otro programa tal como está.</li><li>Toque <b>Importar productos</b> y elija el archivo (o arrástrelo aquí).</li><li><b>Revise las columnas</b> que reconocimos, confirme y listo.</li></ol>
+  <div class="dz" data-kind="imp" data-act="importXlsx">📄 Arrastre aquí su archivo Excel o CSV, o toque para elegirlo</div>
+  <div class="ft" style="justify-content:flex-start"><button class="btn pri" data-act="importXlsx">⬆ Importar productos</button><button class="btn" data-act="impTemplate">📄 Descargar plantilla</button><button class="btn" data-act="exportProducts">⬇ Exportar productos</button><button class="btn" data-act="exportStock">⬇ Exportar inventario</button></div>
+  <p class="hint">Si el producto ya existe (mismo código) se actualiza; si no, se crea. El archivo que exporta aquí se puede volver a importar sin cambios.</p></div>`}
+document.addEventListener('dragover',e=>{const z=e.target.closest&&e.target.closest('.dz');if(z){e.preventDefault();z.classList.add('over')}});
+document.addEventListener('dragleave',e=>{const z=e.target.closest&&e.target.closest('.dz');if(z)z.classList.remove('over')});
+document.addEventListener('drop',e=>{const z=e.target.closest&&e.target.closest('.dz');if(!z)return;e.preventDefault();z.classList.remove('over');if(!isOwner())return toast('Solo el administrador puede hacerlo.',1);const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)(z.dataset.kind==='bk'?bkFile:importFile)(f)});
+['restore','resetSalesAsk','backup','snapNow','snapList'].forEach(k=>{const f=A[k];if(f)A[k]=function(){if(!isOwner())return toast('Solo el administrador puede hacerlo.',1);return f.apply(this,arguments)}});
+/* ---- PIN: confirmar con el PIN actual ---- */
+const pwf=(id,l)=>`<label class="f"><span>${l}</span><span class="pw"><input id="${id}" type="password" inputmode="numeric" maxlength="6" autocomplete="off"><button type="button" class="eye" data-act="pinEye" aria-label="Mostrar u ocultar">👁</button></span></label>`;
+A.pinEye=el=>{const i=el.parentElement.querySelector('input');i.type=i.type==='password'?'text':'password';i.focus()};
+const PINF={n:0,until:0};
+function shakeDlg(){const d=document.querySelector('#modal .dlg');if(d){d.classList.remove('shake');void d.offsetWidth;d.classList.add('shake')}}
+function myPinCheck(v){if(Date.now()<PINF.until){toast('Demasiados intentos. Espere unos segundos.',1);return false}
+  const h=(S.cfg.pins||{})[cUser()];if(!h)return true;
+  if(phash(String(v||'').trim())===h){PINF.n=0;return true}
+  PINF.n++;if(PINF.n>=5){PINF.n=0;PINF.until=Date.now()+30000;toast('5 intentos fallidos. Espere 30 segundos.',1)}else toast('Su PIN actual es incorrecto.',1);return false}
+function setPin(k,v){(S.cfg.pins=S.cfg.pins||{})[k]=phash(v);(S.cfg.pinT=S.cfg.pinT||{})[k]=Date.now()}
+function pinModal(k){const own=k===cUser();if(!own&&!isOwner())return toast('Solo puede cambiar su propio PIN.',1);window._pk=k;
+  modal(`${dlgHead('Nuevo PIN'+(own?'':' · '+esc(k)))}${pwf('pn_i','Nuevo PIN (4 a 6 números)')}${pwf('pn_j','Repita el nuevo PIN')}<div class="sec">${pwf('pn_c',own?'Su PIN actual · para confirmar':'Su PIN de administrador · para confirmar')}</div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="pinSave" data-enter>Guardar PIN</button></div>`);
+  setTimeout(()=>{const f=$('#pn_i');f&&f.focus()},60)}
+A.pinSet=el=>pinModal(el.dataset.k);
+A.pinSave=()=>{const k=window._pk;if(!k)return;if(k!==cUser()&&!isOwner())return;const v=($('#pn_i').value||'').trim(),w=($('#pn_j').value||'').trim(),c=$('#pn_c').value;
+  if(!/^\d{4,6}$/.test(v))return toast('Use de 4 a 6 números.',1);if(v!==w)return toast('Los PIN no coinciden.',1);
+  if(!String(c).trim())return toast('Escriba su PIN actual para confirmar.',1);
+  if(!myPinCheck(c))return shakeDlg();
+  setPin(k,v);save(true);window._pk=null;closeModal();render();toast('PIN guardado')};
+/* ---- perfil del administrador: nombre y PIN ---- */
+function miPerfilPanel(){const n=cUser();return `<div class="panel prof"><div class="avt" aria-hidden="true">${esc((n||'?').trim().charAt(0).toUpperCase())}</div><div class="pinfo"><h3>${esc(n)}</h3><div class="muted small"><span class="pill ok">Administrador</span> Para cambiar su nombre o su PIN se le pedirá su PIN actual.</div></div><div class="pact"><button class="btn" data-act="profName">✏️ Editar nombre</button><button class="btn" data-act="profPin">🔑 Cambiar PIN</button></div></div>`}
+A.profPin=()=>isOwner()?pinModal(cUser()):toast('Solo el administrador puede hacerlo.',1);
+A.profName=()=>{if(!isOwner())return toast('Solo el administrador puede hacerlo.',1);
+  modal(`${dlgHead('Editar mi nombre')}<label class="f"><span>Nombre</span><input id="pf_n" value="${esc(cUser())}" maxlength="40" autocomplete="off"></label><p class="hint">El cambio vale en todo el programa: caja, inicio de sesión y comprobantes nuevos. Las ventas ya hechas conservan el nombre con que se registraron.</p><div class="sec">${pwf('pf_c','Su PIN actual · para confirmar')}</div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="profSave" data-enter>Guardar nombre</button></div>`);
+  setTimeout(()=>{const f=$('#pf_n');f&&(f.focus(),f.select())},60)};
+function renameUser(old,nn){const now=Date.now(),M=S.cfg.sellMeta=S.cfg.sellMeta||{},P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{};
+  const i=S.sellers.indexOf(old);if(i>=0)S.sellers[i]=nn;else S.sellers.push(nn);
+  M[old]={t:now,d:1};M[nn]={t:now,d:0};P[nn]=P[old]||'';T[nn]=now;P[old]='';T[old]=now;
+  if(S.cfg.bancoUsers&&old in S.cfg.bancoUsers){S.cfg.bancoUsers[nn]=S.cfg.bancoUsers[old];delete S.cfg.bancoUsers[old]}
+  S.cfg.recentSellers=(S.cfg.recentSellers||[]).map(x=>x===old?nn:x);
+  setProf(p=>{p.roles=Object.assign({},p.roles);p.roles[nn]=p.roles[old]||'dueno';delete p.roles[old]});
+  const al=S.cfg.alias=S.cfg.alias||{};for(const k in al)if(al[k]===old)al[k]=nn;al[old]=nn;
+  S.cfg.cur=nn;if(S.cfg.att===old)S.cfg.att=nn;applyAlias();save(true)}
+function applyAlias(){const al=S.cfg.alias;if(!al)return 0;let ch=0;const f=x=>{let n=x,g=0;while(al[n]&&al[n]!==n&&g++<8)n=al[n];return n};
+  for(const e of S.ledger||[])for(const k of ['u','by'])if(e[k]&&al[e[k]]){e[k]=f(e[k]);ch++}
+  for(const h of S.cajaHist||[])for(const k of ['u','who'])if(h[k]&&al[h[k]]){h[k]=f(h[k]);ch++}
+  for(const u of Object.keys(S.cajas||{}))if(al[u]){const t=f(u),c=S.cajas[u];delete S.cajas[u];c.u=t;if(c.who&&al[c.who])c.who=f(c.who);if(!S.cajas[t])S.cajas[t]=c;ch++}
+  return ch}
+A.profSave=()=>{if(!isOwner())return;const old=cUser(),nn=($('#pf_n').value||'').trim().replace(/\s+/g,' '),c=$('#pf_c').value;
+  if(!nn)return toast('Escriba su nombre.',1);if(nn.length>40)return toast('El nombre es muy largo (máximo 40 letras).',1);
+  if(nn===old)return toast('Ese ya es su nombre.',1);
+  if(S.sellers.some(x=>x!==old&&nrm(x)===nrm(nn)))return toast('Ya existe un usuario con ese nombre.',1);
+  if(!String(c).trim())return toast('Escriba su PIN actual para confirmar.',1);
+  if(!myPinCheck(c))return shakeDlg();
+  renameUser(old,nn);closeModal();render();toast('Nombre actualizado')};
+/* ---- eliminar empleados (pide el PIN del administrador) ---- */
+A.userDel=el=>{if(!isOwner())return toast('Solo el administrador puede eliminar usuarios.',1);const n=el.dataset.n;
+  if(n===cUser())return toast('No puede eliminar su propio usuario.',1);
+  if(roleOf(n)==='dueno'&&cajasOwners().filter(x=>x!==n).length<1)return toast('Debe quedar al menos un administrador.',1);
+  window._ud=n;const c=(S.cajas||{})[n],bal=lgBalU('caja',n);
+  modal(`${dlgHead('Eliminar usuario')}<div class="warnbox"><b>${esc(n)}</b> ya no podrá entrar al sistema.<ul><li>Su PIN se borra y desaparece de la pantalla de inicio (en todos los equipos al sincronizar).</li><li>Las ventas y movimientos que hizo se conservan.</li>${c?`<li>⚠ Tiene la caja abierta desde ${fmtDT(c.ts)}.</li>`:''}${bal?`<li>⚠ Efectivo registrado en su caja: <b>${money(bal)}</b>.</li>`:''}</ul></div><div class="sec">${pwf('ud_pin','Su PIN de administrador · para confirmar')}</div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn bad" data-act="userDelDo" data-enter>Eliminar a ${esc(n)}</button></div>`);
+  setTimeout(()=>{const f=$('#ud_pin');f&&f.focus()},60)};
+A.userDelDo=()=>{const n=window._ud;if(!n||!isOwner())return;const c=$('#ud_pin').value;if(!String(c).trim())return toast('Escriba su PIN para confirmar.',1);
+  if(!myPinCheck(c))return shakeDlg();
+  if(n===cUser())return;if(roleOf(n)==='dueno'&&cajasOwners().filter(x=>x!==n).length<1)return toast('Debe quedar al menos un administrador.',1);
+  S.sellers=S.sellers.filter(x=>x!==n);(S.cfg.sellMeta=S.cfg.sellMeta||{})[n]={t:Date.now(),d:1};
+  S.cfg.recentSellers=(S.cfg.recentSellers||[]).filter(x=>x!==n);(S.cfg.pins=S.cfg.pins||{})[n]='';(S.cfg.pinT=S.cfg.pinT||{})[n]=Date.now();
+  if(S.cfg.att===n)S.cfg.att='';window._ud=null;save(true);closeModal();render();toast('Usuario eliminado: '+n)};
+/* si el usuario conectado fue eliminado (p. ej. desde otro equipo), vuelve a pedir inicio de sesión */
+{const _rn5=render;render=function(){if(SETTAB==='dat'&&!isOwner())SETTAB='usr';_rn5.apply(this,arguments);
+  try{if(S.sellers.length&&(!S.cfg.cur||!S.sellers.includes(S.cfg.cur))&&!document.getElementById('lgin')){const was=S.cfg.cur;S.cfg.cur='';save(true);loginShow(false);was&&toast('Su usuario ya no existe. Inicie sesión de nuevo.',1)}}catch(e){}}}
+/* ---- Enter en las ventanas ---- */
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.tagName==='INPUT'&&e.target.closest&&e.target.closest('#modal')){const b=$('#modal [data-enter]');if(b){e.preventDefault();b.click()}}});
+/* ---- ripple en botones ---- */
+document.addEventListener('pointerdown',e=>{if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const el=e.target.closest&&e.target.closest('.btn,.tile,.tcard');if(!el||el.disabled)return;
+  const r=el.getBoundingClientRect(),d=Math.max(r.width,r.height)*1.6,s=document.createElement('span');s.className='rip';s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;el.appendChild(s);setTimeout(()=>s.remove(),650)},true);
+/* ---- números que suben al entrar a una pantalla ---- */
+function countUps(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  $$('#view .tile-s b').forEach(b=>{const m=/^(-?)(\$?)(\d+(?:\.\d+)?)$/.exec(b.textContent.trim());if(!m)return;const neg=m[1],pre=m[2],to=parseFloat(m[3]),dec=(m[3].split('.')[1]||'').length;if(!to||to>1e9)return;const t0=performance.now(),D=650,fin=b.textContent;
+    const step=t=>{const k=Math.min(1,(t-t0)/D),v=to*(1-Math.pow(1-k,3));b.textContent=k>=1?fin:neg+pre+v.toFixed(dec);if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
+{const _vaX=viewAnim;viewAnim=function(){_vaX.apply(this,arguments);try{countUps()}catch(e){}}}
+
 setBizLogo();
 loginShow(false);
 </script>
