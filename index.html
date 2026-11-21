@@ -253,7 +253,7 @@ body.pc.vfit #view>.rwrap{flex:none}
 body.pc.vfit .pc{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:6px}
 body.pc.vfit .pc>*{flex:none}
 body.pc.vfit .pc>.cartw{flex:1 1 auto;min-height:90px;overflow-x:hidden;overflow-y:auto}
-body.pc.vfit .pc>#sugg{max-height:calc(var(--avail,600px)*.35);overflow-y:auto}
+body.pc.vfit .pc>#sugg>.plist{max-height:calc(var(--avail,600px)*.45);overflow-y:auto}
 body.pc.vfit .ct2 thead th{position:sticky;top:0;z-index:2;background:var(--surface2)}
 body.pc.vfit .pc>.panel,body.pc.vfit .pc-foot .panel{padding:8px 12px}
 body.pc.vfit .pc-row{padding:6px 12px}
@@ -265,6 +265,20 @@ body.pc.vfit .pc-pay{margin-top:6px}
 body.pc.vfit .pc-foot{gap:10px}
 /* empleado: sin costos ni herramientas de administración */
 body.emp .pc2-ft,body.emp .ptools,body.emp [data-act="editProd"][data-id=""]{display:none!important}
+/* animaciones de venta */
+@keyframes rowadd{0%{opacity:0;transform:translateX(-18px);background:var(--accent-soft)}60%{opacity:1;transform:none;background:var(--accent-soft)}100%{background:transparent}}
+@keyframes rowflash{0%{background:var(--accent-soft)}100%{background:transparent}}
+@keyframes sale-ok{from{opacity:0;transform:translateY(-6px) scale(.9)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+  .ct2 tbody tr.rowadd{animation:rowadd .7s var(--ease,ease-out) both}
+  .ct2 tbody tr.rowflash{animation:rowflash .6s ease-out both}
+  .btn,.chip[data-act],.seg button{transition:transform .12s ease,background .15s,filter .15s,box-shadow .15s}
+  .btn:not(:disabled):active,.seg button:active{transform:scale(.95)}
+  .saleok{display:grid;justify-items:center;padding:2px 0 8px;animation:sale-ok .4s ease-out both}
+  .saleok .okm{width:64px;height:64px}
+  #totals .big>*:last-child.bump,#barTot.bump{animation:p6bump .5s var(--spring,ease-out)}
+}
+@media(prefers-reduced-motion:reduce){.saleok .okm circle,.saleok .okm path{stroke-dashoffset:0}.saleok .okm circle{animation:none}}
 /* ajustes v3 */
 #menuBtn{display:none}.chip[data-act]{cursor:pointer;outline:1px solid var(--ok)}
 .vbar{flex-direction:column;align-items:stretch;gap:8px}.vtop{display:flex;justify-content:space-between;align-items:center;gap:10px}.vbar>.btn{width:100%}
@@ -780,7 +794,9 @@ nav a svg{transition:transform .2s ease}nav a:hover svg{transform:translateY(-1p
 tbody tr{transition:background-color .12s}
 .chip.warn#cajaChip{animation:pulse 2.4s ease-in-out infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--warn) 18%,transparent)}}
+@media(prefers-reduced-motion:no-preference){.bellbtn.upd{animation:ring .9s ease 4}}
 .bellbtn:hover{animation:ring .6s ease}
+.bellbtn{order:9;width:38px;height:34px;font-size:17px;margin-left:2px;box-shadow:0 0 0 1px var(--line)}
 @keyframes ring{20%{transform:rotate(14deg)}40%{transform:rotate(-12deg)}60%{transform:rotate(8deg)}80%{transform:rotate(-4deg)}}
 }
 @keyframes spin{to{transform:rotate(360deg)}}.spin{display:inline-block;animation:spin .9s linear infinite}
@@ -1115,9 +1131,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
     <button id="netChip" class="chip" type="button" data-act="netToggle"></button>
     <button id="cloudChip" class="chip" type="button" data-act="cloudOpen">☁ Nube</button>
     <button id="syncBtn" class="chip" type="button" data-act="syncNow" title="Sincronizar ahora"><span id="syncIc">🔄</span> Sincronizar</button>
-    <button id="bell" class="bellbtn" type="button" data-act="bell" aria-label="Avisos">🔔<i class="dot" id="bellDot"></i></button><button id="cajaChip" class="chip" type="button">Caja</button>
+    <button id="cajaChip" class="chip" type="button">Caja</button>
     <span class="muted small" id="clock"></span>
-    <button class="btn sm" id="menuBtn" data-act="menu">☰ Menú</button><div class="seg" id="uiSeg" style="margin-left:auto" role="group" aria-label="Versión de pantalla"></div>
+    <button class="btn sm" id="menuBtn" data-act="menu">☰ Menú</button><div class="seg" id="uiSeg" style="margin-left:auto" role="group" aria-label="Versión de pantalla"></div><button id="bell" class="bellbtn" type="button" data-act="bell" aria-label="Avisos">🔔<i class="dot" id="bellDot"></i></button>
   </div><nav id="nav"></nav></header>
   <div id="notice"></div>
 <div id="bellpop" hidden></div>
@@ -1381,9 +1397,10 @@ function notifs(){
   if(num(S.cfg.goalM)){const g=S.cfg.goalM/(S.cfg.goalDays||26),v=netIn(today(),today());L.push({l:v>=g?'g':'y',t:'Meta de hoy: '+money(v)+' de '+money(g),s:Math.round(v/g*100)+'%',h:'#reportes'})}
   if(isOwner()){const nq=(S.requests||[]).filter(r=>!r.done).length;if(nq)L.push({l:'y',t:nq+' solicitud(es) de cambio de empleados',s:'Ver en Ajustes',h:'#ajustes'})}
   if(SY.msg&&SY.msg[0]==='✓')L.push({l:'g',t:'Nube sincronizada',s:SY.msg.slice(2)});
+  if(window.NEWV)L.unshift({l:'y',t:'⬆ Nueva versión disponible',s:'Toque aquí para actualizar',a:'appUpdate'});
   netNotifs(L);
   return L}
-function bellUpdate(){const L=notifs(),d=$('#bellDot');if(d)d.className='dot '+(L.some(x=>x.l==='r')?'r':L.some(x=>x.l==='y')?'y':L.length?'g':'');
+function bellUpdate(){const L=notifs(),d=$('#bellDot');try{const bb=document.querySelector('.bellbtn');bb&&bb.classList.toggle('upd',!!window.NEWV)}catch(e){}if(d)d.className='dot '+(L.some(x=>x.l==='r')?'r':L.some(x=>x.l==='y')?'y':L.length?'g':'');
   const p=$('#bellpop');if(p&&!p.hidden)bellDraw(L)}
 function bellDraw(L){const p=$('#bellpop');L=L||notifs();
   p.innerHTML=L.length?L.map((x,i)=>x.h?`<a class="nt ${x.l}" href="${x.h}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></a>`:`<button class="nt ${x.l}" data-act="bellDo" data-i="${i}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></button>`).join(''):'<div class="muted small" style="padding:10px">Todo en orden, sin avisos.</div>';window._nt=L}
@@ -1840,7 +1857,7 @@ const waClean=t=>t.replace(/▪️?/g,'•').replace(/\p{Extended_Pictographic}[
 function waUrl(s,num){return 'https://wa.me/'+num+'?text='+encodeURIComponent(waClean(waText(s)))}
 function waOpen(s,num){const a=document.createElement('a');a.href=waUrl(s,num);a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
 function showReceipt(s,fresh){rcpt=s;
-  modal(`${dlgHead(fresh?'Venta registrada':'Comprobante')}${fresh&&s.change>0?`<div class="change ok"><span>Cambio a devolver</span><b>${money(s.change)}</b></div>`:''}<div class="ticket" id="tk">${receiptHTML(s)}</div>
+  modal(`${dlgHead(fresh?'Venta registrada':'Comprobante')}${fresh?`<div class="saleok">${okIcon()}</div>`:''}${fresh&&s.change>0?`<div class="change ok"><span>Cambio a devolver</span><b>${money(s.change)}</b></div>`:''}<div class="ticket" id="tk">${receiptHTML(s)}</div>
   <div class="bar" style="margin:0"><label class="f grow">WhatsApp del cliente<input id="wa_num" type="tel" inputmode="tel" value="${esc(cust(s.customerId).tel||'')}" placeholder="09XXXXXXXX"></label><button class="btn pri" data-act="rcptWa" style="align-self:flex-end;display:inline-flex;align-items:center;gap:8px;background:#25D366;border-color:#25D366;color:#fff"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.52.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016c-1.77 0-3.524-.48-5.055-1.38l-.36-.214-3.75.975 1.005-3.645-.239-.375c-.99-1.576-1.516-3.391-1.516-5.26 0-5.445 4.455-9.885 9.942-9.885 2.654 0 5.145 1.035 7.021 2.91 1.875 1.859 2.909 4.35 2.909 6.99-.004 5.444-4.46 9.885-9.935 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/></svg>Enviar por WhatsApp</button></div><div class="muted small" style="margin-top:-6px">«Enviar por WhatsApp» manda el comprobante en texto. Para mandarlo como imagen use «Copiar comprobante en imagen» y péguelo en el chat (Ctrl+V, o mantener presionado → Pegar).</div>
   <div class="ft"><select data-cfg="paper" data-t="s" style="width:auto" aria-label="Papel">${paperOpts()}</select><button class="btn pri" data-act="rcptImg">🖼 Copiar comprobante en imagen</button><button class="btn" data-act="rcptPrint">Imprimir</button><button class="btn" data-act="rcptFile">Descargar</button><button class="btn" data-act="rcptCopy">Copiar texto</button>${!fresh&&s.status==='ok'?`<button class="btn" data-act="retOpen" data-id="${s.id}">↩ Devolución / cambio</button><button class="btn bad" data-act="voidAsk" data-id="${s.id}">Anular venta</button>`:''}<button class="btn pri" data-act="closeModal" autofocus>${fresh?'Nueva venta':'Cerrar'}</button></div>`)}
 
@@ -2318,6 +2335,7 @@ A.rcptImg=()=>copyTicketImg(rcpt);A.proforma=makeProforma;A.genCode=()=>{const i
 A.pfOpen=el=>{const pf=pfLoad().items.find(x=>x.id===el.dataset.id);pf?showProforma(pf):toast('Esa proforma ya no está disponible.',1)};
 A.pfDel=el=>{const o=pfLoad();o.items=o.items.filter(x=>x.id!==el.dataset.id);pfSave(o);pfList()};
 A.bell=()=>{const p=$('#bellpop');if(p.hidden){bellDraw();p.hidden=false}else p.hidden=true};
+A.appUpdate=()=>{const go=()=>{try{closeModal()}catch(e){}location.reload()};if(S.cart&&S.cart.lines&&S.cart.lines.length)confirmBox('Hay una venta en curso. Si actualiza ahora, la venta puede perderse. ¿Actualizar de todos modos?',go,'Actualizar',1);else go()};
 A.bellDo=el=>{const x=(window._nt||[])[+el.dataset.i];$('#bellpop').hidden=true;if(x&&x.a&&A[x.a])A[x.a]()};
 A.hrng=el=>{const k=el.dataset.k,t=today();H.auto=false;H.q='';H.t=t;H.f=k==='hoy'?t:k==='ayer'?(H.t=addDays(t,-1),addDays(t,-1)):k==='7'?addDays(t,-6):k==='mes'?t.slice(0,8)+'01':'2000-01-01';vHistorial()};
 A.trackToggle=el=>{const p=prod(el.dataset.id);if(!p)return;p.track=!p.track;save(true);toast(p.track?'Control de stock activado.':'Control de stock desactivado.');render()};
@@ -2543,7 +2561,9 @@ function labelTables(){$$('#view table, #modal table').forEach(t=>{const H=[...t
 new MutationObserver(labelTables).observe(document.body,{childList:true,subtree:true});
 window.addEventListener('hashchange',route);
 route();
-if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)toast('Hay una versión nueva. Recargue la página para usarla.')})})}).catch(()=>{})}
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller){window.NEWV=true;try{bellUpdate()}catch(e){}toast('⬆ Nueva versión disponible. Toque la campana 🔔 para actualizar.')}})})}).catch(()=>{});
+  /* busca versiones nuevas cada 10 min y al volver a la app */
+  const chk=()=>{navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{})};setInterval(chk,6e5);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})}
 
 /* ===== PIN (solo para acciones delicadas) ===== */
 let AUTH={n:'',t:0};const phash=p=>'p'+hsh('star|'+p);
@@ -3241,6 +3261,20 @@ function countUps(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)ret
   ['linePrice','lineDisc','gd'].forEach(k=>{const f=CH[k];if(typeof f==='function')CH[k]=function(el){if(!isOwner()){toast('Solo el administrador cambia precios o descuentos. Use la lista de precios.',1);renderCart();return}return f.apply(this,arguments)}});
   window.addEventListener('hashchange',()=>{try{if(!viewOK(view)){location.hash='#venta'}}catch(e){}});
 })();
+/* ===== animaciones del carrito y del total ===== */
+(function(){const _rc=renderCart;let prevEl=null,prev=[],prevTot='';
+  renderCart=function(){const r=_rc.apply(this,arguments);try{
+    const el=document.getElementById('cartw'),L=(S.cart&&S.cart.lines)||[],sig=L.map(l=>l.pid+'|'+l.qty);
+    if(el&&el===prevEl&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){
+      const rows=el.querySelectorAll('.ct2 tbody tr');
+      L.forEach((l,i)=>{const row=rows[i];if(!row)return;const p=prev[i];
+        if(p===undefined||p.split('|')[0]!==String(l.pid)){row.classList.add('rowadd');if(i===L.length-1&&row.scrollIntoView)try{row.scrollIntoView({block:'nearest'})}catch(e){}}
+        else if(p!==sig[i])row.classList.add('rowflash')})}
+    prevEl=el;prev=sig;
+    const bt=document.querySelector('#totals .big>*:last-child'),bar=document.getElementById('barTot'),tx=(bt?bt.textContent:'')+'|'+(bar?bar.textContent:'');
+    if(tx!==prevTot&&prevTot!==''){[bt,bar].forEach(x=>{if(x){x.classList.remove('bump');void x.offsetWidth;x.classList.add('bump');setTimeout(()=>x.classList.remove('bump'),600)}})}
+    prevTot=tx}catch(e){}
+    return r}})();
 setBizLogo();
 loginShow(false);
 </script>
