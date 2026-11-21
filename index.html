@@ -79,6 +79,16 @@ td.wrapc{white-space:normal;min-width:180px}
 .tile-s{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);padding:12px 14px;box-shadow:var(--shadow)}
 .tile-s b{display:block;font-family:var(--font-head);font-size:24px;margin-top:2px}
 .tile-s span{font-size:12px;color:var(--muted);font-weight:600}
+.bklg{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--s,44px);height:var(--s,44px);border-radius:12px;font-weight:800;font-size:calc(var(--s,44px)*.38);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);vertical-align:middle;line-height:1}
+.bklg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:10%}
+.bkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px;margin-bottom:16px}
+.bkcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.bkcard.off{opacity:.6}
+.bkh{display:flex;gap:12px;align-items:center}.bkt{flex:1;min-width:0}.bkt b{overflow-wrap:anywhere}
+.bkb{text-align:right}.bkb b{display:block;font-family:var(--font-head);font-size:24px}
+.bkact{display:flex;gap:6px;flex-wrap:wrap}
+.bkmini{display:inline-flex;align-items:center;gap:5px;margin-right:12px;font-size:12px}
+.bkpick{display:flex;gap:8px;flex-wrap:wrap}.bkpick .btn{display:flex;align-items:center;gap:8px}
 .empty{padding:28px 16px;text-align:center;color:var(--muted)}
 .banner{border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}
 .banner.warn{background:var(--warn-bg);color:var(--warn)} .banner.bad{background:var(--bad-bg);color:var(--bad)}
@@ -232,6 +242,27 @@ body.m .sale,body.m .two{grid-template-columns:1fr}
 body.m .prow{grid-template-columns:1fr 1fr 1fr}body.m .prow.ph{display:none}body.m .prow .pn,body.m .prow .pp{grid-column:1/-1}body.m .prow .r{text-align:left}
 body.m .pc-tot .big{font-size:34px}
 
+
+/* ===== Ventana de venta fija (PC): sin desplazamiento de página; el carrito se ajusta al espacio ===== */
+body.pc.vfit{height:var(--avail,100vh);overflow:hidden;display:flex;flex-direction:column;padding-bottom:6px}
+body.pc.vfit .wrap{flex:1 1 auto;min-height:0;width:100%;display:flex;flex-direction:column}
+body.pc.vfit .top{flex:none;margin-bottom:6px}
+body.pc.vfit #notice{flex:none}
+body.pc.vfit #view{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+body.pc.vfit #view>.rwrap{flex:none}
+body.pc.vfit .pc{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:6px}
+body.pc.vfit .pc>*{flex:none}
+body.pc.vfit .pc>.cartw{flex:1 1 auto;min-height:90px;overflow-x:hidden;overflow-y:auto}
+body.pc.vfit .pc>#sugg{max-height:calc(var(--avail,600px)*.35);overflow-y:auto}
+body.pc.vfit .ct2 thead th{position:sticky;top:0;z-index:2;background:var(--surface2)}
+body.pc.vfit .pc>.panel,body.pc.vfit .pc-foot .panel{padding:8px 12px}
+body.pc.vfit .pc-row{padding:6px 12px}
+body.pc.vfit .sbar input.big{min-height:44px;padding-block:6px}
+body.pc.vfit .pc-btns{gap:6px}body.pc.vfit .pc-btns .btn{min-height:38px}
+body.pc.vfit .pc-tot .big{font-size:34px;margin-top:2px;padding-top:4px}
+body.pc.vfit .pc-tot .pri{min-height:48px;font-size:18px}
+body.pc.vfit .pc-pay{margin-top:6px}
+body.pc.vfit .pc-foot{gap:10px}
 /* ajustes v3 */
 #menuBtn{display:none}.chip[data-act]{cursor:pointer;outline:1px solid var(--ok)}
 .vbar{flex-direction:column;align-items:stretch;gap:8px}.vtop{display:flex;justify-content:space-between;align-items:center;gap:10px}.vbar>.btn{width:100%}
@@ -1129,7 +1160,7 @@ function defaults(){
       listNames:['Unidad','Por mayor','Docena','Bulto','Aliado','Caja'],t2:3,t3:12,lastBackup:0,offline:false},
     products:SEED.map((s,i)=>({id:'p'+(i+1),code:s.c,name:s.d,line:s.l,cost:s.k,p:[...s.p,0],iva:s.iva,track:s.st,stock:0,min:0,active:s.a,bulto:0,supplier:''})),
     customers:[{id:'cf',tipo:'cf',ident:'9999999999999',name:'CONSUMIDOR FINAL',email:'',tel:'',addr:''}],
-    sales:[],moves:[],ledger:[],caja:null,cajaHist:[],held:[],suppliers:[],sellers:[],expenses:[],promos:[],
+    sales:[],moves:[],ledger:[],caja:null,cajaHist:[],held:[],suppliers:[],sellers:[],expenses:[],promos:[],requests:[],
     cart:newCart()};
 }
 function normalize(o){const d=defaults(),old=o.cfg||{};o.cfg=Object.assign(d.cfg,old);if(!o.cfg.name||o.cfg.name==='STAR')o.cfg.name='Mi negocio';if(old.t2===undefined)o.cfg.listNames=defaults().cfg.listNames;
@@ -1240,7 +1271,7 @@ function identWarn(tipo,id){return (tipo==='cedula'&&!cedulaOk(id))||(tipo==='ru
 
 /* ===================== ui base ===================== */
 let view='venta';
-const VIEWS=[['venta','Venta'],['historial','Historial'],['productos','Productos'],['inventario','Inventario'],['clientes','Clientes'],['creditos','Créditos'],['cobrados','Cobrados'],['proveedores','Proveedores'],['caja','Caja'],['ahorros','Ahorros'],['reportes','Reportes'],['promos','Promos'],['ajustes','Ajustes']];
+const VIEWS=[['venta','Venta'],['caja','Caja'],['banco','Banco'],['historial','Historial'],['productos','Productos'],['inventario','Inventario'],['clientes','Clientes'],['creditos','Créditos'],['proveedores','Proveedores'],['ahorros','Ahorros'],['reportes','Reportes'],['promos','Promos'],['ajustes','Ajustes']];
 function toast(msg,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.innerHTML='<span class="ti">'+(bad?'!':'✓')+'</span><span></span>';t.lastChild.textContent=msg;const w=$('#toasts');while(w.children.length>=4)w.firstChild.remove();w.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},bad?4200:2400);if(bad&&!$('#modal').hidden){try{shakeDlg()}catch(e){}}}
 function modal(html,wide){const m=$('#modal'),gh=document.getElementById('modalGhost');if(gh)gh.remove();m.innerHTML=`<div class="scrim" data-act="closeModal"></div><div class="dlg ${wide?'wide':''}" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;setTimeout(()=>{const f=$('[autofocus]',m);if(f){f.focus();f.select&&f.select()}},30)}
 function closeModal(){pendingAdd=false;const m=$('#modal');
@@ -1249,7 +1280,7 @@ function closeModal(){pendingAdd=false;const m=$('#modal');
 let confirmCb=null,pendingAdd=false;
 function confirmBox(msg,cb,label,danger){confirmCb=cb;modal(`<div class="cfm ${danger?'dg':''}"><div class="cfi" aria-hidden="true">${danger?'⚠️':'❓'}</div><h3>${danger?'¿Está seguro?':'Confirmar'}</h3><p>${msg}</p></div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn ${danger?'bad':'pri'}" data-act="confirmYes" autofocus>${label||'Confirmar'}</button></div>`)}
 function dlgHead(t){const p=String(t).replace(/<[^>]*>/g,'');const ic=(dlgHead.IC.find(x=>x[0].test(p))||[0,'✨'])[1];return `<div class="hd"><h3><span class="hi" aria-hidden="true">${ic}</span><span>${t}</span></h3><button class="x" data-act="closeModal" aria-label="Cerrar">✕</button></div>`}
-dlgHead.IC=[[/importa/i,'📥'],[/exporta/i,'📤'],[/pin|contrase/i,'🔐'],[/mi nombre|perfil/i,'🪪'],[/eliminar|quitar|borrar/i,'🗑️'],[/respaldo|copia/i,'💾'],[/producto/i,'📦'],[/cliente/i,'🧑'],[/pago|cobr|cr[eé]dito|abono/i,'💵'],[/stock|inventario|ingreso/i,'📋'],[/caja/i,'🧮'],[/precio/i,'💲'],[/ticket|recibo|comprobante|proforma|copie/i,'🧾'],[/espera/i,'⏸️'],[/nube/i,'☁️'],[/vendedor|atiende|usuario/i,'🧑‍💼']];
+dlgHead.IC=[[/banc/i,'🏦'],[/importa/i,'📥'],[/exporta/i,'📤'],[/pin|contrase/i,'🔐'],[/mi nombre|perfil/i,'🪪'],[/eliminar|quitar|borrar/i,'🗑️'],[/respaldo|copia/i,'💾'],[/producto/i,'📦'],[/cliente/i,'🧑'],[/pago|cobr|cr[eé]dito|abono/i,'💵'],[/stock|inventario|ingreso/i,'📋'],[/caja/i,'🧮'],[/precio/i,'💲'],[/ticket|recibo|comprobante|proforma|copie/i,'🧾'],[/espera/i,'⏸️'],[/nube/i,'☁️'],[/vendedor|atiende|usuario/i,'🧑‍💼']];
 function empty(t){return `<div class="empty">${t}</div>`}
 
 const csvCell=v=>{v=v==null?'':String(v);return /[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
@@ -1260,7 +1291,7 @@ async function saveTable(base,rows,sheetName){
   return saveFile(base+'.csv',toCSV(rows))}
 
 /* ===================== router ===================== */
-const ICONS={ahorros:'<path d="M5 12a7 7 0 0114 0v3a3 3 0 01-3 3H8a3 3 0 01-3-3z"/><path d="M12 5V3M9 12h.01"/>',cobrados:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',creditos:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',venta:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/>',
+const ICONS={ahorros:'<ellipse cx="11.5" cy="13" rx="7.5" ry="5.5"/><path d="M8 18v2.5M15 18v2.5M19 11.2l2.5.6v2.8l-2.6.5M8.6 8.2L7.8 5.6 11 7.6M10 10.6h3.2M16 11.4h.01M4 12.2c-1.4 0-2.2.7-2.2 1.8M12 4.2h.01"/>',banco:'<path d="M3 9.5L12 4l9 5.5z"/><path d="M5.5 12.5v5M9.8 12.5v5M14.2 12.5v5M18.5 12.5v5M3 20h18M4 17.5h16"/>',cobrados:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',creditos:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',venta:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6"/>',
 historial:'<path d="M4 3h16v18l-3-2-3 2-3-2-3 2-4-2z"/><path d="M8 8h8M8 12h8"/>',
 productos:'<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
 inventario:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>',
@@ -1272,16 +1303,16 @@ promos:'<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
 ajustes:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'};
 const ico=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||''}</svg>`;
 const WA_LINK=`<a href="#" data-act="waWeb" class="wa" title="Abrir WhatsApp Web en una ventana al lado"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" style="flex:none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.52.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016c-1.77 0-3.524-.48-5.055-1.38l-.36-.214-3.75.975 1.005-3.645-.239-.375c-.99-1.576-1.516-3.391-1.516-5.26 0-5.445 4.455-9.885 9.942-9.885 2.654 0 5.145 1.035 7.021 2.91 1.875 1.859 2.909 4.35 2.909 6.99-.004 5.444-4.46 9.885-9.935 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/></svg><span>WhatsApp</span></a>`;
-function nav(){const cv=VIEWS.find(v=>v[0]===view);$('#menuBtn').textContent='☰ '+(cv?cv[1]:'Menú');$('#nav').innerHTML=VIEWS.filter(v=>v[0]!=='ahorros'||isOwner()).map(([k,n])=>`<a href="#${k}" title="${n}" class="${k===view?'on':''}">${ico(k)}<span>${n}</span></a>`).join('')+WA_LINK}
-function route(){menuOpen=false;const h=location.hash.slice(1);view=VIEWS.some(v=>v[0]===h)?h:'venta';nav();render();viewAnim()}
+function nav(){const cv=VIEWS.find(v=>v[0]===view);$('#menuBtn').textContent='☰ '+(cv?cv[1]:'Menú');$('#nav').innerHTML=VIEWS.filter(v=>(v[0]!=='ahorros'||isOwner())&&(v[0]!=='banco'||bancoOK())).map(([k,n])=>`<a href="#${k}" title="${n}" class="${k===view?'on':''}">${ico(k)}<span>${n}</span></a>`).join('')+WA_LINK}
+function route(){menuOpen=false;let h=location.hash.slice(1);if(h==='cobrados'){h='creditos';if(typeof CR==='object'&&CR)CR.tab='cobrados';else window.CRtab0='cobrados'}view=VIEWS.some(v=>v[0]===h)?h:'venta';nav();render();viewAnim()}
 const curMode=()=>S.cfg.ui==='pc'||S.cfg.ui==='movil'?S.cfg.ui:(innerWidth<860?'movil':'pc');
 let LOGO='';
 let menuOpen=false;
 function applyZoom(){const z=Math.min(150,Math.max(50,num(S.cfg.zoom)||80));document.documentElement.style.zoom=curMode()==='pc'?z/100:'';document.documentElement.style.setProperty('--z',curMode()==='pc'?z/100:1);fitPC()}
 function render(){
-  document.body.className=(curMode()==='pc'?'pc':'m')+(menuOpen?' menu':'');applyZoom();
+  document.body.className=(curMode()==='pc'?'pc':'m')+(curMode()==='pc'&&view==='venta'?' vfit':'')+(menuOpen?' menu':'');applyZoom();
   $('#bname').textContent=S.cfg.name||'STAR';nav();headState();
-  ({venta:vVenta,historial:vHistorial,productos:vProductos,inventario:vInventario,clientes:vClientes,creditos:vCreditos,cobrados:vCobrados,proveedores:vProveedores,caja:vCaja,ahorros:vAhorros,reportes:vReportes,promos:vPromos,ajustes:vAjustes})[view]();
+  ({venta:vVenta,historial:vHistorial,productos:vProductos,inventario:vInventario,clientes:vClientes,creditos:vCreditos,cobrados:vCobrados,proveedores:vProveedores,caja:vCaja,banco:vBanco,ahorros:vAhorros,reportes:vReportes,promos:vPromos,ajustes:vAjustes})[view]();
 }
 function netState(){return S.cfg.offline?'off':(navigator.onLine?'on':'lost')}
 function headState(){
@@ -1345,6 +1376,7 @@ function notifs(){
   const hoy=S.sales.filter(v=>v.status==='ok'&&dkey(v.ts)===today());
   if(hoy.length)L.push({l:'g',t:'Hoy: '+hoy.length+' venta(s) · '+money(hoy.reduce((a,v)=>a+v.total,0)),s:'Ver historial',h:'#historial'});
   if(num(S.cfg.goalM)){const g=S.cfg.goalM/(S.cfg.goalDays||26),v=netIn(today(),today());L.push({l:v>=g?'g':'y',t:'Meta de hoy: '+money(v)+' de '+money(g),s:Math.round(v/g*100)+'%',h:'#reportes'})}
+  if(isOwner()){const nq=(S.requests||[]).filter(r=>!r.done).length;if(nq)L.push({l:'y',t:nq+' solicitud(es) de cambio de empleados',s:'Ver en Ajustes',h:'#ajustes'})}
   if(SY.msg&&SY.msg[0]==='✓')L.push({l:'g',t:'Nube sincronizada',s:SY.msg.slice(2)});
   netNotifs(L);
   return L}
@@ -1439,7 +1471,7 @@ function vVentaPC(){
    <div class="pc-foot"><div class="panel pc-btns"><button class="btn" data-act="search">Buscar producto</button><button class="btn" data-act="hold">En espera</button><button class="btn" data-act="lastTicket">Re-imprimir último ticket</button><button class="btn" data-act="proforma">Proforma${pfCount()?' · '+pfCount():''}</button><button class="btn bad" data-act="clearCart">Cancelar venta</button></div>
     <div class="panel pc-tot"><div class="tot" id="totals"></div><div class="pc-pay"><div id="ptype"></div><button class="btn pri" data-act="pay">COBRAR (F2)</button></div></div></div></div>`;
   renderCust();renderCart();$('#q').focus();fitPC()}
-function fitPC(){const t=document.querySelector('.top');if(t)document.documentElement.style.setProperty('--topH',t.offsetHeight+'px')}
+function fitPC(){const t=document.querySelector('.top');if(t)document.documentElement.style.setProperty('--topH',t.offsetHeight+'px');const z=parseFloat(document.documentElement.style.zoom)||1;document.documentElement.style.setProperty('--avail',Math.floor(innerHeight/z)+'px')}
 addEventListener('resize',fitPC);
 function vVentaM(){
   $('#view').innerHTML=`${ventaStrip()}<div class="mv"><div class="panel" id="custPanel"></div><div class="sbar" style="margin:0">${QIN}<button class="btn pri" data-act="search">Buscar</button></div><div id="sugg"></div>
@@ -1544,7 +1576,7 @@ function openPay(){
   modal(`${dlgHead('Cobrar')}<div><div class="muted small">Total a pagar · ${esc(c.id==='cf'?'Consumidor final':c.name)}</div><div class="due money">${money(T.total)}</div></div>
   ${(()=>{const q=L.filter(l=>{const p=prod(l.pid);return p.track&&l.qty>p.stock});return q.length?`<div class="banner warn" style="margin:0"><span>⚠ Sin stock suficiente: ${q.map(l=>esc(l.name)).join(', ')}. Se venderá igual y el stock quedará en negativo.</span></div>`:''})()}
   <div><div class="muted small" style="margin-bottom:6px">Forma de pago</div><div class="paymodes">${MODES.map(([m,n])=>`<button class="btn" data-act="payMode" data-m="${m}">${n}</button>`).join('')}</div></div>
-  <div id="payrows" style="display:grid;gap:8px">${rows}</div>
+  <div id="payrows" style="display:grid;gap:8px">${rows}</div>${bkSel('pay_bk','','Banco que recibe (transferencia, tarjeta o QR)')}
   <div class="quick" id="payquick">${bills.map(x=>`<button class="btn" data-act="cashQuick" data-v="${x}">${x===T.total?'Exacto':money(x)}</button>`).join('')}</div>
   <div class="muted small" id="paymixhint" style="display:none">Ej.: total $20 → Efectivo $15 y pulse "Resto" en Transferencia para completar $5.</div>
   <div class="change" id="payInfo"></div>
@@ -1589,7 +1621,7 @@ function finishSale(pays,change,balance,due){
     pays,change,seller:attName(),prof:S.cfg.cur||'',credit:balance>0,balance,due:due||'',abonos:[],status:'ok',sessionId:S.caja?S.caja.id:null};
   for(const l of sale.lines){const p=prod(l.pid);if(p&&p.track){p.stock=r2(p.stock-l.qty);S.moves.push({id:uid(),ts:sale.ts,pid:p.id,name:p.name,type:'venta',qty:-l.qty,ref:sale.num})}}
   if(S.moves.length>4000)S.moves=S.moves.slice(-3000);
-  S.sales.push(sale);lgSale(sale);S.cfg.seq++;S.cart=newCart();save(true);
+  {const bq=document.getElementById('pay_bk');if(bq&&bq.value&&pays.some(q=>q.m!=='efectivo'&&q.m!=='credito'))sale.bk=bq.value}S.sales.push(sale);lgSale(sale);S.cfg.seq++;S.cart=newCart();save(true);
   render();showReceipt(sale,true);
   if(S.cfg.waAuto&&c.id!=='cf'){const n=waNum(c.tel);if(n)waOpen(sale,n)}}
 function openPayCredit(T,c){
@@ -2013,7 +2045,7 @@ function lgTag(){if(!Array.isArray(S.ledger)||S.ledgerU)return;S.ledger.forEach(
 function lgTs(dk){return !dk||dk>=today()?Date.now():dayStart(dk)+12*36e5}
 function lgAdd(acc,amt,type,concept,o){o=o||{};amt=r2(amt);if(!amt)return null;const ts=o.ts||Date.now();
   const e={id:uid(),ts,d:dkey(ts),acc,amt,type,concept:String(concept||'').slice(0,160),ref:o.ref||'',sid:o.sid===undefined?(S.caja?S.caja.id:null):o.sid,by:o.by||S.cfg.cur||''};e.u=o.u!==undefined?o.u:e.by;e.dev=DEV;if(o.pc)e.pc=o.pc;if(o.nl)e.nl=1;
-  if(o.grp)e.grp=o.grp;if(o.of)e.of=o.of;if(o.rv)e.rv=o.rv;if(o.cp)e.cp=o.cp;S.ledger.push(e);return e}
+  if(o.grp)e.grp=o.grp;if(o.of)e.of=o.of;if(o.rv)e.rv=o.rv;if(o.cp)e.cp=o.cp;if(o.bk)e.bk=o.bk;else if(acc==='banco'){const d=bkDef();if(d)e.bk=d}S.ledger.push(e);return e}
 function lgBalU(acc,u){return r2(S.ledger.reduce((a,e)=>e.acc===acc&&(e.u||e.by||'')===(u||'')?a+e.amt:a,0))}
 const cUser=()=>S.cfg.cur||'';
 const lgMine=e=>e.acc!=='caja'||(e.u||e.by||'')===cUser();
@@ -2024,12 +2056,12 @@ function lgKey(e){return e.type==='anulacion'?(e.of||'anulacion'):e.type}
 function lgRevd(e){return S.ledger.some(x=>x.rv===e.id)}
 function lgRev(e,label){if(e.type==='anulacion'||lgRevd(e))return;
   if(e.acc==='porconfirmar'&&(e.type==='venta'||e.type==='abono'))S.ledger.filter(x=>x.pc===e.id&&x.type==='aprobado'&&!lgRevd(x)).forEach(x=>lgRev(x,label));
-  const o={ref:e.ref,of:e.type,rv:e.id,cp:e.cp};if(e.grp)o.grp=e.grp;lgAdd(e.acc,-e.amt,'anulacion',label+' · '+e.concept,o)}
+  const o={ref:e.ref,of:e.type,rv:e.id,cp:e.cp,bk:e.bk};if(e.grp)o.grp=e.grp;lgAdd(e.acc,-e.amt,'anulacion',label+' · '+e.concept,o)}
 function lgRevRef(ref,label,types){for(const e of S.ledger.slice())if(e.ref===ref&&(!types||types.includes(e.type)))lgRev(e,label)}
 function lgSale(s){const c=r2(s.pays.filter(p=>p.m==='efectivo').reduce((a,p)=>a+p.amt,0)-(s.change||0)),nm=(s.credit?'Abono inicial ':'Venta ')+s.num;
   lgAdd('caja',c,'venta',nm,{ref:s.id,ts:s.ts,sid:s.sessionId});
   const B={};for(const p of s.pays)if(p.m!=='efectivo'&&p.m!=='credito')B[p.m]=(B[p.m]||0)+p.amt;
-  const bk=userBanco(cUser())?'banco':'porconfirmar';for(const m in B)lgAdd(bk,B[m],'venta',nm+' · '+PAY[m].n,{ref:s.id,ts:s.ts,sid:s.sessionId})}
+  const bk=userBanco(cUser())?'banco':'porconfirmar';for(const m in B)lgAdd(bk,B[m],'venta',nm+' · '+PAY[m].n,{ref:s.id,ts:s.ts,sid:s.sessionId,bk:s.bk})}
 function lgWarn(acc){const b=lgBal(acc);if(b<0)toast('El saldo de '+ACC[acc]+' quedó en '+money(b)+'. Falta registrar un ingreso, depósito o transferencia.',1)}
 function lgSince(ts){return S.ledger.filter(e=>e.ts>=ts&&lgMine(e))}
 function lgSum(L){const o={ci:0,ce:0,tcb:0,tcs:0,bi:0,be:0,aj:0};
@@ -2055,13 +2087,13 @@ function pcMine(u){const L=pcItems(u),sm=pcSum(L);if(!L.length&&userBanco(u))ret
 function pcOwner(){const L=pcItems(undefined,1).filter(x=>x.st==='pend');if(!L.length)return '';
   return `<div class="panel" style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><div><h3 style="margin:0">⏳ Por confirmar en Banco (${L.length})</h3><div class="muted small">Dinero cobrado por transferencia que aún no se suma al Banco. Marque las que ya le llegaron.</div></div><div><b class="money">${money(pcSum(L).pend)}</b></div></div>
   <div class="tblw" style="max-height:300px;overflow:auto;margin-top:8px"><table><tbody>${L.map(x=>`<tr><td><input type="checkbox" class="pcchk" data-id="${x.e.id}" style="width:auto"></td><td style="white-space:nowrap">${fmtDT(x.e.ts)}</td><td>${esc(x.e.u||x.e.by||'')}</td><td>${esc(x.e.concept)}</td><td class="r money">${money(x.e.amt)}</td><td><button class="btn sm" data-act="pcNo" data-id="${x.e.id}">No llegó</button></td></tr>`).join('')}</tbody></table></div>
-  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" data-act="pcAll">Marcar todas</button><button class="btn sm pri" data-act="pcApprove">Aprobado (seleccionadas)</button></div></div>`}
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:flex-end">${bkSel('pc_bk','','Se acredita en')}<button class="btn sm" data-act="pcAll">Marcar todas</button><button class="btn sm pri" data-act="pcApprove">Aprobado (seleccionadas)</button></div></div>`}
 const lgSg=v=>`<span style="color:var(${v<0?'--bad':'--ok'})">${v<0?'-':'+'}${money(Math.abs(v)).replace('-','')}</span>`;
 function lgPanel(acc){
   const bal=lgBal(acc),cats=lgCats(acc),H=lgHist(acc),C=acc==='caja',c=S.caja;
   const btn=(a,t,x)=>`<button class="btn sm" data-act="${a}" ${x}>${t}</button>`;
   const rows=LGCAT.filter(([k])=>cats[k]).map(([k,n])=>`<tr><td>${n}</td><td class="r money">${lgSg(cats[k])}</td></tr>`).join('');
-  return `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div><h3 style="margin:0">${C?'💵 Dinero en Caja':'🏦 Dinero en Banco'}</h3><div class="muted small">${C?(c?'Turno abierto desde '+fmtDT(c.ts)+(c.who?' · '+esc(c.who):''):'Caja cerrada'):'Cuenta bancaria del negocio'}</div></div><div style="text-align:right"><div class="muted small">${C?'Saldo esperado en caja':'Saldo en banco'}</div><b class="money" style="font-size:26px;color:var(${bal<0?'--bad':'--fg'})">${money(bal)}</b></div></div>
+  return `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap"><div><h3 style="margin:0">${C?'💵 Dinero en Caja':'🏦 Dinero en Banco'}</h3><div class="muted small">${C?(c?'Turno abierto desde '+fmtDT(c.ts)+(c.who?' · '+esc(c.who):''):'Caja cerrada'):bkMini()}</div></div><div style="text-align:right"><div class="muted small">${C?'Saldo esperado en caja':'Saldo en banco'}</div><b class="money" style="font-size:26px;color:var(${bal<0?'--bad':'--fg'})">${money(bal)}</b></div></div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin:12px 0">${C?btn('lgMove','Ingreso','data-acc="caja" data-t="ingreso"')+btn('lgMove','Retiro','data-acc="caja" data-t="retiro"')+btn('lgExp','Gasto','data-p="caja"')+`<button class="btn sm pri" data-act="lgTr" data-from="caja">Transferir a Banco</button>`:btn('lgMove','Depósito / ingreso','data-acc="banco" data-t="ingreso"')+btn('lgExp','Gasto desde banco','data-p="banco"')+`<button class="btn sm pri" data-act="lgTr" data-from="banco">Pasar a Caja</button>`}</div>
   <h4 class="tsec" style="margin-top:4px">Resumen · ${LG.r==='hoy'?'hoy':LG.r==='7'?'últimos 7 días':LG.r==='mes'?'este mes':'todo'}</h4>${rows?`<table><tbody>${rows}</tbody></table>`:'<div class="muted small">Sin movimientos en este período.</div>'}
   <h4 class="tsec">Historial de movimientos</h4>${H.length?`<div class="tblw" style="max-height:340px;overflow:auto"><table><thead><tr><th>Fecha</th><th>Detalle</th><th class="r">Monto</th><th class="r">Saldo</th><th></th></tr></thead><tbody>${H.slice(0,60).map(e=>`<tr><td style="white-space:nowrap">${fmtDT(e.ts)}</td><td><span class="pill ${e.type==='anulacion'?'bad':e.type==='transfer'?'warn':'ok'}">${LGT[e.type]||e.type}</span> ${esc(e.concept)}${e.by?` <span class="muted small">· ${esc(e.by)}</span>`:''}</td><td class="r money">${lgSg(e.amt)}</td><td class="r money">${money(e.run)}</td><td>${['ingreso','retiro','transfer'].includes(e.type)&&!lgRevd(e)?`<button class="btn sm" data-act="lgUndo" data-id="${e.id}" title="Anular este movimiento" aria-label="Anular">↩</button>`:''}</td></tr>`).join('')}</tbody></table></div>${H.length>60?`<div class="muted small">Se muestran los últimos 60 de ${H.length}. Elija un período más corto.</div>`:''}`:'<div class="muted small">Sin movimientos en este período.</div>'}</div>`}
@@ -2075,10 +2107,10 @@ function vCaja(){
   if(c)h+=`<div class="panel" style="margin-top:28px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b>Terminar el turno</b><div class="muted small">Cuente el efectivo y revise el banco. El saldo del banco no se reinicia. No podrá vender hasta abrir una nueva caja.</div></div><button class="btn bad" data-act="cajaAsk">Cerrar caja…</button></div>`;
   h+=`<h3 style="margin:20px 0 8px">Cierres anteriores</h3><div class="tblw">${S.cajaHist.length?`<table><thead><tr><th>Apertura</th><th>Cierre</th><th>Responsable</th><th class="r">Ventas</th><th class="r">Caja esperado</th><th class="r">Caja contado</th><th class="r">Dif. caja</th><th class="r">Banco sistema</th><th class="r">Banco real</th><th class="r">Dif. banco</th><th></th></tr></thead><tbody>${S.cajaHist.slice().reverse().slice(0,40).map(x=>{const b=x.bank;return `<tr><td>${fmtDT(x.ts)}</td><td>${fmtDT(x.closeTs)}</td><td>${esc(x.who||'')}</td><td class="r money">${money(x.sales)}</td><td class="r money">${money(x.expected)}</td><td class="r money">${money(x.counted)}</td><td class="r"><span class="pill ${Math.abs(x.diff)<0.005?'ok':'bad'}">${money(x.diff)}</span></td><td class="r money">${b?money(b.sys):'—'}</td><td class="r money">${b&&b.real!==null?money(b.real):'—'}</td><td class="r">${b&&b.diff!==null?`<span class="pill ${Math.abs(b.diff)<0.005?'ok':'bad'}">${money(b.diff)}</span>`:'—'}</td><td><button class="btn sm" data-act="cierreDet" data-id="${x.id}">Detalle</button></td></tr>`}).join('')}</tbody></table>`:empty('Aún no hay cierres de caja.')}</div>`;
   $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">Caja y Banco</h2><div class="seg">${[['hoy','Hoy'],['7','7 días'],['mes','Este mes'],['todo','Todo']].map(([k,n])=>`<button data-act="lgRange" data-k="${k}" class="${LG.r===k?'on':''}">${n}</button>`).join('')}</div></div>${h}`}
-function lgMoveModal(acc,t){const T=acc==='ahorro'?(t==='ingreso'?'Depósito en ahorros':'Retiro de ahorros'):acc==='banco'?'Depósito / ingreso bancario':t==='ingreso'?'Ingreso de efectivo':'Retiro de efectivo';
-  modal(`${dlgHead(T)}<div class="fgrid"><label class="f">Monto<input inputmode="decimal" autocomplete="off" id="m_amt" type="text" autofocus></label><label class="f">Fecha<input id="m_d" type="date" value="${today()}" max="${today()}"></label></div><label class="f">Concepto<input id="m_why" placeholder="${acc==='banco'?'Ej: depósito del administrador, cobro de cliente':t==='ingreso'?'Ej: cambio adicional':'Ej: retiro del administrador'}"></label><p class="muted small" style="margin:0">${t==='retiro'?'Un retiro no es un gasto del negocio. Si es un gasto (transporte, compras), use «Gasto».':'Es dinero que no viene de una venta ni de una transferencia entre Caja y Banco.'}</p><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="lgMoveDo" data-acc="${acc}" data-t="${t}">Registrar</button></div>`)}
-function lgTrModal(from,to){to=to||(from==='caja'?'banco':'caja');
-  modal(`${dlgHead('Transferir a '+ACC[to])}<div class="payinfo"><span>${ACC[from]} disponible</span><span class="money">${money(lgBal(from))}</span></div><div class="fgrid"><label class="f">Cantidad a transferir<input inputmode="decimal" autocomplete="off" id="t_amt" type="text" autofocus></label><label class="f">Fecha<input id="t_d" type="date" value="${today()}" max="${today()}"></label></div><label class="f">Motivo u observación<input id="t_why" placeholder="Ej: depósito del día"></label><p class="muted small" style="margin:0">Se descuenta de ${ACC[from]} y se suma a ${ACC[to]}. No es un gasto ni una venta.</p><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="lgTrDo" data-from="${from}" data-to="${to}">Transferir</button></div>`)}
+function lgMoveModal(acc,t,bk){const T=acc==='ahorro'?(t==='ingreso'?'Depósito en ahorros':'Retiro de ahorros'):acc==='banco'?'Depósito / ingreso bancario':t==='ingreso'?'Ingreso de efectivo':'Retiro de efectivo';
+  modal(`${dlgHead(T)}<div class="fgrid"><label class="f">Monto<input inputmode="decimal" autocomplete="off" id="m_amt" type="text" autofocus></label><label class="f">Fecha<input id="m_d" type="date" value="${today()}" max="${today()}"></label></div>${acc==='banco'?bkSel('m_b',bk||'','Banco / cuenta'):''}<label class="f">Concepto<input id="m_why" placeholder="${acc==='banco'?'Ej: depósito del administrador, cobro de cliente':t==='ingreso'?'Ej: cambio adicional':'Ej: retiro del administrador'}"></label><p class="muted small" style="margin:0">${t==='retiro'?'Un retiro no es un gasto del negocio. Si es un gasto (transporte, compras), use «Gasto».':'Es dinero que no viene de una venta ni de una transferencia entre Caja y Banco.'}</p><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="lgMoveDo" data-acc="${acc}" data-t="${t}">Registrar</button></div>`)}
+function lgTrModal(from,to,bk){to=to||(from==='caja'?'banco':'caja');const bkOn=(from==='banco'||to==='banco');const av=from==='banco'&&banks().length>1?bkBal(bk&&bkGet(bk)?bk:bkDef()):lgBal(from);
+  modal(`${dlgHead('Transferir a '+ACC[to])}<div class="payinfo"><span>${ACC[from]} disponible</span><span class="money" id="t_av">${money(av)}</span></div><div class="fgrid"><label class="f">Cantidad a transferir<input inputmode="decimal" autocomplete="off" id="t_amt" type="text" autofocus></label><label class="f">Fecha<input id="t_d" type="date" value="${today()}" max="${today()}"></label></div>${bkOn?bkSel('t_b',bk||'',from==='banco'?'Sale de este banco':'Entra a este banco',from==='banco'?'data-chg="tbAv"':''):''}<label class="f">Motivo u observación<input id="t_why" placeholder="Ej: depósito del día"></label><p class="muted small" style="margin:0">Se descuenta de ${ACC[from]} y se suma a ${ACC[to]}. No es un gasto ni una venta.</p><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="lgTrDo" data-from="${from}" data-to="${to}">Transferir</button></div>`)}
 function closeCajaModal(){const exp=lgBal('caja'),bs=lgBal('banco'),c=S.caja,sm=lgSum(lgSince(Math.min(c.ts,dayStart(dkey(c.ts)))));
   modal(`${dlgHead('Cerrar caja')}<div class="two" style="margin:0;gap:12px"><div class="panel"><h4 class="tsec" style="margin-top:0">💵 Caja</h4><div class="payinfo"><span>Saldo esperado según el sistema</span><span class="money">${money(exp)}</span></div><label class="f">Dinero físico contado<input inputmode="decimal" autocomplete="off" id="cc_amt" type="text" data-inp="ccDiff" autofocus></label><div id="ccd" class="muted"></div><label class="f">Observaciones de caja<input id="cc_note" placeholder="Ej: faltó cambio, billete falso"></label></div>
   ${userBanco(cUser())?`<div class="panel"><h4 class="tsec" style="margin-top:0">🏦 Banco</h4><div class="payinfo"><span>Saldo registrado por el sistema</span><span class="money">${money(bs)}</span></div><label class="f">Saldo real en la cuenta (opcional)<input inputmode="decimal" autocomplete="off" id="cb_amt" type="text" data-inp="ccDiff"></label><div id="cbd" class="muted"></div><label class="f">Observaciones del banco<input id="cb_note" placeholder="Ej: transferencia pendiente de acreditar"></label><label style="display:flex;gap:8px;align-items:center;margin-top:6px;font-size:13px"><input id="cb_adj" type="checkbox" style="width:auto"> Ajustar el saldo del sistema al saldo real</label></div>`:''}</div>
@@ -2115,7 +2147,7 @@ function vAhorros(){
   <div class="panel" style="margin-top:12px"><div style="display:flex;gap:6px;flex-wrap:wrap">${btn('lgMove','Depósito','data-acc="ahorro" data-t="ingreso"')+btn('lgMove','Retiro','data-acc="ahorro" data-t="retiro"')+btn('lgTr','Pasar de Caja a Ahorros','data-from="caja" data-to="ahorro"')+(userBanco(cUser())?btn('lgTr','Pasar de Banco a Ahorros','data-from="banco" data-to="ahorro"'):'')+btn('lgTr','Ahorros a Caja','data-from="ahorro" data-to="caja"')+(userBanco(cUser())?btn('lgTr','Ahorros a Banco','data-from="ahorro" data-to="banco"'):'')}</div><p class="muted small" style="margin:8px 0 0">Los ahorros están separados del dinero del negocio. Pasar dinero entre Caja, Banco y Ahorros no es una venta, ganancia ni gasto. No entran en el total Caja + Banco.</p></div>
   <h4 class="tsec">Por día</h4>${D.length?`<div class="tblw"><table><thead><tr><th>Día</th><th class="r">Ingresado</th><th class="r">Retirado</th><th class="r">Saldo acumulado</th></tr></thead><tbody>${D.map(k=>`<tr><td>${k}</td><td class="r money">${money(days[k].in)}</td><td class="r money">${money(days[k].out)}</td><td class="r money">${money(days[k].run)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="muted small">Sin movimientos en este período.</div>'}
   <h4 class="tsec">Historial</h4>${hist.length?`<div class="tblw" style="max-height:340px;overflow:auto"><table><thead><tr><th>Fecha</th><th>Detalle</th><th class="r">Monto</th><th class="r">Saldo</th><th></th></tr></thead><tbody>${hist.slice(0,80).map(e=>`<tr><td style="white-space:nowrap">${fmtDT(e.ts)}</td><td><span class="pill ${e.type==='anulacion'?'bad':e.type==='transfer'?'warn':'ok'}">${LGT[e.type]||e.type}</span> ${esc(e.concept)}${e.by?` <span class="muted small">· ${esc(e.by)}</span>`:''}</td><td class="r money">${lgSg(e.amt)}</td><td class="r money">${money(e.run)}</td><td>${e.type==='anulacion'||lgRevd(e)?'':`<button class="btn sm" data-act="lgUndo" data-id="${e.id}">Anular</button>`}</td></tr>`).join('')}</tbody></table></div>`:'<div class="muted small">Aún no hay movimientos de ahorro.</div>'}`}
-function lgRefresh(){if(view==='caja')vCaja();else if(view==='ahorros')vAhorros()}
+function lgRefresh(){if(view==='caja')vCaja();else if(view==='ahorros')vAhorros();else if(view==='banco')vBanco()}
 
 /* ===================== REPORTES ===================== */
 const R={f:addDays(today(),-6),t:today(),auto:true};
@@ -2162,7 +2194,8 @@ function printerPanel(){const c=S.cfg,P=prn(),N=(k,l,v,st,mn,mx)=>`<label class=
   <p class="muted small" style="margin:8px 0 0">«Líneas en blanco al final»: súbalo si la impresora corta antes de terminar el mensaje de agradecimiento. En el cuadro de impresión del navegador deje <b>Márgenes: Ninguno</b>, <b>Escala: 100 %</b> y desactive «Encabezados y pies de página».</p>
   <div class="ft" style="justify-content:flex-start;margin-top:12px"><button class="btn pri" data-act="printTest">Imprimir ticket de prueba</button><button class="btn" data-act="printerReset">Restablecer (H-58B)</button></div></div>`}
 let SETTAB='neg';
-function vAjustes(){const c=S.cfg;const T2=k=>`<input type="number" step="1" min="1" data-cfg="${k}" data-t="n" value="${c[k]}"> unidades`;const T=(k,l,t)=>`<label class="f">${l}<input data-cfg="${k}" data-t="${t||'s'}" value="${esc(c[k])}" ${t==='n'?'type="number" step="1"':''}></label>`;
+function vAjustes(){vAjustes0();bizLock()}
+function vAjustes0(){const c=S.cfg;const T2=k=>`<input type="number" step="1" min="1" data-cfg="${k}" data-t="n" value="${c[k]}"> unidades`;const T=(k,l,t)=>`<label class="f">${l}<input data-cfg="${k}" data-t="${t||'s'}" value="${esc(c[k])}" ${t==='n'?'type="number" step="1"':''}></label>`;
   $('#view').innerHTML=`<div class="bar"><h2>Ajustes</h2></div><div class="stabs" data-st="${SETTAB}">${[['neg','🏪 Negocio'],['vta','🛒 Ventas'],['tick','🧾 Tickets'],['apa','🎨 Apariencia'],['usr','👥 Usuarios'],['red','🌐 Equipos y nube'],['dat','💾 Datos']].filter(x=>(x[0]!=='dat'&&x[0]!=='red')||isOwner()).map(([k,n])=>`<button class="btn sm${SETTAB===k?' on':''}" data-act="setTab" data-t="${k}">${n}</button>`).join('')}</div>
   <div class="panel" data-sec="neg" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Datos del negocio</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div style="width:64px;height:64px;border:1px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface2)">${c.logo?`<img src="${c.logo}" alt="" style="max-width:100%;max-height:100%">`:'<span class="muted small">Sin logo</span>'}</div><div><b>Logo de su negocio</b><div class="muted small" style="margin-bottom:6px">Sale junto al nombre y en sus comprobantes.</div><button class="btn sm" data-act="logoPick">${c.logo?'Cambiar logo':'Subir logo'}</button>${c.logo?' <button class="btn sm bad" data-act="logoDel">Quitar</button>':''}</div></div><div class="fgrid">${T('name','Nombre comercial')}${T('ruc','RUC')}${T('addr','Dirección')}${T('tel','Teléfono')}
    <label class="f">Régimen<select data-cfg="regimen" data-t="s">${['RIMPE Negocio Popular','RIMPE Emprendedor','Régimen General','Persona natural no obligada'].map(x=>`<option ${c.regimen===x?'selected':''}>${x}</option>`).join('')}</select></label>
@@ -2290,7 +2323,7 @@ A.waWeb=()=>{const w=Math.min(480,screen.availWidth),h=screen.availHeight,l=(scr
 A.netToggle=()=>{S.cfg.offline=!S.cfg.offline;save(true);headState();toast(S.cfg.offline?'Modo sin internet: no se usará la red.':'Se usará internet cuando haya conexión.')};
 window.addEventListener('online',()=>headState());window.addEventListener('offline',()=>headState());
 /* ===== SINCRONIZACIÓN (Supabase) ===== */
-const SK=['products','customers','suppliers','sales','moves','expenses','promos'];
+const SK=['products','customers','suppliers','sales','moves','expenses','promos','requests'];
 function hsh(o,sk){const s=JSON.stringify(o,(k,v)=>k==='_u'||(sk&&k==='stock')?undefined:v);let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)+s.length}
 function sHdr(){const h={apikey:S.cfg.syncKey,'Content-Type':'application/json'};if(S.cfg.syncKey.startsWith('eyJ'))h.Authorization='Bearer '+S.cfg.syncKey;return h}
 function markDel(k,id){if(!S.cfg.syncUrl)return;const sy=S.sync=S.sync||{h:{},cur:null,started:false};sy.del=sy.del||{};sy.del[k+':'+id]=Date.now()}
@@ -2311,11 +2344,12 @@ function sApply(k,x){
 function sFetch(u,o){const c=new AbortController(),t=setTimeout(()=>c.abort(),20000);return fetch(u,{...o,signal:c.signal}).finally(()=>clearTimeout(t))}
 function sRows(rows){const sy=S.sync;let ch=0;
     for(const k of SK)for(const x of rows)if(x.kind===k)ch+=sApply(k,x);
+    for(const x of rows)if(x.kind==='biz')ch+=bizApply(x);
     for(const x of rows)if(x.kind==='sellers'){const M=S.cfg.sellMeta=S.cfg.sellMeta||{},rm=x.data.meta||{};
       for(const n of x.data.list||[])if(!S.sellers.includes(n)&&!(M[n]&&M[n].d)){S.sellers.push(n);ch++}
       for(const n in rm){const l=M[n],r=rm[n];if(l&&l.t>=r.t)continue;M[n]=r;const i=S.sellers.indexOf(n);
         if(r.d){if(i>=0){S.sellers.splice(i,1);S.cfg.recentSellers=(S.cfg.recentSellers||[]).filter(y=>y!==n);if(S.cfg.cur===n)S.cfg.cur='';ch++}}else if(i<0){S.sellers.push(n);ch++}}
-      if(x.data.pins){const P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{},rt=x.data.pinT||{};for(const k in x.data.pins){if(!(k in P)||(rt[k]||0)>(T[k]||0)){if(P[k]!==x.data.pins[k])ch++;P[k]=x.data.pins[k];T[k]=rt[k]||0}}}if(x.data.bancoUsers)S.cfg.bancoUsers=Object.assign({},S.cfg.bancoUsers,x.data.bancoUsers);if(x.data.prof&&(x.data.prof.t||0)>((S.cfg.prof||{}).t||0)){S.cfg.prof=x.data.prof;ch++}if(x.data.alias)S.cfg.alias=Object.assign({},x.data.alias,S.cfg.alias||{});sy.h['sellers:all']=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},M,S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{}])}
+      if(x.data.pins){const P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{},rt=x.data.pinT||{};for(const k in x.data.pins){if(!(k in P)||(rt[k]||0)>(T[k]||0)){if(P[k]!==x.data.pins[k])ch++;P[k]=x.data.pins[k];T[k]=rt[k]||0}}}if(x.data.bancoUsers)S.cfg.bancoUsers=Object.assign({},S.cfg.bancoUsers,x.data.bancoUsers);if(x.data.prof&&(x.data.prof.t||0)>((S.cfg.prof||{}).t||0)){S.cfg.prof=x.data.prof;ch++}if(x.data.alias)S.cfg.alias=Object.assign({},x.data.alias,S.cfg.alias||{});if(x.data.banks&&(x.data.banksT||0)>(S.cfg.banksT||0)){S.cfg.banks=x.data.banks;S.cfg.bankDef=x.data.bankDef||'';S.cfg.banksT=x.data.banksT;ch++}sy.h['sellers:all']=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},M,S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{},S.cfg.banks||[],S.cfg.bankDef||''])}
     ch+=sRowsLg(rows);try{ch+=applyAlias()}catch(e){}
   return ch}
 /* 6B-2: libro y cierres, solo se AGREGAN por id (nunca se sobrescribe ni se borra) */
@@ -2358,7 +2392,8 @@ async function sPush(){
   const sy=S.sync,out=[];
   for(const k of SK)for(const o of S[k]){const key=k+':'+o.id,h=hsh(o,k==='products');if(sy.h[key]!==h)out.push({key,h,row:{id:key,kind:k,data:o,u:o._u||o.ts||0,dev:DEV}})}
   for(const key in (sy.del||{})){if(sy.h[key]==='del')continue;const p=key.indexOf(':'),k=key.slice(0,p),id=key.slice(p+1);out.push({key,h:'del',row:{id:key,kind:k,data:{id,_del:1},u:sy.del[key],dev:DEV}})}
-  const sh=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},S.cfg.sellMeta||{},S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{}]);if(sy.h['sellers:all']!==sh)out.push({key:'sellers:all',h:sh,row:{id:'sellers:all',kind:'sellers',data:{list:S.sellers,pins:S.cfg.pins||{},pinT:S.cfg.pinT||{},meta:S.cfg.sellMeta||{},bancoUsers:S.cfg.bancoUsers||{},prof:S.cfg.prof||{},alias:S.cfg.alias||{}},u:Date.now(),dev:DEV}});
+  if(isOwner()){const sn=bizSnap(),bh=hsh(sn);if(sy.h['biz:cfg']!==bh){const bt=Date.now();S.cfg.bizT=bt;out.push({key:'biz:cfg',h:bh,row:{id:'biz:cfg',kind:'biz',data:{cfg:sn,t:bt},u:bt,dev:DEV}})}}
+  const sh=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},S.cfg.sellMeta||{},S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{},S.cfg.banks||[],S.cfg.bankDef||'']);if(sy.h['sellers:all']!==sh)out.push({key:'sellers:all',h:sh,row:{id:'sellers:all',kind:'sellers',data:{list:S.sellers,pins:S.cfg.pins||{},pinT:S.cfg.pinT||{},meta:S.cfg.sellMeta||{},bancoUsers:S.cfg.bancoUsers||{},prof:S.cfg.prof||{},alias:S.cfg.alias||{},banks:S.cfg.banks||[],bankDef:S.cfg.bankDef||'',banksT:S.cfg.banksT||0},u:Date.now(),dev:DEV}});
   for(let i=0;i<out.length;i+=25){const c=out.slice(i,i+25);
     const r=await sFetch(S.cfg.syncUrl+'/rest/v1/records?on_conflict=id',{method:'POST',headers:{...sHdr(),Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(c.map(x=>x.row))});
     if(!r.ok)throw new Error('envío '+r.status);
@@ -2391,7 +2426,10 @@ A.cloudCode=()=>{try{const o=JSON.parse(atob($('#sy_c').value.trim()));if(!o.u||
 A.cloudFull=()=>{const sy=S.sync=S.sync||{h:{},cur:null,started:false};sy.cur=null;sy.ok=0;save(true);closeModal();runSync(true)};
 A.cloudSave=()=>{S.cfg.syncUrl=$('#sy_u').value.trim().replace(/\/+$/,'');S.cfg.syncKey=$('#sy_k').value.trim();save(true);closeModal();runSync(true)};
 /* ===================== CRÉDITOS ===================== */
-var CR={f:'open',q:'',photo:'',from:''};
+var CR={f:'open',q:'',photo:'',from:'',tab:window.CRtab0||'deuda'};
+var CB={f:today(),t:today(),auto:true};
+function crTabs(){return `<div class="seg" role="tablist" style="margin-bottom:12px">${[['deuda','📒 Por cobrar'],['cobrados','✅ Cobrados']].map(([k,n])=>`<button role="tab" data-act="crTab" data-k="${k}" class="${CR.tab===k?'on':''}">${n}</button>`).join('')}</div>`}
+A.crTab=el=>{CR.tab=el.dataset.k;if(CR.tab==='cobrados')CB.auto=true;vCreditos()};
 function crSales(cid,all){return S.sales.filter(s=>s.customerId===cid&&s.status==='ok'&&s.credit&&(all||s.balance>0)).sort((a,b)=>a.ts-b.ts)}
 function crPaid(s){return r2((s.abonos||[]).reduce((a,x)=>a+x.amt,0))}
 function crOrig(s){return r2(s.balance+crPaid(s))}
@@ -2401,8 +2439,9 @@ function crClients(){
   const ids=[...new Set(S.sales.filter(s=>s.status==='ok'&&s.credit).map(s=>s.customerId))];
   return ids.map(id=>{const L=crSales(id,true),open=L.filter(s=>s.balance>0);return {c:cust(id),L,open,debt:r2(open.reduce((a,s)=>a+s.balance,0)),orig:r2(open.reduce((a,s)=>a+crOrig(s),0)),over:open.filter(crOver)}}).filter(x=>x.c)}
 function vCreditos(){
+  if(CR.tab==='cobrados')return vCobrados();
   const D=crClients(),tot=r2(D.reduce((a,x)=>a+x.debt,0)),ven=r2(D.reduce((a,x)=>a+x.over.reduce((b,s)=>b+s.balance,0),0)),nv=D.filter(x=>x.over.length).length,nd=D.filter(x=>x.debt>0).length;
-  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">Créditos</h2><button class="btn" data-act="crAll">Recordar a vencidos${nv?' · '+nv:''}</button></div>
+  $('#view').innerHTML=`${crTabs()}<div class="bar"><h2 style="margin-right:auto">Créditos</h2><button class="btn" data-act="crAll">Recordar a vencidos${nv?' · '+nv:''}</button></div>
   <div class="kpis"><div class="panel"><div class="muted small">Nos deben en total</div><div class="due">${money(tot)}</div><div class="muted small">${nd} cliente(s) con deuda</div></div><div class="panel"><div class="muted small">Ya vencido</div><div class="due" style="color:var(--bad)">${money(ven)}</div><div class="muted small">${nv} cliente(s)</div></div></div>
   <div class="bar"><input id="crq" class="grow" placeholder="Buscar cliente" value="${esc(CR.q)}" data-inp="crList"><select id="crf" data-inp="crList">${[['open','Con deuda'],['paid','Pagados'],['all','Todos']].map(([k,n])=>`<option value="${k}" ${CR.f===k?'selected':''}>${n}</option>`).join('')}</select><label class="f" style="margin:0">Plazo por defecto (días)<input id="crd" inputmode="numeric" value="${S.cfg.crDays||0}" data-inp="crDays" style="width:90px"></label><button class="btn sm" data-act="crCleanAll">Quitar fotos de pagados</button></div><div id="crbody"></div>`;crList()}
 function crDays(){S.cfg.crDays=Math.max(0,Math.floor(num($('#crd').value)));save()}
@@ -2429,17 +2468,17 @@ function crDetail(cid){
 function collectModal(cid){
   const c=cust(cid),d=debt(cid);CR.photo='';
   modal(`${dlgHead('Registrar abono')}<div><b>${esc(c.name)}</b><div class="muted">Saldo pendiente: <b class="money">${money(d)}</b></div></div>
-  <div class="fgrid"><label class="f">Monto<input id="ab_amt" type="text" inputmode="decimal" autocomplete="off" value="${d}" autofocus></label><label class="f">Forma de pago<select id="ab_m">${['efectivo','transferencia','tarjeta','qr'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label><label class="f">Fecha del abono<input id="ab_d" type="date" value="${today()}" max="${today()}"></label><label class="f">Quién recibió<input id="ab_by" value="${esc(S.cfg.cur||'')}" placeholder="Responsable"></label></div>
+  <div class="fgrid"><label class="f">Monto<input id="ab_amt" type="text" inputmode="decimal" autocomplete="off" value="${d}" autofocus></label><label class="f">Forma de pago<select id="ab_m">${['efectivo','transferencia','tarjeta','qr'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label>${bkSel('ab_b','','Banco (si no es efectivo)')}<label class="f">Fecha del abono<input id="ab_d" type="date" value="${today()}" max="${today()}"></label><label class="f">Quién recibió<input id="ab_by" value="${esc(S.cfg.cur||'')}" placeholder="Responsable"></label></div>
   <label class="f">Observaciones (opcional)<input id="ab_n" placeholder="Ej.: llevó 3 cajas, paga el resto el viernes"></label>
   <label class="f">Foto del comprobante (opcional)<input id="ab_f" type="file" accept="image/*"></label><div id="ab_p" class="muted small"></div>
   <p class="muted small" style="margin:0">El abono se aplica primero a las ventas más antiguas.${' En efectivo suma a Caja; por transferencia, tarjeta o QR suma a Banco.'}</p>
   <div class="ft"><button class="btn" ${CR.from==='d'?`data-act="crOpen" data-id="${cid}"`:'data-act="closeModal"'}>Cancelar</button><button class="btn pri" data-act="collectDo" data-id="${cid}">Registrar abono</button></div>`)}
 function collectDo(cid){
-  const amt0=r2(num($('#ab_amt').value)),m=$('#ab_m').value;let amt=amt0;
+  const amt0=r2(num($('#ab_amt').value)),m=$('#ab_m').value,bkv=($('#ab_b')||{}).value||'';let amt=amt0;
   if(amt<=0)return toast('Ingrese un monto.',1);if(amt>debt(cid))return toast('El monto supera la deuda.',1);
   const dk=$('#ab_d').value||today(),ts=dk===today()?Date.now():dayStart(dk)+12*36e5,by=$('#ab_by').value.trim(),note=$('#ab_n').value.trim();let first=true;
   for(const s of crSales(cid)){if(amt<=0)break;const a=Math.min(amt,s.balance);s.balance=r2(s.balance-a);s.abonos=s.abonos||[];
-    s.abonos.push({ts,m,amt:a,by,note,photo:first?CR.photo:'',sessionId:S.caja?S.caja.id:null});first=false;if(s.balance<=0)s.paidTs=ts;amt=r2(amt-a);lgAdd(m==='efectivo'?'caja':userBanco(cUser())?'banco':'porconfirmar',a,'abono','Cobro '+(s.custName||'')+' · '+s.num+(m==='efectivo'?'':' · '+PAY[m].n),{ref:s.id,ts})}
+    s.abonos.push({ts,m,amt:a,by,note,photo:first?CR.photo:'',sessionId:S.caja?S.caja.id:null});first=false;if(s.balance<=0)s.paidTs=ts;amt=r2(amt-a);lgAdd(m==='efectivo'?'caja':userBanco(cUser())?'banco':'porconfirmar',a,'abono','Cobro '+(s.custName||'')+' · '+s.num+(m==='efectivo'?'':' · '+PAY[m].n),{ref:s.id,ts,bk:m==='efectivo'?'':bkv})}
   CR.photo='';save(true);closeModal();render();toast('Abono registrado.');if(CR.from==='d')crDetail(cid)}
 function imgShrink(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,700/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.55))};im.onerror=()=>res('');im.src=r.result};r.onerror=()=>res('');r.readAsDataURL(f)})}
 document.addEventListener('change',async e=>{if(e.target.id!=='ab_f')return;const f=e.target.files[0],p=$('#ab_p');if(!f){CR.photo='';p.textContent='';return}
@@ -2537,12 +2576,12 @@ A.retDo=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s)return;const L=
 /* ===== gastos del negocio ===== */
 const EXC=['Arriendo','Sueldos','Servicios (luz, agua, internet)','Transporte','Cuota de crédito','Compras menores','Otros'];
 function expRoll(){const m=today().slice(0,7);let ch=0;for(const e of S.expenses.filter(x=>x.rec&&!x.src&&!x.del)){let k=e.date.slice(0,7);while(k<m){const d=new Date(k+'-01T12:00:00');d.setMonth(d.getMonth()+1);k=d.toISOString().slice(0,7);const id='r'+e.id+'-'+k;if(!S.expenses.some(x=>x.id===id)){S.expenses.push({...e,id,src:e.id,rec:false,pay:'',date:k+'-'+String(Math.min(+e.date.slice(8),28)).padStart(2,'0')});ch++}}}if(ch)save(true)}
-function expModal(pre){const L=S.expenses.filter(e=>!e.del&&e.date>=R.f&&e.date<=R.t).sort((a,b)=>b.date.localeCompare(a.date));
-  modal(`${dlgHead('Gastos del negocio')}<div class="fgrid"><label class="f">Concepto<select id="ex_c">${EXC.map(c=>`<option>${c}</option>`).join('')}</select></label><label class="f">Monto<input id="ex_a" inputmode="decimal" autocomplete="off"></label><label class="f">Fecha<input id="ex_d" type="date" value="${today()}"></label><label class="f">Se pagó desde<select id="ex_p"><option value="caja" ${pre!=='banco'&&pre!==''?'selected':''}>Caja (efectivo)</option><option value="banco" ${pre==='banco'?'selected':''}>Banco</option><option value="" ${pre===''?'selected':''}>No descontar de ninguno</option></select></label></div><label class="f">Motivo o descripción<input id="ex_n" placeholder="Ej: COMPRA DE FUNDAS"></label><label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input id="ex_r" type="checkbox" style="width:auto"> Se repite cada mes (arriendo, sueldos…)</label><div class="ft" style="justify-content:flex-start"><button class="btn pri" data-act="expAdd">Guardar gasto</button></div><h4 class="tsec">${R.f} a ${R.t}</h4>${L.length?`<table><tbody>${L.map(e=>`<tr><td>${e.date}</td><td>${esc(e.cat)}${e.n?' · '+esc(e.n):''}${e.rec?' 🔁':''}${e.pay?` <span class="pill">${e.pay==='banco'?'Banco':'Caja'}</span>`:''}</td><td class="r money">${money(e.amt)}</td><td><button class="btn sm bad" data-act="expDel" data-id="${e.id}">✕</button></td></tr>`).join('')}</tbody></table>`:'<div class="muted small">Sin gastos en este período.</div>'}`,1)}
+function expModal(pre,bk){const L=S.expenses.filter(e=>!e.del&&e.date>=R.f&&e.date<=R.t).sort((a,b)=>b.date.localeCompare(a.date));
+  modal(`${dlgHead('Gastos del negocio')}<div class="fgrid"><label class="f">Concepto<select id="ex_c">${EXC.map(c=>`<option>${c}</option>`).join('')}</select></label><label class="f">Monto<input id="ex_a" inputmode="decimal" autocomplete="off"></label><label class="f">Fecha<input id="ex_d" type="date" value="${today()}"></label><label class="f">Se pagó desde<select id="ex_p"><option value="caja" ${pre!=='banco'&&pre!==''?'selected':''}>Caja (efectivo)</option><option value="banco" ${pre==='banco'?'selected':''}>Banco</option><option value="" ${pre===''?'selected':''}>No descontar de ninguno</option></select></label>${bkSel('ex_b',bk||'','Banco que pagó')}</div><label class="f">Motivo o descripción<input id="ex_n" placeholder="Ej: COMPRA DE FUNDAS"></label><label style="display:flex;gap:8px;align-items:center;margin:8px 0"><input id="ex_r" type="checkbox" style="width:auto"> Se repite cada mes (arriendo, sueldos…)</label><div class="ft" style="justify-content:flex-start"><button class="btn pri" data-act="expAdd">Guardar gasto</button></div><h4 class="tsec">${R.f} a ${R.t}</h4>${L.length?`<table><tbody>${L.map(e=>`<tr><td>${e.date}</td><td>${esc(e.cat)}${e.n?' · '+esc(e.n):''}${e.rec?' 🔁':''}${e.pay?` <span class="pill">${e.pay==='banco'?(bkName(e.bk)||'Banco'):'Caja'}</span>`:''}</td><td class="r money">${money(e.amt)}</td><td><button class="btn sm bad" data-act="expDel" data-id="${e.id}">✕</button></td></tr>`).join('')}</tbody></table>`:'<div class="muted small">Sin gastos en este período.</div>'}`,1)}
 A.expOpen=()=>{expRoll();expModal('')};
-A.expAdd=()=>{const amt=r2(num($('#ex_a').value));if(amt<=0)return toast('Ingrese el monto.',1);const ex={id:uid(),date:$('#ex_d').value||today(),cat:$('#ex_c').value,n:$('#ex_n').value.trim(),amt,rec:$('#ex_r').checked,by:S.cfg.cur||'',pay:$('#ex_p').value};S.expenses.push(ex);
-  if(ex.pay)lgAdd(ex.pay,-amt,'gasto',ex.cat+(ex.n?' · '+ex.n:''),{ref:ex.id,ts:lgTs(ex.date)});
-  save(true);expRoll();expModal(ex.pay);if($('#rbody'))repBody();lgRefresh();toast('Gasto guardado.');if(ex.pay)lgWarn(ex.pay)};
+A.expAdd=()=>{const amt=r2(num($('#ex_a').value));if(amt<=0)return toast('Ingrese el monto.',1);const ex={id:uid(),date:$('#ex_d').value||today(),cat:$('#ex_c').value,n:$('#ex_n').value.trim(),amt,rec:$('#ex_r').checked,by:S.cfg.cur||'',pay:$('#ex_p').value};if(ex.pay==='banco'&&$('#ex_b'))ex.bk=$('#ex_b').value;S.expenses.push(ex);
+  if(ex.pay)lgAdd(ex.pay,-amt,'gasto',ex.cat+(ex.n?' · '+ex.n:''),{ref:ex.id,ts:lgTs(ex.date),bk:ex.bk||''});
+  save(true);expRoll();expModal(ex.pay,ex.bk);if($('#rbody'))repBody();lgRefresh();toast('Gasto guardado.');if(ex.pay)lgWarn(ex.pay)};
 A.expDel=el=>guard('Borrar gasto',()=>{const e=S.expenses.find(x=>x.id===el.dataset.id);if(e){e.del=1;e.rec=false;lgRevRef(e.id,'Gasto borrado',['gasto'])}save(true);expModal(e&&e.pay);if($('#rbody'))repBody();lgRefresh()});
 function syncPending(){if(!S.cfg.syncUrl||!S.sync||!S.sync.started)return null;let n=0;try{for(const k of SK){if(k==='moves')continue;for(const o of S[k]||[])if(S.sync.h[k+':'+o.id]!==hsh(o,k==='products'))n++}}catch(e){return null}return n}
 A.offInfo=()=>{const ns=netState(),pn=syncPending(),cl=!!S.cfg.syncUrl;
@@ -2568,7 +2607,7 @@ A.cajasAll=()=>isOwner()?guard('Ver cajas de todos',()=>{const U=cajasUsers().ma
 A.pcAll=()=>document.querySelectorAll('.pcchk').forEach(x=>x.checked=true);
 A.pcApprove=()=>{if(!isOwner())return toast('Solo el administrador puede aprobar.',1);const ids=[...document.querySelectorAll('.pcchk:checked')].map(x=>x.dataset.id);if(!ids.length)return toast('Marque al menos una transferencia.',1);
   guardOwner('Aprobar '+ids.length+' transferencia(s)',()=>{let n=0,t=0;for(const id of ids){const e=S.ledger.find(x=>x.id===id);if(!e)continue;const it=pcItems(e.u||e.by||'',1).find(x=>x.e.id===id);if(!it||it.st!=='pend')continue;
-    const g=uid(),c='Aprobado · '+e.concept;lgAdd('porconfirmar',-e.amt,'aprobado',c,{ref:e.ref,grp:g,cp:'banco',pc:e.id,u:e.u});lgAdd('banco',e.amt,'aprobado',c,{ref:e.ref,grp:g,cp:'porconfirmar',pc:e.id,u:e.u});n++;t=r2(t+e.amt)}
+    const g=uid(),c='Aprobado · '+e.concept;lgAdd('porconfirmar',-e.amt,'aprobado',c,{ref:e.ref,grp:g,cp:'banco',pc:e.id,u:e.u});lgAdd('banco',e.amt,'aprobado',c,{ref:e.ref,grp:g,cp:'porconfirmar',pc:e.id,u:e.u,bk:e.bk||(($('#pc_bk')||{}).value||'')});n++;t=r2(t+e.amt)}
     save(true);toast(n?n+' aprobada(s): '+money(t)+' sumados al Banco.':'Nada que aprobar.');render()})};
 A.pcNo=el=>!isOwner()?toast('Solo el administrador puede hacerlo.',1):guardOwner('Marcar "No llegó"',()=>{const e=S.ledger.find(x=>x.id===el.dataset.id);if(!e||lgRevd(e))return;lgAdd('porconfirmar',-e.amt,'anulacion','No llegó · '+e.concept,{ref:e.ref,of:e.type,rv:e.id,nl:1,u:e.u});save(true);toast('Marcada como "No llegó".');render()});
 A.roleSet=el=>!isOwner()?toast('Solo el administrador puede cambiarlo.',1):guard('Cambiar perfil',()=>{const n=el.dataset.n,to=roleOf(n)==='dueno'?'empleado':'dueno';
@@ -2581,7 +2620,7 @@ A.attPick=()=>modal(`${dlgHead('¿Quién atiende?')}<div style="display:grid;gap
 A.attUse=el=>{S.cfg.att=el.dataset.n;save(true);closeModal();render()};
 A.bancoUser=el=>!isOwner()?toast('Solo el administrador puede cambiarlo.',1):guard('Cambiar Banco por usuario',()=>{const b=S.cfg.bancoUsers=S.cfg.bancoUsers||{};b[el.dataset.n]=userBanco(el.dataset.n)?false:true;save(true);render()});
 /* ===== CRÉDITOS COBRADOS HOY (Etapa 6) y CRÉDITOS OTORGADOS ===== */
-const CB={f:today(),t:today(),auto:true};
+/* CB se declara junto a CR (arriba) para que Cobrados abra bien al recargar */
 const crCred=s=>r2(s.total-s.pays.reduce((a,p)=>a+p.amt,0)+(s.change||0));
 function crAbonos(f,t){const a=dayStart(f),b=dayEnd(t),o=[];
   for(const s of S.sales){if(s.status!=='ok'||!s.credit)continue;let run=crCred(s);
@@ -2589,7 +2628,7 @@ function crAbonos(f,t){const a=dayStart(f),b=dayEnd(t),o=[];
   return o.sort((p,q)=>q.ts-p.ts)}
 function vCobrados(){
   if(CB.auto){CB.f=CB.t=today()}
-  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">Créditos cobrados</h2><div class="seg">${[['hoy','Hoy'],['ayer','Ayer'],['7','7 días'],['mes','Mes']].map(([k,n])=>`<button data-act="cbRng" data-k="${k}">${n}</button>`).join('')}</div><label class="f">Desde<input type="date" id="cb_f" value="${CB.f}" data-chg="cobr"></label><label class="f">Hasta<input type="date" id="cb_t" value="${CB.t}" data-chg="cobr"></label></div><div id="cbbody"></div>`;cbBody()}
+  $('#view').innerHTML=`${crTabs()}<div class="bar"><h2 style="margin-right:auto">Créditos cobrados</h2><div class="seg">${[['hoy','Hoy'],['ayer','Ayer'],['7','7 días'],['mes','Mes']].map(([k,n])=>`<button data-act="cbRng" data-k="${k}">${n}</button>`).join('')}</div><label class="f">Desde<input type="date" id="cb_f" value="${CB.f}" data-chg="cobr"></label><label class="f">Hasta<input type="date" id="cb_t" value="${CB.t}" data-chg="cobr"></label></div><div id="cbbody"></div>`;cbBody()}
 function cbBody(){
   CB.f=$('#cb_f').value||CB.f;CB.t=$('#cb_t').value||CB.t;
   const L=crAbonos(CB.f,CB.t),tot=r2(L.reduce((a,o)=>a+o.x.amt,0)),ef=r2(L.filter(o=>o.x.m==='efectivo').reduce((a,o)=>a+o.x.amt,0)),bk=r2(tot-ef);
@@ -2609,27 +2648,193 @@ A.cbRng=el=>{const k=el.dataset.k,t=today();CB.auto=false;CB.t=t;CB.f=k==='hoy'?
 A.hmode=el=>{H.mode=el.dataset.k;vHistorial()};
 CH.hbWarn=el=>{S.cfg.hbWarnH=+el.value||6;save(true);bellUpdate()};
 CH.cobr=el=>{if(el.type==='date')CB.auto=false;cbBody()};
+/*BANCOS*/
+/* ===== CONFIGURACIÓN DEL NEGOCIO COMPARTIDA: el administrador configura, los empleados la reciben solos ===== */
+/* Logo, datos del negocio, reglas de venta y todo lo del ticket. No incluye apariencia ni pantalla (son de cada equipo),
+   ni establecimiento / punto de emisión / secuencial (distintos en cada equipo). */
+const BIZ_KEYS=['name','ruc','addr','tel','regimen','docType','legal','logo','ivaRate','incIva','cfLimit','footer','tk','tkLogo','requireCaja','allowNeg','waAuto','listNames','t2','t3','paper','pPaper','pPrintable','pFont','pBold','pLogo','pDpi','feed','feedMm'];
+function bizSnap(){const o={};for(const k of BIZ_KEYS)if(S.cfg[k]!==undefined)o[k]=S.cfg[k];return o}
+function bizApply(x){const d=x.data||{},sn=d.cfg;if(!sn)return 0;const t=d.t||x.u||0,sy=S.sync;
+  if(t<=(S.cfg.bizT||0))return 0;
+  if(isOwner()&&S.cfg.bizT&&hsh(bizSnap())!==sy.h['biz:cfg'])return 0;
+  for(const k of BIZ_KEYS)if(k in sn)S.cfg[k]=sn[k];
+  S.cfg.bizT=t;sy.h['biz:cfg']=hsh(bizSnap());
+  try{setBizLogo();const b=$('#bname');if(b)b.textContent=S.cfg.name||'STAR'}catch(e){}return 1}
+/* Empleados: pantalla en solo lectura + solicitar cambios al administrador */
+const REQ_AREAS=['Datos del negocio / logo','Impresión del ticket','Reglas de venta o precios','Otro'];
+function bizLock(){const v=$('#view');if(!v)return;
+  if(isOwner()){const R=(S.requests||[]).filter(r=>!r.done).sort((a,b)=>b.ts-a.ts);if(!R.length)return;
+    const h=document.createElement('div');h.className='panel';h.style.marginBottom='16px';
+    h.innerHTML=`<h3 style="margin:0 0 4px">📨 Solicitudes de cambio (${R.length})</h3><p class="muted small" style="margin:0 0 8px">Sus empleados piden estos cambios. Hágalos en Ajustes y marque «Atendida».</p><div class="tblw"><table><tbody>${R.map(r=>`<tr><td style="white-space:nowrap">${fmtDT(r.ts)}</td><td>${esc(r.u||'')}</td><td><span class="pill">${esc(r.area||'')}</span> ${esc(r.text)}</td><td><button class="btn sm pri" data-act="reqDone" data-id="${r.id}">Atendida</button></td></tr>`).join('')}</tbody></table></div>`;
+    const bar=v.querySelector('.bar');bar?bar.after(h):v.prepend(h);return}
+  const mine=(S.requests||[]).filter(r=>r.u===cUser()).sort((a,b)=>b.ts-a.ts).slice(0,3);
+  const ban=k=>`<div class="panel bizban" data-sec="${k}" style="margin-bottom:16px"><b>🔒 Esto lo configura el administrador del negocio.</b><div class="muted small" style="margin:4px 0 8px">Usted ya recibe el logo, los datos y el formato del ticket automáticamente. Si necesita un cambio, solicítelo.</div><button class="btn sm pri reqbtn" data-act="reqOpen">Solicitar cambio al administrador</button>${mine.length?`<div class="muted small" style="margin-top:8px">Sus solicitudes: ${mine.map(r=>(r.done?'✓ atendida':'⏳ pendiente')+' · '+esc(r.text.slice(0,40))).join(' | ')}</div>`:''}</div>`;
+  const first=v.querySelector('[data-sec]');const html=['neg','vta','tick'].map(ban).join('');if(first)first.insertAdjacentHTML('beforebegin',html);
+  v.querySelectorAll('[data-sec="neg"],[data-sec="vta"],[data-sec="tick"]').forEach(c=>{if(c.classList.contains('bizban'))return;c.querySelectorAll('input,select,textarea,button').forEach(e=>{e.disabled=true});c.style.opacity='.9'})}
+A.reqOpen=()=>modal(`${dlgHead('Solicitar cambio al administrador')}<label class="f">¿Qué quiere cambiar?<select id="rq_a">${REQ_AREAS.map(a=>`<option>${a}</option>`).join('')}</select></label><label class="f">Explique el cambio<textarea id="rq_t" rows="4" placeholder="Ej: el ticket debería mostrar el teléfono nuevo"></textarea></label><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="reqSend">Enviar</button></div>`);
+A.reqSend=()=>{const t=$('#rq_t').value.trim();if(t.length<5)return toast('Explique el cambio que necesita.',1);
+  S.requests=S.requests||[];S.requests.push({id:uid(),ts:Date.now(),u:cUser(),area:$('#rq_a').value,text:t,done:0,_u:Date.now()});save(true);closeModal();toast('Solicitud enviada al administrador.');if($('#view'))vAjustes()};
+A.reqDone=el=>guardOwner('Marcar solicitud',()=>{const r=(S.requests||[]).find(x=>x.id===el.dataset.id);if(!r)return;r.done=1;r._u=Date.now();save(true);toast('Solicitud atendida.');bellUpdate();vAjustes()});
+
+/* ===================== BANCOS: varias cuentas, con logo y saldo por banco ===================== */
+/* Bancos y cooperativas más usados en Ecuador. El logo se busca en internet por la página web del banco;
+   si no hay internet o no se encuentra, se muestra un cuadro con el color y las iniciales del banco. */
+const BANKS_EC=[
+ {k:'pichincha',n:'Banco Pichincha',s:'PI',d:'pichincha.com',c:'#FFDD00',f:'#00305F'},
+ {k:'guayaquil',n:'Banco Guayaquil',s:'GY',d:'bancoguayaquil.com',c:'#E6007E',f:'#FFFFFF'},
+ {k:'produbanco',n:'Produbanco',s:'PR',d:'produbanco.com',c:'#007A3D',f:'#FFFFFF'},
+ {k:'banecuador',n:'BanEcuador',s:'BE',d:'banecuador.fin.ec',c:'#0B5CAD',f:'#FFFFFF'},
+ {k:'internacional',n:'Banco Internacional',s:'BI',d:'bancointernacional.com.ec',c:'#0A4DA2',f:'#FFFFFF'},
+ {k:'pacifico',n:'Banco del Pacífico',s:'PA',d:'bancodelpacifico.com',c:'#0072CE',f:'#FFFFFF'},
+ {k:'bolivariano',n:'Banco Bolivariano',s:'BO',d:'bolivariano.com',c:'#00843D',f:'#FFFFFF'},
+ {k:'austro',n:'Banco del Austro',s:'AU',d:'bancodelaustro.com',c:'#C8102E',f:'#FFFFFF'},
+ {k:'solidario',n:'Banco Solidario',s:'SO',d:'bancosolidario.com',c:'#F58220',f:'#FFFFFF'},
+ {k:'bgr',n:'Banco General Rumiñahui',s:'GR',d:'bgr.com.ec',c:'#1D4F91',f:'#FFFFFF'},
+ {k:'diners',n:'Diners Club',s:'DC',d:'dinersclub.com.ec',c:'#0079BE',f:'#FFFFFF'}];
+function bancoOK(){return isOwner()||userBanco(cUser())}
+const bkAll=()=>S.cfg.banks||[];
+const banks=()=>bkAll().filter(b=>!b.off);
+const bkGet=id=>bkAll().find(b=>b.id===id);
+const bkName=id=>{const b=bkGet(id);return b?b.name:''};
+function bkDef(){const L=banks();if(!L.length)return '';const d=L.find(b=>b.id===S.cfg.bankDef);return (d||L[0]).id}
+const bkOf=e=>{const b=e.bk&&bkGet(e.bk);return b?b.id:bkDef()};
+function bkBal(id){return r2(S.ledger.reduce((a,e)=>e.acc==='banco'&&bkOf(e)===id?a+e.amt:a,0))}
+const bkNum=b=>{const n=String(b.num||'');return !n?'Sin número':isOwner()?n:'•••• '+n.slice(-4)};
+function bkTouch(){S.cfg.banksT=Date.now()}
+function bkColor(name){let h=0;for(const c of String(name))h=(h*31+c.charCodeAt(0))%360;return `hsl(${h} 55% 38%)`}
+function bkInit(name){const w=String(name||'').replace(/^(banco|cooperativa|coop\.?)\s+(de(l)?\s+)?/i,'').trim().split(/\s+/).filter(Boolean);return ((w[0]||'?')[0]+((w[1]||w[0]||'')[1]||'')).toUpperCase()}
+function bkLogo(b,sz){sz=sz||46;
+  const u=b.d?'https://www.google.com/s2/favicons?domain='+encodeURIComponent(b.d)+'&sz=128':'';
+  return `<span class="bklg" style="--s:${sz}px;background:${esc(b.color||'#64748b')};color:${esc(b.fg||'#fff')}">${esc(b.s||bkInit(b.name))}${u?`<img src="${u}" alt="" loading="lazy" referrerpolicy="no-referrer" data-d="${esc(b.d)}" onload="bkImgOk(this)" onerror="bkImgErr(this)">`:''}</span>`}
+function bkImgErr(i){if(!i.dataset.t&&i.dataset.d){i.dataset.t=1;i.src='https://icons.duckduckgo.com/ip3/'+i.dataset.d+'.ico'}else i.remove()}
+function bkImgOk(i){if(i.naturalWidth&&i.naturalWidth<24)bkImgErr(i)}
+/* Lista desplegable de bancos (solo aparece si hay 2 o más) */
+function bkSel(id,sel,label,extra){const L=banks();if(L.length<2)return '';const g=bkGet(sel),s=g&&!g.off?g.id:bkDef();
+  return `<label class="f">${label}<select id="${id}" ${extra||''}>${L.map(b=>`<option value="${b.id}" ${b.id===s?'selected':''}>${esc(b.name)}${b.num?' · …'+esc(String(b.num).slice(-4)):''}</option>`).join('')}</select></label>`}
+/* Resumen pequeño que se ve dentro de Caja */
+function bkMini(){const L=banks();if(!L.length)return 'Cuenta bancaria del negocio';
+  return L.map(b=>`<span class="bkmini">${bkLogo(b,18)}<span>${esc(b.name.replace(/^Banco (del? )?/i,''))}</span> <b class="money">${money(bkBal(b.id))}</b></span>`).join('')+(bancoOK()?' <a href="#banco" class="small">Ver detalle</a>':'')}
+CH.tbAv=el=>{const a=$('#t_av');if(a&&el.value)a.textContent=money(bkBal(el.value))};
+
+function vBanco(){
+  if(!bancoOK()){$('#view').innerHTML='<div class="panel"><b>Este usuario no tiene acceso al Banco.</b></div>';return}
+  const own=isOwner(),L=bkAll(),act=banks(),tot=lgBalAll('banco'),f=lgFrom(),per={};
+  for(const b of L)per[b.id]={in:0,out:0};
+  for(const e of S.ledger){if(e.acc!=='banco'||e.ts<f||e.type==='anulacion'||lgRevd(e))continue;const q=per[bkOf(e)];if(!q)continue;if(e.amt>0)q.in=r2(q.in+e.amt);else q.out=r2(q.out-e.amt)}
+  const tin=r2(Object.values(per).reduce((a,x)=>a+x.in,0)),tout=r2(Object.values(per).reduce((a,x)=>a+x.out,0)),pend=r2(lgBalAll('porconfirmar')),per_=LG.r==='hoy'?'hoy':'período';
+  const btn=(a,t,x,c)=>`<button class="btn sm ${c||''}" data-act="${a}" ${x}>${t}</button>`;
+  const card=b=>{const q=per[b.id],bal=bkBal(b.id),d=bkDef()===b.id&&act.length>1;
+    return `<div class="bkcard ${b.off?'off':''}"><div class="bkh">${bkLogo(b,52)}<div class="bkt"><b>${esc(b.name)}</b>${d?' <span class="pill ok">Principal</span>':''}${b.off?' <span class="pill">Oculto</span>':''}
+      <div class="muted small">${esc(b.type||'Cuenta')} · <span>${esc(bkNum(b))}</span>${own&&b.num?` <button class="btn sm" data-act="bkCopy" data-id="${b.id}" title="Copiar número de cuenta" aria-label="Copiar número de cuenta">Copiar</button>`:''}</div>
+      ${b.holder?`<div class="muted small">Titular: ${esc(b.holder)}</div>`:''}${b.note?`<div class="muted small">${esc(b.note)}</div>`:''}</div>
+      <div class="bkb"><span class="muted small">Debería tener</span><b class="money" style="color:var(${bal<0?'--bad':'--fg'})">${money(bal)}</b></div></div>
+      <div class="muted small">Entró ${money(q.in)} · Salió ${money(q.out)} (${per_})</div>
+      <div class="bkact">${b.off?(own?btn('bkEdit','Editar','data-id="'+b.id+'"'):''):btn('lgMove','Depósito','data-acc="banco" data-t="ingreso" data-bk="'+b.id+'"')+btn('lgExp','Gasto','data-p="banco" data-bk="'+b.id+'"')+btn('lgTr','Pasar a Caja','data-from="banco" data-to="caja" data-bk="'+b.id+'"')+(act.length>1?btn('bkMove','Mover a otro banco','data-id="'+b.id+'"'):'')+btn('bkVerify','Verificar saldo','data-id="'+b.id+'"')+btn('bkHist','Movimientos','data-id="'+b.id+'"')+(own?btn('bkEdit','Editar','data-id="'+b.id+'"'):'')}</div></div>`};
+  const H=S.ledger.map((e,i)=>({e,i})).filter(x=>x.e.acc==='banco'&&x.e.ts>=f).sort((a,b)=>b.e.ts-a.e.ts||b.i-a.i).slice(0,60).map(x=>x.e);
+  const empt=!L.length;
+  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">Banco</h2><div class="seg">${[['hoy','Hoy'],['7','7 días'],['mes','Este mes'],['todo','Todo']].map(([k,n])=>`<button data-act="lgRange" data-k="${k}" class="${LG.r===k?'on':''}">${n}</button>`).join('')}</div>${own?'<button class="btn pri" data-act="bkAdd">＋ Agregar banco</button>':''}</div>
+  <div class="tiles"><div class="tile-s"><span>🏦 Total que debería haber en bancos</span><b class="money" style="color:var(${tot<0?'--bad':'--fg'})">${money(tot)}</b></div><div class="tile-s"><span>Entró (${per_})</span><b class="money">${money(tin)}</b></div><div class="tile-s"><span>Salió (${per_})</span><b class="money">${money(tout)}</b></div>${own&&pend?`<div class="tile-s"><span>⏳ Por confirmar</span><b class="money">${money(pend)}</b></div>`:''}</div>
+  ${own?pcOwner():''}
+  ${empt?`<div class="panel"><h3 style="margin:0 0 4px">Agregue sus cuentas bancarias</h3><p class="muted small" style="margin:0 0 12px">Elija su banco: el logo se busca solo. Después podrá ver cuánto dinero debería tener en cada cuenta.${tot?` Ya hay <b>${money(tot)}</b> registrados en Banco; se asignarán a la primera cuenta que cree.`:''}</p>${own?`<div class="bkpick">${BANKS_EC.slice(0,6).map(b=>`<button class="btn" data-act="bkAdd" data-k="${b.k}">${bkLogo({d:b.d,color:b.c,fg:b.f,s:b.s},28)}${esc(b.n)}</button>`).join('')}<button class="btn" data-act="bkAdd" data-k="otro">Otro banco…</button></div>`:'<div class="muted small">Pida al administrador que agregue los bancos.</div>'}</div>`:`<div class="bkgrid">${L.slice().sort((a,b)=>(a.off?1:0)-(b.off?1:0)).map(card).join('')}</div>`}
+  <h4 class="tsec">Movimientos de banco (${LG.r==='hoy'?'hoy':LG.r==='7'?'últimos 7 días':LG.r==='mes'?'este mes':'todo'})</h4>${H.length?`<div class="tblw" style="max-height:360px;overflow:auto"><table><thead><tr><th>Fecha</th><th>Banco</th><th>Detalle</th><th class="r">Monto</th><th></th></tr></thead><tbody>${H.map(e=>{const b=bkGet(bkOf(e));return `<tr><td style="white-space:nowrap">${fmtDT(e.ts)}</td><td>${b?`<span class="bkmini" style="margin:0">${bkLogo(b,18)}${esc(b.name)}</span>`:'—'}</td><td><span class="pill ${e.type==='anulacion'?'bad':e.type==='transfer'?'warn':'ok'}">${LGT[e.type]||e.type}</span> ${esc(e.concept)}${e.by?` <span class="muted small">· ${esc(e.by)}</span>`:''}</td><td class="r money">${lgSg(e.amt)}</td><td>${['ingreso','retiro','transfer'].includes(e.type)&&!lgRevd(e)?`<button class="btn sm" data-act="lgUndo" data-id="${e.id}" title="Anular este movimiento" aria-label="Anular">↩</button>`:''}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="muted small">Sin movimientos en este período.</div>'}
+  <p class="muted small" style="margin:10px 0 0">«Debería tener» es lo que el sistema calcula: ventas y cobros por transferencia, depósitos, gastos y traslados. Compárelo con su app del banco con «Verificar saldo». El total también se ve en Caja. Los créditos pendientes no cuentan hasta que el cliente paga.</p>`}
+
+/* --- agregar / editar --- */
+function bkDraft(){const k=$('#bk_k').value,pre=BANKS_EC.find(x=>x.k===k),name=$('#bk_n').value.trim(),d=$('#bk_w').value.trim().replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/.*$/,'');
+  return pre?{k,name:name||pre.n,d:d||pre.d,color:pre.c,fg:pre.f,s:pre.s}:{k:'otro',name,d,color:bkColor(name||'x'),fg:'#FFFFFF',s:bkInit(name)}}
+function bkPrev(){const b=bkDraft(),x=$('#bk_prev');if(x)x.innerHTML=`${bkLogo(b,52)}<div><b>${esc(b.name||'Nombre del banco')}</b><div class="muted small">${b.d?'Logo: '+esc(b.d):'Escriba la página web del banco para buscar su logo'}</div></div>`}
+IN.bkPrev=bkPrev;
+CH.bkPre=el=>{const x=BANKS_EC.find(p=>p.k===el.value);$('#bk_n').value=x?x.n:'';$('#bk_w').value=x?x.d:'';bkPrev()};
+function bkModal(id,pk){const b=id?bkGet(id):null,first=!bkAll().length,pre=BANKS_EC.find(x=>x.k===(b?b.k:pk)),adopt=!id&&first&&lgBalAll('banco')!==0,v=(b&&b.name)||(pre&&pre.n)||'';
+  modal(`${dlgHead(b?'Editar banco':'Agregar banco')}<div id="bk_prev" style="display:flex;gap:12px;align-items:center;margin-bottom:10px"></div>
+  <label class="f">Banco<select id="bk_k" data-chg="bkPre">${BANKS_EC.map(x=>`<option value="${x.k}" ${pre&&pre.k===x.k?'selected':''}>${esc(x.n)}</option>`).join('')}<option value="otro" ${!pre?'selected':''}>Otro banco o cooperativa…</option></select></label>
+  <div class="fgrid"><label class="f">Nombre<input id="bk_n" value="${esc(v)}" placeholder="Ej: Cooperativa JEP" data-inp="bkPrev"></label>
+  <label class="f">Página web (para buscar el logo)<input id="bk_w" data-nocaps value="${esc((b&&b.d)||(pre&&pre.d)||'')}" placeholder="Ej: jep.fin.ec" data-inp="bkPrev" autocapitalize="none"></label>
+  <label class="f">Tipo de cuenta<select id="bk_t">${['Ahorros','Corriente','Otra'].map(t=>`<option ${b&&b.type===t?'selected':''}>${t}</option>`).join('')}</select></label>
+  <label class="f">Número de cuenta<input id="bk_c" inputmode="numeric" autocomplete="off" value="${esc((b&&b.num)||'')}" placeholder="Solo números"></label>
+  <label class="f">Titular (opcional)<input id="bk_h" value="${esc((b&&b.holder)||'')}"></label>
+  <label class="f">Nota (opcional)<input id="bk_o" value="${esc((b&&b.note)||'')}" placeholder="Ej: cuenta del negocio"></label>
+  ${!b&&!adopt?`<label class="f">Saldo actual en esta cuenta<input id="bk_s" inputmode="decimal" autocomplete="off" placeholder="0.00"></label>`:''}</div>
+  ${adopt?`<p class="muted small" style="margin:4px 0">Ya hay <b>${money(lgBalAll('banco'))}</b> registrados en Banco: se asignan a esta cuenta.</p>`:''}
+  ${(b&&banks().length>1)||(!b&&banks().length>=1)?`<label style="display:flex;gap:8px;align-items:center;margin:8px 0;font-size:13px"><input id="bk_p" type="checkbox" ${b&&bkDef()===b.id?'checked':''}> Banco principal (donde se acreditan por defecto los cobros por transferencia)</label>`:''}
+  <div class="ft">${b?`<button class="btn bad" data-act="bkRemove" data-id="${b.id}" style="margin-right:auto">${b.off?'Mostrar de nuevo':'Eliminar u ocultar'}</button>`:''}<button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="bkSave" data-id="${id||''}">Guardar</button></div>`);bkPrev()}
+A.bkAdd=el=>!isOwner()?toast('Solo el administrador puede agregar bancos.',1):bkModal('',el.dataset.k);
+A.bkEdit=el=>!isOwner()?toast('Solo el administrador puede editar bancos.',1):bkModal(el.dataset.id);
+A.bkSave=el=>guardOwner('Guardar banco',()=>{const id=el.dataset.id,d=bkDraft(),num=($('#bk_c').value||'').replace(/\s|-/g,'');
+  if(!d.name)return toast('Escriba el nombre del banco.',1);
+  if(num&&!/^\d{4,22}$/.test(num))return toast('El número de cuenta debe tener solo números.',1);
+  if(bkAll().some(x=>x.id!==id&&num&&x.num===num&&x.name===d.name))return toast('Esa cuenta ya está registrada.',1);
+  const o={k:d.k,name:d.name,d:d.d,color:d.color,fg:d.fg,s:d.s,type:$('#bk_t').value,num,holder:$('#bk_h').value.trim(),note:$('#bk_o').value.trim()};
+  S.cfg.banks=S.cfg.banks||[];let b;
+  if(id){b=bkGet(id);Object.assign(b,o)}
+  else{b=Object.assign({id:uid(),off:0},o);const first=!banks().length;S.cfg.banks.push(b);if(first){S.cfg.bankDef=b.id;S.ledger.forEach(e=>{if(e.acc==='banco'&&!e.bk)e.bk=b.id})}
+    const sal=r2(num0($('#bk_s')));if(sal)lgAdd('banco',sal,'saldo_ini','Saldo inicial · '+b.name,{bk:b.id})}
+  if($('#bk_p')&&$('#bk_p').checked)S.cfg.bankDef=b.id;
+  bkTouch();save(true);closeModal();toast(id?'Banco actualizado.':'Banco agregado.');render()});
+function num0(el){return el?num(el.value):0}
+A.bkRemove=el=>guardOwner('Quitar banco',()=>{const b=bkGet(el.dataset.id);if(!b)return;
+  if(b.off){b.off=0;bkTouch();save(true);closeModal();render();return toast('Banco visible de nuevo.')}
+  const used=S.ledger.some(e=>e.acc==='banco'&&bkOf(e)===b.id),bal=bkBal(b.id);
+  if(used&&Math.abs(bal)>=0.005)return toast('Este banco tiene '+money(bal)+'. Pase ese dinero a otro banco o a Caja antes de ocultarlo.',1);
+  confirmBox(used?'Se ocultará «'+b.name+'». Sus movimientos quedan guardados.':'Se eliminará «'+b.name+'».',()=>{
+    if(used)b.off=1;else S.cfg.banks=S.cfg.banks.filter(x=>x.id!==b.id);
+    if(S.cfg.bankDef===b.id)S.cfg.bankDef='';bkTouch();save(true);closeModal();render();toast(used?'Banco oculto.':'Banco eliminado.')},used?'Ocultar':'Eliminar',1)});
+A.bkCopy=el=>{const b=bkGet(el.dataset.id);if(!b||!b.num)return;
+  try{navigator.clipboard.writeText(b.num).then(()=>toast('Número de cuenta copiado.'),()=>toast('Cuenta: '+b.num))}catch(e){toast('Cuenta: '+b.num)}};
+
+/* --- mover dinero entre bancos --- */
+A.bkMove=el=>{const b=bkGet(el.dataset.id),O=banks().filter(x=>x.id!==b.id);if(!O.length)return toast('Agregue otro banco primero.',1);
+  modal(`${dlgHead('Mover dinero entre bancos')}<div class="payinfo"><span>${esc(b.name)} · disponible</span><span class="money">${money(bkBal(b.id))}</span></div>
+  <div class="fgrid"><label class="f">Pasar a<select id="bm_to">${O.map(x=>`<option value="${x.id}">${esc(x.name)}${x.num?' · …'+esc(String(x.num).slice(-4)):''}</option>`).join('')}</select></label><label class="f">Cantidad<input id="bm_a" inputmode="decimal" autocomplete="off" autofocus></label><label class="f">Fecha<input id="bm_d" type="date" value="${today()}" max="${today()}"></label></div>
+  <label class="f">Motivo u observación<input id="bm_w" placeholder="Ej: transferencia entre mis cuentas"></label><p class="muted small" style="margin:0">Es un traslado: no es un gasto ni una venta, y el total en bancos no cambia.</p>
+  <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="bkMoveDo" data-id="${b.id}">Mover</button></div>`)};
+A.bkMoveDo=el=>{const from=el.dataset.id,to=$('#bm_to').value,a=r2(num($('#bm_a').value)),w=$('#bm_w').value.trim();
+  if(a<=0)return toast('Ingrese la cantidad.',1);if(a>bkBal(from))return toast('No hay tanto en '+bkName(from)+' ('+money(bkBal(from))+').',1);
+  const ts=lgTs($('#bm_d').value),grp=uid(),tx=w?': '+w:'';
+  lgAdd('banco',-a,'transfer','A '+bkName(to)+tx,{ts,grp,cp:'banco',bk:from});lgAdd('banco',a,'transfer','Desde '+bkName(from)+tx,{ts,grp,cp:'banco',bk:to});
+  save(true);closeModal();toast('Movido '+money(a)+' de '+bkName(from)+' a '+bkName(to)+'.');render()};
+
+/* --- verificar saldo contra la app del banco --- */
+A.bkVerify=el=>{const b=bkGet(el.dataset.id);
+  modal(`${dlgHead('Verificar saldo · '+esc(b.name))}<div class="payinfo"><span>Debería tener según el sistema</span><span class="money">${money(bkBal(b.id))}</span></div>
+  <label class="f">Saldo real que ve en su banco<input id="bv_a" inputmode="decimal" autocomplete="off" data-inp="bkDiff" data-id="${b.id}" autofocus></label><div id="bv_d" class="muted" style="margin:4px 0"></div>
+  ${isOwner()?`<label style="display:flex;gap:8px;align-items:center;font-size:13px"><input id="bv_adj" type="checkbox"> Ajustar el saldo del sistema al saldo real</label>`:''}
+  <div class="ft"><button class="btn" data-act="closeModal">Cerrar</button>${isOwner()?`<button class="btn pri" data-act="bkVerifyDo" data-id="${b.id}">Aplicar ajuste</button>`:''}</div>`)};
+IN.bkDiff=el=>{const v=el.value,sys=bkBal(el.dataset.id);$('#bv_d').innerHTML=v===''?'':(d=>`Diferencia: <b style="color:var(${Math.abs(d)<0.005?'--ok':'--bad'})">${money(d)}</b> ${d<0?'(el banco tiene menos de lo que debería)':d>0?'(el banco tiene más de lo que debería)':'(cuadra ✓)'}`)(r2(num(v)-sys))};
+A.bkVerifyDo=el=>guardOwner('Ajustar saldo de banco',()=>{const id=el.dataset.id,v=$('#bv_a').value;if(v==='')return toast('Ingrese el saldo real.',1);
+  const d=r2(num(v)-bkBal(id));if(Math.abs(d)<0.005){closeModal();return toast('El saldo cuadra ✓')}
+  if(!$('#bv_adj').checked)return toast('Marque «Ajustar el saldo del sistema» para aplicar la diferencia de '+money(d)+'.',1);
+  lgAdd('banco',d,'ajuste','Ajuste al saldo real de '+bkName(id),{bk:id});save(true);closeModal();toast('Saldo ajustado.');render()});
+
+/* --- movimientos de un banco --- */
+A.bkHist=el=>{const id=el.dataset.id,b=bkGet(id),f=lgFrom();let run=0;
+  const H=S.ledger.map((e,i)=>({e,i})).filter(x=>x.e.acc==='banco'&&bkOf(x.e)===id).sort((a,c)=>a.e.ts-c.e.ts||a.i-c.i).map(x=>{run=r2(run+x.e.amt);return {...x.e,run}}).filter(x=>x.ts>=f).reverse();
+  modal(`${dlgHead('Movimientos · '+esc(b.name))}<div class="muted small">${LG.r==='hoy'?'Hoy':LG.r==='7'?'Últimos 7 días':LG.r==='mes'?'Este mes':'Todo'} · cambie el período en la pantalla Banco.</div>
+  ${H.length?`<div class="tblw" style="max-height:420px;overflow:auto"><table><thead><tr><th>Fecha</th><th>Detalle</th><th class="r">Monto</th><th class="r">Saldo</th></tr></thead><tbody>${H.slice(0,120).map(e=>`<tr><td style="white-space:nowrap">${fmtDT(e.ts)}</td><td><span class="pill ${e.type==='anulacion'?'bad':e.type==='transfer'?'warn':'ok'}">${LGT[e.type]||e.type}</span> ${esc(e.concept)}</td><td class="r money">${lgSg(e.amt)}</td><td class="r money">${money(e.run)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="muted small">Sin movimientos en este período.</div>'}
+  <div class="ft"><button class="btn pri" data-act="closeModal">Cerrar</button></div>`,1)};
+
 /* ===== acciones de Caja y Banco (Etapa 5) ===== */
 A.lgRange=el=>{LG.r=el.dataset.k;lgRefresh()};
-A.lgMove=el=>lgMoveModal(el.dataset.acc,el.dataset.t);
+A.lgMove=el=>lgMoveModal(el.dataset.acc,el.dataset.t,el.dataset.bk);
 A.lgMoveDo=el=>{const acc=el.dataset.acc,t=el.dataset.t;if(acc==='ahorro'&&!isOwner())return toast('Solo el administrador maneja los ahorros.',1);const a=r2(num($('#m_amt').value)),w=$('#m_why').value.trim();
   if(a<=0)return toast('Ingrese un monto.',1);if(!w)return toast('Indique el concepto.',1);
   if(acc==='ahorro'&&t==='retiro'&&a>lgBalAll('ahorro'))return toast('No hay tanto en Ahorros ('+money(lgBalAll('ahorro'))+').',1);
-  lgAdd(acc,t==='ingreso'?a:-a,t,w,{ts:lgTs($('#m_d').value)});save(true);closeModal();lgRefresh();render();if(t==='retiro')lgWarn(acc)};
-A.lgTr=el=>(el.dataset.to==='ahorro'||el.dataset.from==='ahorro')&&!isOwner()?toast('Solo el administrador maneja los ahorros.',1):lgTrModal(el.dataset.from,el.dataset.to);
+  lgAdd(acc,t==='ingreso'?a:-a,t,w,{ts:lgTs($('#m_d').value),bk:acc==='banco'?(($('#m_b')||{}).value||''):''});save(true);closeModal();lgRefresh();render();if(t==='retiro')lgWarn(acc)};
+A.lgTr=el=>(el.dataset.to==='ahorro'||el.dataset.from==='ahorro')&&!isOwner()?toast('Solo el administrador maneja los ahorros.',1):lgTrModal(el.dataset.from,el.dataset.to,el.dataset.bk);
 A.lgTrDo=el=>{const from=el.dataset.from,to=el.dataset.to||(from==='caja'?'banco':'caja');if((from==='ahorro'||to==='ahorro')&&!isOwner())return toast('Solo el administrador maneja los ahorros.',1);const a=r2(num($('#t_amt').value)),w=$('#t_why').value.trim();
   if(a<=0)return toast('Ingrese la cantidad a transferir.',1);
-  if(a>lgBal(from))return toast('No hay tanto dinero en '+ACC[from]+' ('+money(lgBal(from))+'). Registre primero el ingreso o saldo inicial.',1);
+  const bkv=($('#t_b')||{}).value||'',many=banks().length>1,av=from==='banco'&&many&&bkv?bkBal(bkv):lgBal(from),tg=(ac,id)=>ac==='banco'&&id&&many?' · '+bkName(id):'';
+  if(a>av)return toast('No hay tanto dinero en '+ACC[from]+tg(from,bkv)+' ('+money(av)+'). Registre primero el ingreso o saldo inicial.',1);
   const ts=lgTs($('#t_d').value),grp=uid(),tx=w?': '+w:'';
-  lgAdd(from,-a,'transfer','A '+ACC[to]+tx,{ts,grp,cp:to});lgAdd(to,a,'transfer','Desde '+ACC[from]+tx,{ts,grp,cp:from});
+  lgAdd(from,-a,'transfer','A '+ACC[to]+tg(to,bkv)+tx,{ts,grp,cp:to,bk:from==='banco'?bkv:''});lgAdd(to,a,'transfer','Desde '+ACC[from]+tg(from,bkv)+tx,{ts,grp,cp:from,bk:to==='banco'?bkv:''});
   save(true);closeModal();toast('Transferencia registrada: '+money(a)+' de '+ACC[from]+' a '+ACC[to]+'.');render()};
 A.lgUndo=el=>guard('Anular movimiento',()=>{const e=S.ledger.find(x=>x.id===el.dataset.id);if(!e)return;
   confirmBox('Se anula este movimiento (queda registrado el original y su anulación).',()=>{
     const L=e.grp?S.ledger.filter(x=>x.grp===e.grp&&(x.type==='transfer'||x.type==='aprobado')):[e];L.forEach(x=>lgRev(x,'Anulado'));save(true);toast('Movimiento anulado.');render();if(L.some(x=>x.acc==='ahorro'))lgWarn('ahorro')},'Anular',1)});
-A.lgExp=el=>{expRoll();expModal(el.dataset.p)};
+A.lgExp=el=>{expRoll();expModal(el.dataset.p,el.dataset.bk)};
 A.cierreDet=el=>cierreDet(el.dataset.id);
 /* ===== campos: números válidos y MAYÚSCULAS automáticas ===== */
-const CAPS_SKIP=/^(rf|rt|pin_i|pn_i|pn_j|lg_p|lg_p2|lg_a|nu_p|sy_.*|ab_f|ex_d)$/,CAPS_CFG=/^(name|addr|legal)$/;
+const CAPS_SKIP=/^(bk_w|bk_c|rf|rt|pin_i|pn_i|pn_j|lg_p|lg_p2|lg_a|nu_p|sy_.*|ab_f|ex_d)$/,CAPS_CFG=/^(name|addr|legal)$/;
 function capsOK(el){const ty=(el.getAttribute('type')||'text').toLowerCase();if(!(el.tagName==='TEXTAREA'||(el.tagName==='INPUT'&&ty==='text')))return false;
   if(el.getAttribute('inputmode')||el.dataset.nocaps!==undefined||el.dataset.tk||el.dataset.cust||el.dataset.cfglist||CAPS_SKIP.test(el.id||''))return false;
   return !el.dataset.cfg||CAPS_CFG.test(el.dataset.cfg)}
@@ -2776,7 +2981,7 @@ const _rnd=render;render=function(){_rnd.apply(this,arguments);const n=document.
 /* Para cambiar el logo de la app (esquina superior), reemplace el SVG de APP_MARK. */
 function setBizLogo(){const v=S.cfg.logo||'';if(v!==LOGO){LOGO=v;for(const k in _lbw)delete _lbw[k];if(v)LOGOIMG.src=v;else LOGOIMG.removeAttribute('src')}
   const l=document.getElementById('logo');if(l){if(v){l.src=v;l.style.display=''}else{l.removeAttribute('src');l.style.display='none'}}}
-A.logoPick=()=>{const i=document.createElement('input');i.type='file';i.accept='image/*';
+A.logoPick=()=>{if(!isOwner())return toast('El logo lo cambia el administrador. Use «Solicitar cambio».',1);const i=document.createElement('input');i.type='file';i.accept='image/*';
   i.onchange=()=>{const f=i.files&&i.files[0];if(!f)return;if(f.size>8e6)return toast('La imagen es muy grande (máximo 8 MB).',1);
     const u=URL.createObjectURL(f),im=new Image();
     im.onload=()=>{try{const N=256,cv=document.createElement('canvas');cv.width=cv.height=N;const x=cv.getContext('2d');x.imageSmoothingQuality='high';
@@ -2784,7 +2989,7 @@ A.logoPick=()=>{const i=document.createElement('input');i.type='file';i.accept='
         x.drawImage(im,Math.round((N-w)/2),Math.round((N-h)/2),w,h);const d=cv.toDataURL('image/png');if(d.length>400000)throw 0;
         S.cfg.logo=d;save(true);setBizLogo();render();toast('Logo guardado.')}catch(e){toast('No se pudo usar esa imagen.',1)}URL.revokeObjectURL(u)};
     im.onerror=()=>{URL.revokeObjectURL(u);toast('Ese archivo no es una imagen válida.',1)};im.src=u};i.click()};
-A.logoDel=()=>{S.cfg.logo='';save(true);setBizLogo();render();toast('Logo quitado.')};
+A.logoDel=()=>{if(!isOwner())return toast('El logo lo cambia el administrador. Use «Solicitar cambio».',1);S.cfg.logo='';save(true);setBizLogo();render();toast('Logo quitado.')};
 /* respaldo: descargar y restaurar con verificación */
 const bkStamp=()=>today()+'-'+new Date().toTimeString().slice(0,5).replace(':','');
 function bkStats(o){const cl=(o.customers||[]).filter(c=>c&&c.id!=='cf'),cr=(o.sales||[]).filter(s=>s&&s.status==='ok'&&s.credit&&(+s.balance||0)>0);
