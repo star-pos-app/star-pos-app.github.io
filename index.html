@@ -85,7 +85,7 @@ td.wrapc{white-space:normal;min-width:180px}
 .bkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px;margin-bottom:16px}
 .bkcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
 .bkcard.off{opacity:.6}
-.bkh{display:flex;gap:12px;align-items:center}.bkt{flex:1;min-width:0}.bkt b{overflow-wrap:anywhere}
+.bkh{display:flex;gap:12px;align-items:flex-start}.bkt{flex:1;min-width:0}.bkt b{overflow-wrap:anywhere}
 .bkb{text-align:right}.bkb b{display:block;font-family:var(--font-head);font-size:24px}
 .bkact{display:flex;gap:6px;flex-wrap:wrap}
 .bkmini{display:inline-flex;align-items:center;gap:5px;margin-right:12px;font-size:12px}
@@ -308,6 +308,7 @@ body.m .tkwrap{grid-template-columns:1fr!important}
 .nt{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:10px;text-decoration:none;color:inherit;width:100%;background:none;border:0;text-align:left;font:inherit;cursor:pointer}
 .nt:hover{background:var(--surface2)}.nt i{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:none}
 .nt.r i{background:#e5484d}.nt.y i{background:#f5b301}.nt.g i{background:#30a46c}
+.ntw{position:relative}.ntw .nt{padding-right:34px}.ntx{position:absolute;right:6px;top:7px;width:24px;height:24px;border-radius:50%;border:0;background:none;color:var(--muted);font-size:13px;line-height:1;cursor:pointer;transition:background-color .15s,color .15s,transform .15s}.ntx:hover{background:var(--surface2);color:var(--bad)}.ntx:active{transform:scale(.88)}.ntf{display:flex;gap:8px;justify-content:flex-end;padding:6px 4px 2px;border-top:1px solid var(--line);margin-top:4px}
 .nt b{display:block;font-size:13.5px}.nt span{font-size:12px;color:var(--muted)}
 .pc-row{display:grid;grid-template-columns:200px minmax(0,1fr) 130px 230px 150px;gap:16px;align-items:end;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .pc-row span.l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;display:block}
@@ -1432,11 +1433,20 @@ function notifs(){
   if(SY.msg&&SY.msg[0]==='✓')L.push({l:'g',t:'Nube sincronizada',s:SY.msg.slice(2)});
   if(window.NEWV)L.unshift({l:'y',t:'⬆ Nueva versión disponible',s:'Toque aquí para actualizar',a:'appUpdate'});
   netNotifs(L);
-  return L}
+  return ntFilter(L)}
+/* Avisos que se pueden borrar: se ocultan en este equipo hasta que el aviso cambie (otro número o texto) */
+const NT_KEY='star_pos_nt_dis';
+function ntLoad(){try{return JSON.parse(localStorage.getItem(NT_KEY)||'{}')||{}}catch(e){return {}}}
+function ntSave(o){try{localStorage.setItem(NT_KEY,JSON.stringify(o))}catch(e){}}
+const ntKey=x=>String(x.t).replace(/\d+([.,]\d+)?/g,'#'),ntSig=x=>x.t+'|'+(x.s||'');
+function ntFilter(L){const d=ntLoad();return L.filter(x=>x.a==='appUpdate'||d[ntKey(x)]!==ntSig(x))}
 function bellUpdate(){const L=notifs(),d=$('#bellDot');try{const bb=document.querySelector('.bellbtn');bb&&bb.classList.toggle('upd',!!window.NEWV)}catch(e){}if(d)d.className='dot '+(L.some(x=>x.l==='r')?'r':L.some(x=>x.l==='y')?'y':L.length?'g':'');
   const p=$('#bellpop');if(p&&!p.hidden)bellDraw(L)}
 function bellDraw(L){const p=$('#bellpop');L=L||notifs();
-  p.innerHTML=L.length?L.map((x,i)=>x.h?`<a class="nt ${x.l}" href="${x.h}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></a>`:`<button class="nt ${x.l}" data-act="bellDo" data-i="${i}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></button>`).join(''):'<div class="muted small" style="padding:10px">Todo en orden, sin avisos.</div>';window._nt=L}
+  const hid=Object.keys(ntLoad()).length;
+  const row=(x,i)=>`<div class="ntw">${x.h?`<a class="nt ${x.l}" href="${x.h}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></a>`:`<button class="nt ${x.l}" data-act="bellDo" data-i="${i}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></button>`}${x.a==='appUpdate'?'':`<button class="ntx" data-act="bellDel" data-i="${i}" title="Borrar aviso" aria-label="Borrar aviso">✕</button>`}</div>`;
+  const del=L.filter(x=>x.a!=='appUpdate').length;
+  p.innerHTML=(L.length?L.map(row).join(''):'<div class="muted small" style="padding:10px">Todo en orden, sin avisos.</div>')+((del>1||hid)?`<div class="ntf">${del>1?'<button class="btn sm" data-act="bellClear">Borrar todos</button>':''}${hid?'<button class="btn sm" data-act="bellReset">Mostrar borrados</button>':''}</div>`:'');window._nt=L}
 document.addEventListener('click',e=>{const p=$('#bellpop');if(!p||p.hidden)return;if(e.target.closest('#bellpop a')||(!e.target.closest('#bellpop')&&!e.target.closest('#bell')))p.hidden=true},true);
 setInterval(()=>{$('#clock').textContent=new Date().toLocaleString('es-EC',{timeZone:TZ,weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})},1000);
 
@@ -2386,6 +2396,9 @@ A.pfOpen=el=>{const pf=pfLoad().items.find(x=>x.id===el.dataset.id);pf?showProfo
 A.pfDel=el=>{const o=pfLoad();o.items=o.items.filter(x=>x.id!==el.dataset.id);pfSave(o);pfList()};
 A.bell=()=>{const p=$('#bellpop');if(p.hidden){bellDraw();p.hidden=false}else p.hidden=true};
 A.appUpdate=()=>{const go=()=>{try{closeModal()}catch(e){}location.reload()};if(S.cart&&S.cart.lines&&S.cart.lines.length)confirmBox('Hay una venta en curso. Si actualiza ahora, la venta puede perderse. ¿Actualizar de todos modos?',go,'Actualizar',1);else go()};
+A.bellDel=el=>{const x=(window._nt||[])[+el.dataset.i];if(!x)return;const d=ntLoad();d[ntKey(x)]=ntSig(x);ntSave(d);bellUpdate()};
+A.bellClear=()=>{const d=ntLoad();(window._nt||[]).forEach(x=>{if(x.a!=='appUpdate')d[ntKey(x)]=ntSig(x)});ntSave(d);bellUpdate()};
+A.bellReset=()=>{ntSave({});bellUpdate()};
 A.bellDo=el=>{const x=(window._nt||[])[+el.dataset.i];$('#bellpop').hidden=true;if(x&&x.a&&A[x.a])A[x.a]()};
 A.hrng=el=>{const k=el.dataset.k,t=today();H.auto=false;H.q='';H.t=t;H.f=k==='hoy'?t:k==='ayer'?(H.t=addDays(t,-1),addDays(t,-1)):k==='7'?addDays(t,-6):k==='mes'?t.slice(0,8)+'01':'2000-01-01';vHistorial()};
 A.trackToggle=el=>{const p=prod(el.dataset.id);if(!p)return;p.track=!p.track;save(true);toast(p.track?'Control de stock activado.':'Control de stock desactivado.');render()};
@@ -2610,7 +2623,7 @@ document.addEventListener('click',e=>{if(e.target.closest('nav a')){menuOpen=fal
 function labelTables(){$$('#view table, #modal table').forEach(t=>{const H=[...t.querySelectorAll('thead th')].map(h=>h.textContent.trim());if(!H.length)return;t.querySelectorAll('tbody tr').forEach(tr=>[...tr.children].forEach((td,i)=>{if(!td.dataset.l&&H[i])td.dataset.l=H[i]}))})}
 new MutationObserver(labelTables).observe(document.body,{childList:true,subtree:true});
 window.addEventListener('hashchange',route);
-route();
+var _route0=1;try{route();_route0=0}catch(e){}/* si la pantalla inicial usa código que se define más abajo (ej. #banco), se repite al final */
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller){window.NEWV=true;try{bellUpdate()}catch(e){}toast('⬆ Nueva versión disponible. Toque la campana 🔔 para actualizar.')}})})}).catch(()=>{});
   /* busca versiones nuevas cada 10 min y al volver a la app */
   const chk=()=>{navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{})};setInterval(chk,6e5);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})}
@@ -3337,5 +3350,6 @@ function countUps(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)ret
     prevTot=tx}catch(e){}
     return r}})();
 setBizLogo();
+if(_route0)route();
 loginShow(false);
 </script>
