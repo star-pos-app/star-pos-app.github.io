@@ -3,9 +3,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="theme-color" content="#5303C6">
-<meta name="theme-color" content="#5557AE">
 <link rel="icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka:wght@400;500;600;700&family=Orbitron:wght@600;800&family=VT323&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Press+Start+2P&family=Fredoka:wght@400;500;600;700&family=Orbitron:wght@600;800&family=VT323&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -974,6 +973,108 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
 
 
 
+
+<style id="pack6">
+/* ===== PACK v6 · acabado visual y movimiento suave =====
+   Solo afecta a los temas normales (sin efecto especial). Pixel, Gamer, XP, etc. no se tocan. */
+:root:not([data-fx]){--sh1:0 1px 2px rgba(25,20,70,.05),0 10px 26px -16px rgba(25,20,70,.28);--sh2:0 2px 4px rgba(25,20,70,.06),0 18px 34px -16px rgba(25,20,70,.38);--ease2:cubic-bezier(.22,.8,.3,1)}
+@media (prefers-color-scheme:dark){:root:not([data-fx]):not([data-theme="light"]){--sh1:0 1px 2px rgba(0,0,0,.4),0 10px 26px -14px rgba(0,0,0,.7);--sh2:0 2px 4px rgba(0,0,0,.4),0 18px 34px -14px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]:not([data-fx]){--sh1:0 1px 2px rgba(0,0,0,.4),0 10px 26px -14px rgba(0,0,0,.7);--sh2:0 2px 4px rgba(0,0,0,.4),0 18px 34px -14px rgba(0,0,0,.8)}
+
+/* letra y fondo */
+:root:not([data-fx]) body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  background:radial-gradient(900px 380px at 92% -60px,color-mix(in srgb,var(--accent) 10%,transparent),transparent 70%),radial-gradient(700px 360px at -10% 0,color-mix(in srgb,var(--accent) 6%,transparent),transparent 70%),var(--bg)}
+:root:not([data-fx]) h2{font-size:22px;letter-spacing:-.015em}
+:root:not([data-fx]) h3{letter-spacing:-.01em}
+
+/* barra superior con cristal suave */
+:root:not([data-fx]) .top{background:color-mix(in srgb,var(--surface) 84%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border-bottom-color:transparent;box-shadow:0 1px 0 var(--line),0 12px 24px -22px rgba(25,20,70,.5)}
+:root:not([data-fx]) nav a{border-radius:10px 10px 0 0}
+:root:not([data-fx]) nav a:hover{background:var(--surface2)}
+:root:not([data-fx]) nav a.on{background:linear-gradient(180deg,transparent,var(--accent-soft));color:var(--fg)}
+:root:not([data-fx]) body.m nav a{border-radius:10px}
+:root:not([data-fx]) body.m nav a.on{background:var(--accent-soft)}
+:root:not([data-fx]) .chip{border:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+
+/* botones y campos */
+:root:not([data-fx]) .btn{border-radius:10px}
+:root:not([data-fx]) .btn.pri{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 86%,#fff),var(--accent));border-color:color-mix(in srgb,var(--accent) 82%,#000);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 8px 16px -10px var(--accent)}
+:root:not([data-fx]) input,:root:not([data-fx]) select,:root:not([data-fx]) textarea{border-radius:10px}
+:root:not([data-fx]) input:hover,:root:not([data-fx]) select:hover,:root:not([data-fx]) textarea:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+
+/* tarjetas y paneles */
+:root:not([data-fx]) .panel,:root:not([data-fx]) .tblw,:root:not([data-fx]) .cartw,:root:not([data-fx]) .plist,:root:not([data-fx]) .pc2,:root:not([data-fx]) .cart,:root:not([data-fx]) .tile-s{border-radius:16px;box-shadow:var(--sh1);border-color:color-mix(in srgb,var(--line) 72%,transparent)}
+:root:not([data-fx]) .tile-s{position:relative;overflow:hidden;padding:14px 16px 13px 19px}
+:root:not([data-fx]) .tile-s::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--accent)}
+:root:not([data-fx]) .tile-s b{font-size:26px;letter-spacing:-.015em;margin-top:4px}
+:root:not([data-fx]) .tile-s span{text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+
+/* productos */
+:root:not([data-fx]) .tile{border-radius:14px;padding:12px;box-shadow:var(--sh1);border-color:color-mix(in srgb,var(--line) 75%,transparent)}
+:root:not([data-fx]) .tile:hover{border-color:var(--accent);box-shadow:var(--sh2)}
+:root:not([data-fx]) .tile .tp{font-size:18px;letter-spacing:-.01em}
+
+/* tablas */
+:root:not([data-fx]) th{background:color-mix(in srgb,var(--surface2) 75%,var(--surface));letter-spacing:.08em}
+:root:not([data-fx]) tbody tr.click:hover td,:root:not([data-fx]) .prow:not(.ph):hover{background:color-mix(in srgb,var(--accent-soft) 55%,var(--surface))}
+:root:not([data-fx]) .crow:not(.ch):hover{background:color-mix(in srgb,var(--accent-soft) 35%,var(--surface))}
+
+/* avisos */
+:root:not([data-fx]) .toast{border-radius:14px;box-shadow:0 16px 34px -12px rgba(10,8,30,.5)}
+
+/* ---------- pantalla de inicio: tres tarjetas con color y brillo ---------- */
+.rcard.c2{background:linear-gradient(135deg,#9DB8FF,#7FDCE8);color:#14123A;border-color:transparent}
+.rcard.c3{background:linear-gradient(135deg,#FFD39A,#FF9DBE);color:#14123A;border-color:transparent}
+.rcard.c2 .ri,.rcard.c3 .ri{background:rgba(255,255,255,.3)}
+.rcard.c2:hover,.rcard.c3:hover{border-color:transparent}
+.rcard.c2:hover{box-shadow:0 16px 30px -16px #5FB6D8}
+.rcard.c3:hover{box-shadow:0 16px 30px -16px #FF7FA8}
+.rcard.own{background-size:200% 200%}.rcard.c2,.rcard.c3{background-size:200% 200%}
+
+/* ---------- movimiento extra ---------- */
+@keyframes p6shine{60%,100%{transform:translateX(120%)}}
+@keyframes p6gshift{from{background-position:0 0}to{background-position:100% 100%}}
+@keyframes p6glow{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 10px 26px -6px var(--accent)}}
+@keyframes p6growy{from{transform:scaleY(0)}to{transform:none}}
+@keyframes p6growx{from{transform:scaleX(0)}to{transform:none}}
+@keyframes p6bar{from{transform:scaleY(0)}to{transform:none}}
+@keyframes p6navpop{from{transform:scale(.6) rotate(-12deg);opacity:.4}to{transform:none;opacity:1}}
+@keyframes p6ping{0%{box-shadow:0 0 0 0 rgba(var(--pc),.6)}80%,100%{box-shadow:0 0 0 8px rgba(var(--pc),0)}}
+@keyframes p6bump{0%{transform:scale(1)}40%{transform:scale(1.14);color:var(--accent)}100%{transform:none}}
+.dot.r{--pc:229,72,77}.dot.y{--pc:245,179,1}
+.bump{display:inline-block;transform-origin:right center}
+@media(prefers-reduced-motion:no-preference){
+  /* inicio: cada tarjeta cambia de tono despacio y brilla por turnos */
+  #lgin .panel.lgp .rcard{animation:dlgkid .5s var(--ease) both,p6gshift 7s ease-in-out .6s infinite alternate}
+  #lgin .panel.lgp .rcard.own{animation-delay:.08s,.6s}
+  #lgin .panel.lgp .rcard.c2{animation-delay:.18s,.9s}
+  #lgin .panel.lgp .rcard.c3{animation-delay:.28s,1.2s}
+  .rcard.c2::after,.rcard.c3::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);transform:translateX(-120%)}
+  .rcard.c2::after{animation:p6shine 3.6s ease-in-out 2.2s infinite}
+  .rcard.c3::after{animation:p6shine 3.6s ease-in-out 3.4s infinite}
+  .rcard .ri{transition:transform .3s var(--spring)}
+  .rcard:hover .ri{transform:rotate(-8deg) scale(1.1)}
+  /* botones principales: brillo al pasar el dedo o el cursor */
+  :root:not([data-fx]) .btn.pri::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%)}
+  :root:not([data-fx]) .btn.pri:not(:disabled):hover::after{animation:p6shine .75s ease}
+  /* botón de cobrar: respira suave para llamar la atención */
+  :root:not([data-fx]) .pc-tot .pri:not(:disabled),:root:not([data-fx]) .vbar>.btn.pri:not(:disabled){animation:p6glow 3s ease-in-out infinite}
+  /* tarjetas de resumen, barras y gráficos */
+  :root:not([data-fx]) .tile-s::before{animation:p6growy .6s var(--ease) .2s both}
+  :root:not([data-fx]) .tile-s:hover{box-shadow:var(--sh2)}
+  .prog i{transform-origin:left;animation:p6growx .9s var(--ease) .15s both}
+  .chart .b{transform-origin:bottom;animation:p6bar .7s var(--ease) both}
+  .chart .b:nth-child(1){animation-delay:0.025s}.chart .b:nth-child(2){animation-delay:0.050s}.chart .b:nth-child(3){animation-delay:0.075s}.chart .b:nth-child(4){animation-delay:0.100s}.chart .b:nth-child(5){animation-delay:0.125s}.chart .b:nth-child(6){animation-delay:0.150s}.chart .b:nth-child(7){animation-delay:0.175s}.chart .b:nth-child(8){animation-delay:0.200s}.chart .b:nth-child(9){animation-delay:0.225s}.chart .b:nth-child(10){animation-delay:0.250s}.chart .b:nth-child(11){animation-delay:0.275s}.chart .b:nth-child(12){animation-delay:0.300s}.chart .b:nth-child(13){animation-delay:0.325s}.chart .b:nth-child(14){animation-delay:0.350s}.chart .b:nth-child(15){animation-delay:0.375s}.chart .b:nth-child(16){animation-delay:0.400s}.chart .b:nth-child(17){animation-delay:0.425s}.chart .b:nth-child(18){animation-delay:0.450s}.chart .b:nth-child(19){animation-delay:0.475s}.chart .b:nth-child(20){animation-delay:0.500s}.chart .b:nth-child(21){animation-delay:0.525s}.chart .b:nth-child(22){animation-delay:0.550s}.chart .b:nth-child(23){animation-delay:0.575s}.chart .b:nth-child(24){animation-delay:0.600s}.chart .b:nth-child(25){animation-delay:0.625s}.chart .b:nth-child(26){animation-delay:0.650s}.chart .b:nth-child(27){animation-delay:0.675s}.chart .b:nth-child(28){animation-delay:0.700s}.chart .b:nth-child(29){animation-delay:0.725s}.chart .b:nth-child(30){animation-delay:0.750s}.chart .b:nth-child(31){animation-delay:0.775s}.chart .b:nth-child(32){animation-delay:0.800s}.chart .b:nth-child(33){animation-delay:0.825s}.chart .b:nth-child(34){animation-delay:0.850s}.chart .b:nth-child(35){animation-delay:0.875s}.chart .b:nth-child(36){animation-delay:0.900s}.chart .b:nth-child(37){animation-delay:0.925s}.chart .b:nth-child(38){animation-delay:0.950s}.chart .b:nth-child(39){animation-delay:0.975s}.chart .b:nth-child(40){animation-delay:1.000s}
+  /* menú, avisos y detalles */
+  nav a.on svg{animation:p6navpop .55s var(--spring) both}
+  .dot.r,.dot.y{animation:p6ping 2s ease-out infinite}
+  :root:not([data-fx]) .pc2{transition:transform .2s var(--ease),box-shadow .2s,border-color .2s}
+  :root:not([data-fx]) .pc2:hover{transform:translateY(-3px);box-shadow:var(--sh2)}
+  #logo,#appMark{transition:transform .3s var(--spring)}#logo:hover{transform:rotate(-8deg) scale(1.08)}
+  #view.vin .crow:not(.ch),#view.vin .ct2 tbody tr{animation:rowin .34s var(--ease) both}
+  .bump{animation:p6bump .5s var(--spring)}
+}
+</style>
 
 <div class="wrap">
   <header class="top"><div class="appmark" title="STAR POS · Punto de Venta"><img id="appMark" alt="" width="18" height="18" style="border-radius:5px"><span>STAR POS</span></div><div class="row">
@@ -2628,7 +2729,7 @@ function loginDraw(){const e=lgEl(),U=S.sellers.slice(),P=S.cfg.pins||{};
   LGN.sig=JSON.stringify([U,Object.keys(P).filter(k=>P[k])]);
   const fld=(id,l,ph)=>`<label class="f">${l}<input id="${id}" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="${ph||''}"></label>`;
   let b='',t='Iniciar sesión';
-  if(!U.length&&!LGN.mode){t='Bienvenido';b=`<p class="muted small lgq">Elija cómo va a usar este equipo.</p><button class="rcard own" data-act="lgMode" data-m="dueno"><span class="ri">🏪</span><span class="rt"><b>Crear mi negocio</b><small>Primera vez · soy el dueño</small></span><span class="ra">→</span></button><button class="rcard" data-act="lgMode" data-m="conn"><span class="ri">🔑</span><span class="rt"><b>Ya tengo mi cuenta</b><small>Soy el dueño y uso otro equipo</small></span><span class="ra">→</span></button><button class="rcard" data-act="lgMode" data-m="emp"><span class="ri">🧑‍💼</span><span class="rt"><b>Soy empleado</b><small>Entrar a un negocio que ya existe</small></span><span class="ra">→</span></button>`}
+  if(!U.length&&!LGN.mode){t='Bienvenido';b=`<p class="muted small lgq">Elija cómo va a usar este equipo.</p><button class="rcard own" data-act="lgMode" data-m="dueno"><span class="ri">🏪</span><span class="rt"><b>Crear mi negocio</b><small>Primera vez · soy el dueño</small></span><span class="ra">→</span></button><button class="rcard c2" data-act="lgMode" data-m="conn"><span class="ri">🔑</span><span class="rt"><b>Ya tengo mi cuenta</b><small>Soy el dueño y uso otro equipo</small></span><span class="ra">→</span></button><button class="rcard c3" data-act="lgMode" data-m="emp"><span class="ri">🧑‍💼</span><span class="rt"><b>Soy empleado</b><small>Entrar a un negocio que ya existe</small></span><span class="ra">→</span></button>`}
   else if(!U.length&&LGN.mode==='conn'){t='Entrar a mi negocio';b=`<p class="muted small" style="margin:0">Conecte este equipo a su negocio para traer sus usuarios y datos:</p><ol class="small" style="margin:0;padding-left:20px;display:grid;gap:6px"><li>En el equipo donde ya usa STAR POS vaya a <b>Ajustes → Equipos y nube</b>, toque <b>«Copiar mi código»</b> y envíeselo (WhatsApp o correo).</li><li>Aquí toque <b>Conectar a la nube</b>, pegue el código y toque «Guardar y sincronizar».</li><li>Al terminar, elija su nombre e ingrese su PIN de siempre.</li></ol><button class="btn pri" data-act="cloudOpen">☁ Conectar a la nube</button><div style="border-top:1px solid var(--line);padding-top:10px;text-align:center"><div class="muted small" style="margin-bottom:6px">¿Prefiere usar un archivo de respaldo?</div><button class="btn" data-act="bkPick">Restaurar respaldo</button></div><button class="btn" data-act="lgMode" data-m="">Atrás</button>`}
   else if(!U.length&&LGN.mode==='emp'){t='Entrar como empleado';b=`<p class="muted small" style="margin:0">Para entrar necesita conectar este equipo al negocio:</p><ol class="small" style="margin:0;padding-left:20px;display:grid;gap:6px"><li>Pida al dueño su <b>código de conexión</b> (en su equipo: Ajustes → Equipos y nube → «Copiar mi código»).</li><li>Toque el botón de abajo y pegue el código en «Código de conexión».</li><li>Cuando termine de sincronizar, elija su nombre e ingrese su PIN.</li></ol><button class="btn pri" data-act="cloudOpen">☁ Conectar a la nube</button><button class="btn" data-act="lgMode" data-m="">Atrás</button>`}
   else if(!U.length){t='Crear administrador';b=`<p class="muted small" style="margin:0">Primera vez en este equipo. Cree el usuario administrador con su PIN (4 a 6 números).</p><label class="f">Nombre de su negocio<input id="lg_b" autocomplete="off" autofocus></label><label class="f">Su nombre<input id="lg_n" autocomplete="off"></label>${fld('lg_p','PIN')}${fld('lg_p2','Repita el PIN')}<button class="btn pri" data-act="lgFirst" data-enter>Crear y entrar</button><div style="border-top:1px solid var(--line);padding-top:10px;text-align:center"><div class="muted small" style="margin-bottom:6px">¿Ya tiene un respaldo de STAR POS?</div><button class="btn" data-act="bkPick">Restaurar respaldo</button><button class="btn" data-act="lgMode" data-m="conn" style="margin-top:6px">Ya tengo cuenta en otro equipo</button></div><button class="btn" data-act="lgMode" data-m="">Atrás</button>`}
@@ -2911,6 +3012,15 @@ function countUps(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)ret
   $$('#view .tile-s b').forEach(b=>{const m=/^(-?)(\$?)(\d+(?:\.\d+)?)$/.exec(b.textContent.trim());if(!m)return;const neg=m[1],pre=m[2],to=parseFloat(m[3]),dec=(m[3].split('.')[1]||'').length;if(!to||to>1e9)return;const t0=performance.now(),D=650,fin=b.textContent;
     const step=t=>{const k=Math.min(1,(t-t0)/D),v=to*(1-Math.pow(1-k,3));b.textContent=k>=1?fin:neg+pre+v.toFixed(dec);if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
 {const _vaX=viewAnim;viewAnim=function(){_vaX.apply(this,arguments);try{countUps()}catch(e){}}}
+
+/* ---- los totales "saltan" cuando cambian ---- */
+{const SEL='.pc-tot .big b,.tot .big b,.vbar b,.change b,.due',
+  snapB=()=>{const m=[];try{$$(SEL).forEach(e=>{if(!e.closest('#modal'))m.push([e,e.textContent])})}catch(x){}return m};
+  const _rb=render;render=function(){const k=typeof view!=='undefined'?view:'',a=snapB().map(x=>x[1]);
+    const r=_rb.apply(this,arguments);
+    try{if(!matchMedia('(prefers-reduced-motion:reduce)').matches){const b=snapB();
+      if(a.length&&a.length===b.length&&k===(typeof view!=='undefined'?view:''))b.forEach(([e,t],i)=>{if(t!==a[i]){e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump');setTimeout(()=>e.classList.remove('bump'),600)}})}}catch(x){}
+    return r}}
 
 setBizLogo();
 loginShow(false);
