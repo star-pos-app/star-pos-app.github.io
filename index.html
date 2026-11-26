@@ -1197,7 +1197,7 @@ const SEED=[];
 const KEY='star_pos_v1';
 const PAY={efectivo:{n:'Efectivo',sri:'01'},tarjeta:{n:'Tarjeta',sri:'19'},transferencia:{n:'Transferencia',sri:'20'},qr:{n:'Deuna / QR',sri:'20'},credito:{n:'Crédito (fiado)',sri:'01'}};
 let storageOK=true, S;
-function emptyCust(){return {ident:'',name:'',tel:'',email:'',addr:''}}
+function emptyCust(){return {ident:'',code:'',name:'',tel:'',email:'',addr:''}}
 function newCart(){return {lines:[],gd:0,list:(typeof S!=='undefined'&&S&&S.cart&&!S.cart.listAuto)?S.cart.list:-1,customerId:'cf',cust:emptyCust()}}
 function defaults(){
   return {v:1,
@@ -1308,7 +1308,9 @@ function rucOk(r){if(!/^\d{13}$/.test(r))return false;const p=+r.slice(0,2);if(!
   if(t===9)return calc([4,3,2,7,6,5,4,3,2],9)&&r.slice(10)!=='000';
   if(t===6)return calc([3,2,7,6,5,4,3,2],8)&&r.slice(9)!=='0000';
   return false}
-const TIPOS={cedula:'Cédula',ruc:'RUC',pasaporte:'Pasaporte',cf:'Consumidor final'};
+const TIPOS={cedula:'Cédula',ruc:'RUC',pasaporte:'Pasaporte',cf:'Consumidor final',codigo:'Código'};
+const cleanCode=v=>String(v||'').trim().toUpperCase();
+const idSnap=c=>({custIdent:c.ident||c.code||'',custTipo:c.ident?c.tipo:(c.code?'codigo':c.tipo)});
 function identErr(tipo,id){id=String(id||'').trim();if(tipo==='cf')return '';if(!id)return 'Ingrese la identificación.';
   if(tipo==='cedula'&&!/^\d{10}$/.test(id))return 'La cédula debe tener 10 dígitos.';
   if(tipo==='ruc'&&!/^\d{13}$/.test(id))return 'El RUC debe tener 13 dígitos.';return ''}
@@ -1624,18 +1626,21 @@ function custView(){const c=S.cart;if(c.customerId==='cf')return {...emptyCust()
 function renderCust(){
   const el=$('#custPanel');if(!el)return;const v=custView(),dis=v.kind==='cf'?'disabled':'';let st;
   if(v.kind==='cf')st='<span class="chip">Consumidor final</span>';else if(v.kind==='saved')st='<span class="chip ok">Cliente guardado</span>'+(v.merch?' <span class="chip warn">⭐ Aliado</span>':'');
-  else{const tp=guessTipo(v.ident),e=identErr(tp,v.ident),w=identWarn(tp,v.ident);st=e?`<span class="chip bad">${esc(e)}</span>`:w?`<span class="chip warn">Cliente nuevo · ${w}</span>`:'<span class="chip warn">Cliente nuevo</span>'}
+  else{const tp=guessTipo(v.ident),e=v.ident?(tp==='pasaporte'?'Cédula: 10 dígitos · RUC: 13':identErr(tp,v.ident)):'',w=v.ident?identWarn(tp,v.ident):'';st=e?`<span class="chip bad">${esc(e)}</span>`:w?`<span class="chip warn">Cliente nuevo · ${w}</span>`:'<span class="chip warn">Cliente nuevo</span>'}
   const F=(f,l,cls,type)=>`<label class="f ${cls||''}">${l}<input id="cu_${f}" ${type?`type="${type}"`:''} value="${esc(v[f])}" data-chg="custField" data-f="${f}" ${dis} autocomplete="off"></label>`;
   el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px"><h3>Cliente</h3>${st}</div>
    <div class="cgrid"><label class="f s2">Cédula o RUC<input id="cu_ident" value="${esc(v.ident)}" data-chg="custIdent" inputmode="numeric" placeholder="Vacío = consumidor final" autocomplete="off"></label>
+   <label class="f s2">Código de cliente<input id="cu_code" value="${esc(v.code||'')}" data-chg="custCode" placeholder="Letras y/o números" autocapitalize="characters" autocomplete="off"></label>
    ${F('name','Nombres / razón social','s2')}${F('tel','Teléfono')}${F('email','Correo','','email')}${F('addr','Dirección','s2')}</div>
    ${v.kind!=='cf'?`<label class="ck" style="margin-top:8px"><input type="checkbox" data-chg="custMerch" ${v.merch?'checked':''}> ⭐ Cliente aliado (paga el precio más bajo)</label>`:''}<div class="ft" style="margin-top:10px;justify-content:flex-start">${v.kind==='new'?'<button class="btn sm pri" data-act="saveNewCust">Guardar cliente</button>':''}<button class="btn sm" data-act="pickCustomer">Buscar cliente</button><button class="btn sm" data-act="newCust" data-from="venta">＋ Nuevo cliente</button>${v.kind!=='cf'?'<button class="btn sm" data-act="custClear">Consumidor final</button>':''}</div>`}
 function saveNewCust(){
-  const c=S.cart,d=c.cust,tipo=guessTipo(d.ident),e=identErr(tipo,d.ident);
+  const c=S.cart,d=c.cust,ident=d.ident||'',code=cleanCode(d.code),tipo=ident?guessTipo(ident):'cedula';
+  if(!ident&&!code){toast('Ingrese la cédula/RUC o el código del cliente.',1);const i=$('#cu_ident');i&&i.focus();return false}
+  const e=ident?(tipo==='pasaporte'?'La cédula debe tener 10 dígitos o el RUC 13 (o use el código de cliente).':identErr(tipo,ident)):'';
   if(e){toast(e,1);const i=$('#cu_ident');i&&i.focus();return false}
   if(!String(d.name).trim()){toast('Ingrese el nombre del cliente.',1);const i=$('#cu_name');i&&i.focus();return false}
-  const dup=S.customers.find(x=>x.ident===d.ident);if(dup){c.customerId=dup.id;c.cust=emptyCust();renderCust();return true}
-  const id='c'+uid();S.customers.push({id,tipo,ident:d.ident,name:String(d.name).trim().toUpperCase(),tel:d.tel||'',email:d.email||'',addr:d.addr||'',merch:!!d.merch});
+  const dup=S.customers.find(x=>x.id!=='cf'&&((ident&&x.ident===ident)||(code&&cleanCode(x.code)===code)));if(dup){c.customerId=dup.id;c.cust=emptyCust();renderCust();return true}
+  const id='c'+uid();S.customers.push({id,tipo,ident,code,name:String(d.name).trim().toUpperCase(),tel:d.tel||'',email:d.email||'',addr:d.addr||'',merch:!!d.merch});
   c.customerId=id;c.cust=emptyCust();save(true);renderCust();toast('Cliente guardado.');return true}
 
 /* ---- cobro ---- */
@@ -1645,7 +1650,7 @@ function openPay(){
   if(!S.caja){toast('Abra la caja para cobrar.',1);location.hash='#venta';render();return}
   if(S.cart.customerId==='new'&&!saveNewCust())return;
   const T=curTotals(),c=cust(S.cart.customerId);
-  if(c.id==='cf'&&!S.cart.credit&&T.total>S.cfg.cfLimit){toast(`Ventas mayores a ${money(S.cfg.cfLimit)} requieren cédula o RUC del cliente.`,1);const i=$('#cu_ident');i&&i.focus();return}
+  if(c.id==='cf'&&!S.cart.credit&&T.total>S.cfg.cfLimit){toast(`Ventas mayores a ${money(S.cfg.cfLimit)} requieren cédula, RUC o código del cliente.`,1);const i=$('#cu_ident');i&&i.focus();return}
   for(const l of L){const p=prod(l.pid);if(p.track&&!S.cfg.allowNeg&&l.qty>p.stock)return toast(`Stock insuficiente de ${p.name}.`,1)}
   if(S.cart.credit){if(c.id==='cf'){toast('Elija el cliente para vender a crédito.',1);pickCustomer();return}return openPayCredit(T,c)}
   const bills=[...new Set([T.total,Math.ceil(T.total),5,10,20,50,100,Math.ceil(T.total/50)*50].filter(x=>x>=T.total))].sort((a,b)=>a-b).slice(0,6);
@@ -1693,7 +1698,7 @@ function confirmPay(){
 function finishSale(pays,change,balance,due){
   if(netLim().st==='lock'){toast('Ventas bloqueadas: más de 24 h sin sincronizar. Conéctese a internet.',1);return}
   const T=curTotals(),c=cust(S.cart.customerId);
-  const sale={id:uid(),dev:DEV,num:nextNum(),ts:Date.now(),doc:S.cfg.docType,customerId:c.id,custName:c.name,custIdent:c.ident,custTipo:c.tipo,
+  const sale={id:uid(),dev:DEV,num:nextNum(),ts:Date.now(),doc:S.cfg.docType,customerId:c.id,custName:c.name,...idSnap(c),
     lines:T.lines.map(l=>({pid:l.pid,code:l.code,name:l.name,qty:l.qty,price:l.price,disc:l.disc||0,gd:S.cart.gd||0,iva:l.iva,cost:l.cost,b:l.b,t:l.t,tot:l.tot})),
     gd:S.cart.gd||0,sub0:T.sub0,subIva:T.subIva,iva:T.iva,disc:T.disc,total:T.total,ivaRate:S.cfg.ivaRate,incIva:S.cfg.incIva,
     pays,change,seller:attName(),prof:S.cfg.cur||'',credit:balance>0,balance,due:due||'',abonos:[],status:'ok',sessionId:S.caja?S.caja.id:null};
@@ -1850,7 +1855,7 @@ let curPf=null;
 function makeProforma(){
   const L=cartLines();if(!L.length){const n=pfCount();return n?pfList():toast('Agregue productos al carrito para hacer una proforma.',1)}
   const T=curTotals(),cc=S.cart.customerId,c=cc==='new'?{id:'cf',name:(S.cart.cust.name||'').trim()||'CONSUMIDOR FINAL',ident:S.cart.cust.ident||'',tipo:'cf'}:cust(cc);
-  const o=pfLoad(),pf={id:uid(),proforma:true,num:'PF-'+String(o.seq).padStart(4,'0'),ts:Date.now(),doc:'Proforma',customerId:c.id,custName:c.name,custIdent:c.ident,custTipo:c.tipo,
+  const o=pfLoad(),pf={id:uid(),proforma:true,num:'PF-'+String(o.seq).padStart(4,'0'),ts:Date.now(),doc:'Proforma',customerId:c.id,custName:c.name,...idSnap(c),
     lines:T.lines.map(l=>({pid:l.pid,code:l.code,name:l.name,qty:l.qty,price:l.price,disc:l.disc||0,iva:l.iva,tot:l.tot})),
     sub0:T.sub0,subIva:T.subIva,iva:T.iva,disc:T.disc,total:T.total,ivaRate:S.cfg.ivaRate,incIva:S.cfg.incIva,pays:[],change:0,balance:0,due:'',seller:attName(),status:'ok',
     cart:{lines:JSON.parse(JSON.stringify(S.cart.lines)),gd:S.cart.gd||0}};
@@ -1921,10 +1926,10 @@ function showReceipt(s,fresh){rcpt=s;
 
 /* ---- clientes en venta ---- */
 function pickCustomer(){
-  modal(`${dlgHead('Cliente de la venta')}<input id="cq" placeholder="Buscar por nombre o cédula/RUC" data-inp="custList" autofocus><div id="clist" style="max-height:50vh;overflow:auto"></div><div class="ft"><button class="btn" data-act="newCust" data-from="venta">Nuevo cliente</button></div>`);custList()}
+  modal(`${dlgHead('Cliente de la venta')}<input id="cq" placeholder="Buscar por nombre, código o cédula/RUC" data-inp="custList" autofocus><div id="clist" style="max-height:50vh;overflow:auto"></div><div class="ft"><button class="btn" data-act="newCust" data-from="venta">Nuevo cliente</button></div>`);custList()}
 function custList(){const q=norm(($('#cq')||{}).value||'').trim(),box=$('#clist');if(!box)return;
-  const L=S.customers.filter(c=>!q||norm(c.name+' '+c.ident).includes(q)).slice(0,60);
-  box.innerHTML=L.map(c=>`<button class="btn" style="display:flex;width:100%;justify-content:space-between;margin-bottom:6px;text-align:left" data-act="setCust" data-id="${c.id}"><span>${esc(c.name)}</span><span class="muted">${esc(c.ident)}</span></button>`).join('')||empty('Sin resultados.')}
+  const L=S.customers.filter(c=>!q||norm(c.name+' '+c.ident+' '+(c.code||'')).includes(q)).slice(0,60);
+  box.innerHTML=L.map(c=>`<button class="btn" style="display:flex;width:100%;justify-content:space-between;margin-bottom:6px;text-align:left" data-act="setCust" data-id="${c.id}"><span>${esc(c.name)}</span><span class="muted">${esc([c.code,c.ident].filter(Boolean).join(' · '))}</span></button>`).join('')||empty('Sin resultados.')}
 
 /* ===================== HISTORIAL ===================== */
 function vHistorial(){
@@ -2073,18 +2078,23 @@ function purchaseDo(){const L=PU.filter(l=>l.qty>0);if(!L.length)return toast('A
 /* ===================== CLIENTES ===================== */
 function debt(cid){return r2(S.sales.filter(s=>s.customerId===cid&&s.status==='ok'&&s.balance>0).reduce((a,s)=>a+s.balance,0))}
 function vClientes(){
-  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">Clientes</h2><button class="btn pri" data-act="newCust" data-from="">Nuevo cliente</button></div><div class="bar"><input id="cq2" class="grow" placeholder="Buscar por nombre o identificación" data-inp="custTable"></div><div id="cbody"></div>`;custTable()}
-function custTable(){const q=norm($('#cq2').value).trim();const L=S.customers.filter(c=>!q||norm(c.name+' '+c.ident).includes(q));
-  $('#cbody').innerHTML=`<div class="muted" style="margin-bottom:8px">Total por cobrar: <b class="money">${money(S.customers.reduce((a,c)=>a+debt(c.id),0))}</b></div><div class="tblw"><table><thead><tr><th>Identificación</th><th>Nombre</th><th>Teléfono</th><th>Correo</th><th class="r">Saldo por cobrar</th><th></th></tr></thead><tbody>${L.map(c=>{const d=debt(c.id);return `<tr><td>${esc(c.ident)}</td><td class="wrapc">${esc(c.name)}</td><td>${esc(c.tel)}</td><td>${esc(c.email)}</td><td class="r">${d>0?`<span class="pill warn">${money(d)}</span>`:'—'}</td><td>${c.id==='cf'?'':`<button class="btn sm" data-act="editCust" data-id="${c.id}">Editar</button> `}${d>0?`<button class="btn sm pri" data-act="collect" data-id="${c.id}">Cobrar deuda</button>`:''}</td></tr>`}).join('')}</tbody></table></div>`}
+  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">Clientes</h2><button class="btn pri" data-act="newCust" data-from="">Nuevo cliente</button></div><div class="bar"><input id="cq2" class="grow" placeholder="Buscar por nombre, código o identificación" data-inp="custTable"></div><div id="cbody"></div>`;custTable()}
+function custTable(){const q=norm($('#cq2').value).trim();const L=S.customers.filter(c=>!q||norm(c.name+' '+c.ident+' '+(c.code||'')).includes(q));
+  $('#cbody').innerHTML=`<div class="muted" style="margin-bottom:8px">Total por cobrar: <b class="money">${money(S.customers.reduce((a,c)=>a+debt(c.id),0))}</b></div><div class="tblw"><table><thead><tr><th>Código</th><th>Identificación</th><th>Nombre</th><th>Teléfono</th><th>Correo</th><th class="r">Saldo por cobrar</th><th></th></tr></thead><tbody>${L.map(c=>{const d=debt(c.id);return `<tr><td>${esc(c.code||'')}</td><td>${esc(c.ident)}</td><td class="wrapc">${esc(c.name)}</td><td>${esc(c.tel)}</td><td>${esc(c.email)}</td><td class="r">${d>0?`<span class="pill warn">${money(d)}</span>`:'—'}</td><td>${c.id==='cf'?'':`<button class="btn sm" data-act="editCust" data-id="${c.id}">Editar</button> `}${d>0?`<button class="btn sm pri" data-act="collect" data-id="${c.id}">Cobrar deuda</button>`:''}</td></tr>`}).join('')}</tbody></table></div>`}
 function custModal(id,from){
   const c=id?cust(id):{tipo:'cedula',ident:'',name:'',email:'',tel:'',addr:''};
-  modal(`${dlgHead(id?'Editar cliente':'Nuevo cliente')}<div class="fgrid"><label class="f">Tipo de identificación<select id="c_tipo">${['cedula','ruc','pasaporte'].map(k=>`<option value="${k}" ${c.tipo===k?'selected':''}>${TIPOS[k]}</option>`).join('')}</select></label><label class="f">Número<input id="c_ident" value="${esc(c.ident)}" inputmode="numeric" autofocus></label></div>
+  modal(`${dlgHead(id?'Editar cliente':'Nuevo cliente')}<div class="fgrid"><label class="f">Cédula o RUC<input id="c_ident" value="${esc(c.ident)}" inputmode="numeric" autocomplete="off" placeholder="Opcional si tiene código" autofocus></label><label class="f">Código de cliente<input id="c_code" value="${esc(c.code||'')}" autocomplete="off" autocapitalize="characters" placeholder="Letras y/o números · opcional si tiene cédula"></label></div>
   <label class="f">Nombres / razón social<input id="c_name" value="${esc(c.name)}"></label><div class="fgrid"><label class="f">Teléfono<input id="c_tel" value="${esc(c.tel)}"></label><label class="f">Correo (para enviar la factura)<input id="c_email" type="email" value="${esc(c.email)}"></label></div><label class="f">Dirección<input id="c_addr" value="${esc(c.addr)}"></label><label class="ck"><input type="checkbox" id="c_merch" ${c.merch?'checked':''}> ⭐ Aliado / comerciante antiguo (se le cobra el precio más bajo registrado de cada producto, nunca $0)</label>
   <div class="ft">${id?`<button class="btn bad" data-act="delCust" data-id="${id}">Eliminar</button>`:''}<button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="saveCust" data-id="${id||''}" data-from="${from||''}">Guardar</button></div>`)}
 function saveCust(id,from){
-  const tipo=$('#c_tipo').value,ident=cleanId($('#c_ident').value),name=$('#c_name').value.trim().toUpperCase();const e=identErr(tipo,ident);if(e)return toast(e,1);if(!name)return toast('Ingrese el nombre del cliente.',1);
-  if(S.customers.some(c=>c.ident===ident&&c.id!==id))return toast('Ya existe un cliente con esa identificación.',1);
-  const d={tipo,ident,name,merch:$('#c_merch').checked,tel:$('#c_tel').value.trim(),email:$('#c_email').value.trim(),addr:$('#c_addr').value.trim()};let cid=id;
+  const old=id?cust(id):null,ident=cleanId($('#c_ident').value),code=cleanCode($('#c_code').value),name=$('#c_name').value.trim().toUpperCase();
+  const tipo=ident?guessTipo(ident):(old&&old.tipo)||'cedula';
+  if(!code&&!ident)return toast('Ingrese la cédula/RUC o el código de cliente (al menos uno).',1);
+  if(ident){if(tipo==='pasaporte'&&!(old&&old.tipo==='pasaporte'&&old.ident===ident))return toast('La cédula debe tener 10 dígitos o el RUC 13.',1);const e=identErr(tipo,ident);if(e)return toast(e,1)}
+  if(!name)return toast('Ingrese el nombre del cliente.',1);
+  if(ident&&S.customers.some(c=>c.ident===ident&&c.id!==id))return toast('Ya existe un cliente con esa identificación.',1);
+  if(code&&S.customers.some(c=>cleanCode(c.code)===code&&c.id!==id))return toast('Ya existe un cliente con ese código.',1);
+  const d={tipo,ident,code,name,merch:$('#c_merch').checked,tel:$('#c_tel').value.trim(),email:$('#c_email').value.trim(),addr:$('#c_addr').value.trim()};let cid=id;
   if(id)Object.assign(cust(id),d);else{cid='c'+uid();S.customers.push({id:cid,...d})}
   if(from==='venta'){S.cart.customerId=cid;applyMerch(cust(cid))}save(true);closeModal();toast('Cliente guardado.');render()}
 /* ===================== PROVEEDORES ===================== */
@@ -2372,11 +2382,14 @@ const A={
   resetSalesAsk(){confirmBox('Se borrarán todas las ventas, abonos, movimientos de stock y cierres de caja. Los productos y clientes se conservan, y los saldos de Caja y Banco se recalculan sin esas ventas. No se puede deshacer.',()=>{S.sales=[];S.moves=[];S.cajaHist=[];S.cajas={};S.held=[];S.ledger=S.ledger.filter(e=>!['venta','abono','devolucion'].includes(lgKey(e)));S.cfg.seq=1;save(true);toast('Historial borrado.');render()},'Borrar todo',1)}
 };
 function heldModal(){modal(`${dlgHead('Ventas en espera')}${S.held.map(h=>`<div class="payrow" style="grid-template-columns:1fr auto auto"><span>${fmtDT(h.ts)} · ${h.cart.lines.length} ítems · <b>${money(h.total)}</b></span><button class="btn sm pri" data-act="recover" data-id="${h.id}">Recuperar</button><button class="btn sm bad" data-act="dropHeld" data-id="${h.id}">Quitar</button></div>`).join('')||empty('No hay ventas en espera.')}`)}
+function custLookup(){const c=S.cart,ident=cleanId(($('#cu_ident')||{}).value),code=cleanCode(($('#cu_code')||{}).value);
+  if(!ident&&!code){c.customerId='cf';c.cust=emptyCust()}
+  else{const f=S.customers.find(x=>x.id!=='cf'&&ident&&x.ident===ident)||S.customers.find(x=>x.id!=='cf'&&code&&cleanCode(x.code)===code);
+    if(f){c.customerId=f.id;c.cust=emptyCust();applyMerch(f)}else{const keep=c.customerId==='new'?c.cust:emptyCust();c.customerId='new';c.cust={...keep,ident,code}}}
+  save();renderCust();const t=c.customerId==='new'?$('#cu_name'):$('#q');t&&t.focus()}
 const CH={
   setList(el){S.cart.list=+el.value;S.cart.listAuto=false;for(const l of S.cart.lines)reprice(l);renderCart();save()},
-  custIdent(el){const v=cleanId(el.value),c=S.cart;
-    if(!v){c.customerId='cf';c.cust=emptyCust()}else{const f=S.customers.find(x=>x.ident===v&&x.id!=='cf');if(f){c.customerId=f.id;c.cust=emptyCust();applyMerch(f)}else{c.customerId='new';c.cust={...emptyCust(),ident:v}}}
-    save();renderCust();const t=c.customerId==='new'?$('#cu_name'):$('#q');t&&t.focus()},
+  custIdent(el){custLookup()},custCode(el){custLookup()},
   custMerch(el){const c=S.cart;if(c.customerId==='new'){c.cust.merch=el.checked;applyMerch({merch:el.checked})}else if(c.customerId!=='cf'){const k=cust(c.customerId);k.merch=el.checked;applyMerch(k);save(true)}renderCust();save()},
   custField(el){const f=el.dataset.f,v=el.value.trim(),c=S.cart;if(c.customerId==='new')c.cust[f]=v;else if(c.customerId!=='cf'){cust(c.customerId)[f]=f==='name'?v.toUpperCase():v}save()},
   lineQty(el){const l=S.cart.lines[+el.dataset.i],v=Math.max(0,num(el.value)),p=prod(l.pid);if(p.track&&!S.cfg.allowNeg&&v>p.stock){toast(`Stock insuficiente (hay ${p.stock}).`,1);renderCart();return}l.qty=v;reprice(l);renderCart();save()},
@@ -2531,7 +2544,7 @@ function vCreditos(){
 function crDays(){S.cfg.crDays=Math.max(0,Math.floor(num($('#crd').value)));save()}
 function crList(){
   CR.q=($('#crq')||{}).value||'';CR.f=($('#crf')||{}).value||'open';const q=norm(CR.q).trim(),box=$('#crbody');if(!box)return;
-  let D=crClients().filter(x=>!q||norm(x.c.name+' '+x.c.ident).includes(q));
+  let D=crClients().filter(x=>!q||norm(x.c.name+' '+x.c.ident+' '+(x.c.code||'')).includes(q));
   if(CR.f==='open')D=D.filter(x=>x.debt>0);else if(CR.f==='paid')D=D.filter(x=>!x.debt);
   D.sort((a,b)=>b.over.length-a.over.length||b.debt-a.debt);
   box.innerHTML=D.length?D.map(crCard).join(''):empty('No hay créditos para mostrar.')}
