@@ -1205,6 +1205,46 @@ body.pc .pc .shipbox{padding:6px 12px}
 .scmsg{padding:2px 4px;font-size:13px;text-align:center;color:var(--muted)}
 .scmsg.ok{color:var(--ok)}.scmsg.bad{color:var(--bad)}
 .scbtns{display:flex;gap:8px;flex-wrap:wrap}
+/* ===== ENVÍOS: ciudad del negocio y cooperativas ===== */
+a.btn{text-decoration:none;color:var(--fg);display:inline-flex;align-items:center;justify-content:center}
+.shipcoops{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.shipchip.sm{min-height:30px;padding:0 10px;font-size:12px}
+.enloc2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.enloc2>span{margin-right:auto}
+.cpsum{display:grid;gap:6px;margin-top:8px}
+.cpsum>div{display:flex;flex-direction:column;gap:1px}
+.enname{display:flex;flex-direction:column;gap:1px;min-width:0}
+.encoop{flex:1 1 100%;min-height:30px;font-size:12px;padding:2px 6px;border-radius:8px}
+.enc{flex-wrap:wrap}
+.cplist{display:grid;gap:8px;max-height:52vh;overflow:auto}
+.cprow{display:grid;gap:6px;border:1px solid var(--line);border-radius:10px;padding:8px}
+.cphd{display:flex;gap:6px}.cphd input{flex:1;min-width:0}
+/* ===== ENVÍOS: último valor guardado + ventana de precios ===== */
+.shipchip.last{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;gap:0;padding:2px 12px;line-height:1.15;border-color:var(--accent);background:var(--accent-soft)}
+.shipchip.last small{font-size:9px;font-weight:600;opacity:.8;letter-spacing:.02em}
+.shipchip.last.on{background:var(--accent);color:var(--accent-fg)}
+.enbar{display:grid;gap:8px;margin-bottom:12px}
+.enfil{display:flex;flex-wrap:wrap;gap:6px}
+.enreg{margin-bottom:18px}
+.enreg>h3{display:flex;align-items:center;gap:8px;font-family:var(--font-head);font-size:17px;margin:0 0 4px;padding:6px 0;position:sticky;top:0;z-index:3;background:var(--bg)}
+.enprov{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;padding:10px 2px 2px}
+.enrow{display:grid;grid-template-columns:minmax(140px,1.2fr) minmax(170px,1fr) minmax(170px,1fr);gap:6px 12px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 12px;margin-top:4px}
+.enrow.enhead{background:transparent;border:0;padding-block:2px;margin-top:0}
+.enc{display:flex;align-items:center;gap:8px;min-width:0}
+.enc small{white-space:nowrap}
+.enl{display:none;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.enl em{font-style:normal}
+.enloc{grid-column:2/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.enc .shipin.has{border-color:var(--accent)}
+.enc .shipin.has b{color:var(--accent)}
+.enc .shipin.saved{border-color:var(--ok);box-shadow:0 0 0 3px var(--ok-bg)}
+body.m .enrow{grid-template-columns:1fr 1fr}
+body.m .enname,body.m .enloc{grid-column:1/-1}
+body.m .enhead{display:none}
+body.m .enl{display:flex}
+body.m .enc{flex-direction:column;align-items:flex-start;gap:4px}
+body.m .enc .shipin{width:100%}
+body.m .enc .shipin input{width:100%}
 </style>
 
 <div class="wrap">
@@ -1257,13 +1297,13 @@ function defaults(){
   return {v:1,
     cfg:{name:'Mi negocio',ruc:'',addr:'',tel:'',regimen:'RIMPE Negocio Popular',docType:'Nota de venta',ivaRate:15,incIva:true,
       estab:'001',pto:'001',seq:1,requireCaja:true,allowNeg:true,cfLimit:50,footer:'¡Gracias por su compra!',zoom:80,feed:2,
-      listNames:['Unidad','Por mayor','Docena','Bulto','Aliado','Caja'],t2:3,t3:12,lastBackup:0,offline:false},
+      listNames:['Unidad','Por mayor','Docena','Bulto','Aliado','Caja'],t2:3,t3:12,lastBackup:0,offline:false,city:''},
     products:SEED.map((s,i)=>({id:'p'+(i+1),code:s.c,name:s.d,line:s.l,cost:s.k,p:[...s.p,0],iva:s.iva,track:s.st,stock:0,min:0,active:s.a,bulto:0,supplier:''})),
     customers:[{id:'cf',tipo:'cf',ident:'9999999999999',name:'CONSUMIDOR FINAL',email:'',tel:'',addr:''}],
     sales:[],moves:[],ledger:[],caja:null,cajaHist:[],held:[],suppliers:[],sellers:[],expenses:[],promos:[],requests:[],
     cart:newCart()};
 }
-function normalize(o){const d=defaults(),old=o.cfg||{};o.cfg=Object.assign(d.cfg,old);if(!o.cfg.name||o.cfg.name==='STAR')o.cfg.name='Mi negocio';if(old.t2===undefined)o.cfg.listNames=defaults().cfg.listNames;
+function normalize(o){const d=defaults(),old=o.cfg||{};o.cfg=Object.assign(d.cfg,old);if(old.city===undefined&&((o.sales&&o.sales.length)||(o.ledger&&o.ledger.length)||(old.name&&old.name!=='STAR'&&old.name!=='Mi negocio')))o.cfg.city='Jipijapa';if(!o.cfg.name||o.cfg.name==='STAR')o.cfg.name='Mi negocio';if(old.t2===undefined)o.cfg.listNames=defaults().cfg.listNames;
   o.cart=Object.assign(newCart(),o.cart||{});if(old.t2===undefined)o.cart.list=-1;o.cart.cust=Object.assign(emptyCust(),o.cart.cust||{});
   if(o.cart.customerId==='new'&&!o.cart.cust.ident)o.cart.customerId='cf';
   if(!o.products)o.products=d.products;o.cfg.listNames=(o.cfg.listNames||[]).slice();while(o.cfg.listNames.length<6)o.cfg.listNames.push(defaults().cfg.listNames[o.cfg.listNames.length]||'Caja');o.products.forEach(p=>{if(!p.p)p.p=[0,0,0,0];while(p.p.length<6)p.p.push(0);if(p.dn==null)p.dn=0;if(p.cn==null)p.cn=0;if(p.bulto==null)p.bulto=0;if(p.boxCode==null)p.boxCode='';if(p.supplier==null)p.supplier=''});return Object.assign(d,o)}
@@ -1373,7 +1413,7 @@ function identWarn(tipo,id){return (tipo==='cedula'&&!cedulaOk(id))||(tipo==='ru
 
 /* ===================== ui base ===================== */
 let view='venta';
-const VIEWS=[['venta','Venta'],['caja','Caja'],['banco','Banco'],['historial','Historial'],['productos','Productos'],['inventario','Inventario'],['clientes','Clientes'],['creditos','Créditos'],['proveedores','Proveedores'],['ahorros','Ahorros'],['reportes','Reportes'],['promos','Promos'],['ajustes','Ajustes']];
+const VIEWS=[['venta','Venta'],['caja','Caja'],['banco','Banco'],['historial','Historial'],['productos','Productos'],['inventario','Inventario'],['clientes','Clientes'],['envios','Envíos'],['creditos','Créditos'],['proveedores','Proveedores'],['ahorros','Ahorros'],['reportes','Reportes'],['promos','Promos'],['ajustes','Ajustes']];
 function toast(msg,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.innerHTML='<span class="ti">'+(bad?'!':'✓')+'</span><span></span>';t.lastChild.textContent=msg;const w=$('#toasts');while(w.children.length>=4)w.firstChild.remove();w.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},bad?4200:2400);if(bad&&!$('#modal').hidden){try{shakeDlg()}catch(e){}}}
 function modal(html,wide){try{scanStop()}catch(_){}const m=$('#modal'),gh=document.getElementById('modalGhost');if(gh)gh.remove();m.innerHTML=`<div class="scrim" data-act="closeModal"></div><div class="dlg ${wide?'wide':''}" role="dialog" aria-modal="true">${html}</div>`;m.hidden=false;setTimeout(()=>{const f=$('[autofocus]',m);if(f){f.focus();f.select&&f.select()}},30)}
 function closeModal(){pendingAdd=false;try{scanStop()}catch(_){}const m=$('#modal');
@@ -1398,6 +1438,7 @@ historial:'<path d="M4 3h16v18l-3-2-3 2-3-2-3 2-4-2z"/><path d="M8 8h8M8 12h8"/>
 productos:'<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
 inventario:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>',
 clientes:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 3-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.8 0 4.5 1.8 4.5 4.5"/>',
+envios:'<path d="M12 21.5s-7-6.1-7-11.8a7 7 0 0 1 14 0c0 5.7-7 11.8-7 11.8z"/><circle cx="12" cy="9.5" r="2.6"/>',
 proveedores:'<path d="M2 6h11v10H2zM13 9h4l4 4v3h-8"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/>',
 caja:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9v.01M18 15v.01"/>',
 reportes:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
@@ -1415,7 +1456,7 @@ function applyZoom(){const z=Math.min(150,Math.max(50,num(S.cfg.zoom)||80));docu
 function render(){
   document.body.className=(curMode()==='pc'?'pc':'m')+(isOwner()?'':' emp')+(curMode()==='pc'&&view==='venta'?' vfit':'')+(menuOpen?' menu':'');applyZoom();
   $('#bname').textContent=S.cfg.name||'STAR';nav();headState();
-  ({venta:vVenta,historial:vHistorial,productos:vProductos,inventario:vInventario,clientes:vClientes,creditos:vCreditos,cobrados:vCobrados,proveedores:vProveedores,caja:vCaja,banco:vBanco,ahorros:vAhorros,reportes:vReportes,promos:vPromos,ajustes:vAjustes})[view]();
+  ({venta:vVenta,historial:vHistorial,productos:vProductos,inventario:vInventario,clientes:vClientes,creditos:vCreditos,cobrados:vCobrados,proveedores:vProveedores,envios:vEnvios,caja:vCaja,banco:vBanco,ahorros:vAhorros,reportes:vReportes,promos:vPromos,ajustes:vAjustes})[view]();
 }
 /* Refresco suave (tras sincronizar): no mueve la pantalla ni borra lo que se está escribiendo */
 function softRender(){
@@ -2380,7 +2421,7 @@ let SETTAB='neg';
 function vAjustes(){vAjustes0();bizLock()}
 function vAjustes0(){const c=S.cfg;const T2=k=>`<input type="number" step="1" min="1" data-cfg="${k}" data-t="n" value="${c[k]}"> unidades`;const T=(k,l,t)=>`<label class="f">${l}<input data-cfg="${k}" data-t="${t||'s'}" value="${esc(c[k])}" ${t==='n'?'type="number" step="1"':''}></label>`;
   $('#view').innerHTML=`<div class="bar"><h2>Ajustes</h2></div><div class="stabs" data-st="${SETTAB}">${[['neg','🏪 Negocio'],['vta','🛒 Ventas'],['tick','🧾 Tickets'],['apa','🎨 Apariencia'],['usr','👥 Usuarios'],['red','🌐 Equipos y nube'],['dat','💾 Datos']].filter(x=>(x[0]!=='dat'&&x[0]!=='red')||isOwner()).map(([k,n])=>`<button class="btn sm${SETTAB===k?' on':''}" data-act="setTab" data-t="${k}">${n}</button>`).join('')}</div>
-  <div class="panel" data-sec="neg" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Datos del negocio</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div style="width:64px;height:64px;border:1px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface2)">${c.logo?`<img src="${c.logo}" alt="" style="max-width:100%;max-height:100%">`:'<span class="muted small">Sin logo</span>'}</div><div><b>Logo de su negocio</b><div class="muted small" style="margin-bottom:6px">Sale junto al nombre y en sus comprobantes.</div><button class="btn sm" data-act="logoPick">${c.logo?'Cambiar logo':'Subir logo'}</button>${c.logo?' <button class="btn sm bad" data-act="logoDel">Quitar</button>':''}</div></div><div class="fgrid">${T('name','Nombre comercial')}${T('ruc','RUC')}${T('addr','Dirección')}${T('tel','Teléfono')}
+  <div class="panel" data-sec="neg" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Datos del negocio</h3><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div style="width:64px;height:64px;border:1px dashed var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--surface2)">${c.logo?`<img src="${c.logo}" alt="" style="max-width:100%;max-height:100%">`:'<span class="muted small">Sin logo</span>'}</div><div><b>Logo de su negocio</b><div class="muted small" style="margin-bottom:6px">Sale junto al nombre y en sus comprobantes.</div><button class="btn sm" data-act="logoPick">${c.logo?'Cambiar logo':'Subir logo'}</button>${c.logo?' <button class="btn sm bad" data-act="logoDel">Quitar</button>':''}</div></div><div class="fgrid">${T('name','Nombre comercial')}${T('ruc','RUC')}${T('addr','Dirección')}<label class="f">Ciudad del negocio<button type="button" class="btn shipcity" data-act="bizCity" title="Aquí está su local: es el destino de «entrega local» en Envíos">📍 <span>${esc(bizCity()||'Elegir ciudad')}</span> ▾</button></label>${T('tel','Teléfono')}
    <label class="f">Régimen<select data-cfg="regimen" data-t="s">${['RIMPE Negocio Popular','RIMPE Emprendedor','Régimen General','Persona natural no obligada'].map(x=>`<option ${c.regimen===x?'selected':''}>${x}</option>`).join('')}</select></label>
    <label class="f">Tipo de comprobante<select data-cfg="docType" data-t="s">${['Nota de venta','Factura','Ticket de venta'].map(x=>`<option ${c.docType===x?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
   <div class="panel" data-sec="neg" style="margin-bottom:16px"><h3 style="margin-bottom:12px">Impuestos y numeración</h3><div class="fgrid">${T('ivaRate','Tarifa de IVA (%)','n')}${T('estab','Establecimiento')}${T('pto','Punto de emisión')}${T('seq','Próximo secuencial','n')}${T('cfLimit','Límite consumidor final ($)','n')}</div>
@@ -2535,10 +2576,13 @@ const SHIP_CO={coop:'Cooperativa',serv:'Servientrega'};
 const SHIP_DEF0={coop:[2,5,10],serv:7,jipi:1};
 function shipDef(){const d=S.cfg.shipDef||{};let c=Array.isArray(d.coop)?d.coop.map(num).filter(x=>x>0):[];if(!c.length)c=SHIP_DEF0.coop;
   return {coop:c.slice(0,4),serv:num(d.serv)>0?num(d.serv):SHIP_DEF0.serv,jipi:num(d.jipi)>0?num(d.jipi):SHIP_DEF0.jipi}}
-const isJipi=c=>norm(c||'').trim()==='jipijapa';
+/* Ciudad del negocio (Ajustes → Datos del negocio). Es el destino de «entrega local». Los negocios que ya venían usando el programa quedan en Jipijapa; los nuevos empiezan sin ciudad y no ven cooperativas de otra ciudad. */
+const bizCity=()=>String(S.cfg.city||'').trim();
+const isJipi=c=>{const b=norm(bizCity()).trim();return !!b&&norm(c||'').trim()===b};
+function shipProv(c){const k=norm(c||'').trim();for(const p in SHIP_CITIES)if(SHIP_CITIES[p].some(x=>norm(x).trim()===k))return p;return ''}
 function shipCost(){const s=S.cart&&S.cart.ship;return s&&s.val!=null?r2(Math.max(0,num(s.val))):0}
-function shipInfo(){const s=S.cart.ship;if(!s||(!s.city&&s.val==null))return null;return {ship:shipCost(),shipCity:s.city||'',shipCo:isJipi(s.city)?'':(s.co||'')}}
-function shipLine(s){if(!s||!(s.ship>0||s.shipCity))return null;const nm=[s.shipCo?SHIP_CO[s.shipCo]:'',s.shipCity].filter(Boolean).join(' · ');return ['Envío'+(nm?' ('+nm+')':''),s.ship>0?money(s.ship):'GRATIS']}
+function shipInfo(){const s=S.cart.ship;if(!s||(!s.city&&s.val==null))return null;return {ship:shipCost(),shipCity:s.city||'',shipCo:isJipi(s.city)?'':(s.co||''),shipCoN:(!isJipi(s.city)&&s.co==='coop')?(s.cn||''):''}}
+function shipLine(s){if(!s||!(s.ship>0||s.shipCity))return null;const nm=[s.shipCoN||(s.shipCo?SHIP_CO[s.shipCo]:''),s.shipCity].filter(Boolean).join(' · ');return ['Envío'+(nm?' ('+nm+')':''),s.ship>0?money(s.ship):'GRATIS']}
 const shipCut=t=>t.length>27?t.slice(0,26)+'…':t;
 function shipLogo(k,sz){
   if(k==='serv')return bkLogo({name:'Servientrega',d:'servientrega.com.ec',color:'#ffffff',fg:'#0b7a3b',s:'S'},sz);
@@ -2551,33 +2595,119 @@ function shipHTML(){
   if(!s.city)opts='<span class="muted small">Elija primero la ciudad de destino</span>';
   else if(jp)opts=chip(0,'Gratis')+chip(D.jipi);
   else if(!s.co)opts='<span class="muted small">Elija la empresa de envío</span>';
-  else if(s.co==='coop')opts=D.coop.map(x=>chip(x)).join('')+inp;
-  else opts=chip(D.serv)+inp;
+  else{const sv=shipRate(s.city,s.co),near=(a,b)=>Math.abs(a-b)<.001,
+    last=sv?`<button type="button" class="shipchip last${on(sv.v)}" data-act="shipVal" data-v="${sv.v}" data-cn="${esc(sv.cn||'')}" title="Último valor guardado para ${esc(s.city)} · ${shipAgo(sv.t)}${sv.cn?' · '+esc(sv.cn):''}"><span>★ $${sv.v}</span><small>${sv.cn?esc(sv.cn):'último guardado'}</small></button>`:'';
+    if(s.co==='coop')opts=last+D.coop.filter(x=>!sv||!near(x,sv.v)).map(x=>chip(x)).join('')+inp+`<span id="shipSaveW">${shipSaveHTML()}</span>`;
+    else opts=last+(sv&&near(D.serv,sv.v)?'':chip(D.serv))+inp+`<span id="shipSaveW">${shipSaveHTML()}</span>`}
   const co=['coop','serv'].map(k=>`<button type="button" class="shipco${s.co===k?' on':''}" data-act="shipCo" data-k="${k}" aria-pressed="${s.co===k}">${shipLogo(k,24)}<span>${SHIP_CO[k]}</span></button>`).join('');
+  let cps='';
+  if(s.city&&!jp&&s.co==='coop'){const L=coopsFor(s.city);
+    cps=`<div class="shipcoops"><span class="muted small">🚌 ${L.length?'Llegan a '+esc(s.city)+':':'Cooperativa:'}</span>${L.map(k=>`<button type="button" class="shipchip sm${s.cn===k.n?' on':''}" data-act="shipCoop" data-n="${esc(k.n)}">${esc(k.n)}</button>`).join('')||`<span class="muted small">ninguna registrada para esta ciudad</span>`}${isOwner()?'<button type="button" class="btn sm" data-act="coopMgr" title="Ver o editar las cooperativas y sus destinos">✎ Cooperativas</button>'+(coopList().length?'':'<button type="button" class="btn sm" data-act="coopFind">🔎 Buscar terminal</button>'):''}</div>`}
   return `<div class="shiphd">📦 Envío</div>
   <button type="button" class="btn shipcity" data-act="shipCity">📍 <span>${s.city?esc(s.city):'Elegir ciudad'}</span> ▾</button>
   ${jp?'<span class="pill ok">Entrega local</span>':`<div class="shipcos">${co}</div>`}
   <div class="shipopts">${opts}</div>
-  <div class="shipend"><button type="button" class="btn sm" data-act="shipEdit" title="Editar los valores rápidos">✎ Valores</button>${s.city||s.val!=null?'<button type="button" class="btn sm bad" data-act="shipClear" aria-label="Quitar envío" title="Quitar envío">✕</button>':''}</div>`}
+  <div class="shipend"><button type="button" class="btn sm" data-act="shipEdit" title="Editar los valores rápidos">✎ Valores</button>${s.city||s.val!=null?'<button type="button" class="btn sm bad" data-act="shipClear" aria-label="Quitar envío" title="Quitar envío">✕</button>':''}</div>${cps}`}
+function shipSaveHTML(){const s=S.cart.ship;if(!s||!s.city||!s.co||isJipi(s.city)||s.val==null)return '';const v=num(s.val);if(!(v>0))return '';const sv=shipRate(s.city,s.co);if(sv&&Math.abs(sv.v-v)<.001&&(s.co!=='coop'||!s.cn||sv.cn===s.cn))return `<span class="pill ok" title="Este valor ya está guardado para ${esc(s.city)}">✓ guardado para ${esc(shipCut(s.city))}</span>`;
+  return `<button type="button" class="btn sm" data-act="shipSaveRate" title="Guardar este valor como el último de ${esc(s.city)} (${SHIP_CO[s.co]})">💾 Guardar $${r2(v)} para ${esc(shipCut(s.city))}</button>`}
+function shipSaveRefresh(){const w=$('#shipSaveW');if(!w)return;const h=shipSaveHTML();if(w._h!==h){w.innerHTML=h;w._h=h}}
 function renderShip(){const b=$('#shipBox');if(b)b.innerHTML=shipHTML()}
 function shipSet(){return S.cart.ship=S.cart.ship||{city:'',co:'',val:null}}
-function shipCityModal(){
-  modal(`${dlgHead('Ciudad de envío')}<input id="sc_q" data-inp="shipCityList" data-nocaps placeholder="Escriba la ciudad o provincia…" autocomplete="off" autofocus><div id="sc_list" class="sclist"></div><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button></div>`);
+let SHIP_PICK='shipCityPick';
+function bizCityModal(){if(!isOwner())return toast('Solo el administrador puede cambiar la ciudad del negocio.',1);SHIP_PICK='bizCityPick';
+  modal(`${dlgHead('Ciudad de su negocio')}<p class="muted small" style="margin:0">Elija la ciudad donde está su local. Ahí la entrega es «local» (gratis o con un valor fijo).</p><input id="sc_q" data-inp="shipCityList" data-nocaps placeholder="Escriba la ciudad o provincia…" autocomplete="off" autofocus><div id="sc_list" class="sclist"></div><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button></div>`);
+  shipCityList()}
+function shipCityModal(){SHIP_PICK='shipCityPick';
+  modal(`${dlgHead('Ciudad de envío')}${bizCity()?'':'<p class="muted small" style="margin:0">💡 Defina la ciudad de su negocio en Ajustes → Negocio para activar la entrega local.</p>'}<input id="sc_q" data-inp="shipCityList" data-nocaps placeholder="Escriba la ciudad o provincia…" autocomplete="off" autofocus><div id="sc_list" class="sclist"></div><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button></div>`);
   shipCityList()}
 function shipCityList(){
   const raw=(($('#sc_q')||{}).value||'').trim(),q=norm(raw),box=$('#sc_list');if(!box)return;
-  const row=(c,p)=>`<button type="button" class="scrow" data-act="shipCityPick" data-c="${esc(c)}"><span>${esc(c)}</span><span class="muted small">${esc(p)}</span></button>`;
+  const biz=SHIP_PICK==='bizCityPick',row=(c,p)=>{const a=biz?null:shipRate(c,'coop'),b=biz?null:shipRate(c,'serv'),sv=[a?'Coop. $'+a.v:'',b?'Serv. $'+b.v:''].filter(Boolean).join(' · ');return `<button type="button" class="scrow" data-act="${SHIP_PICK}" data-c="${esc(c)}"><span>${esc(c)}</span><span class="muted small">${sv?'<b style="color:var(--accent)">'+sv+'</b> · ':''}${esc(p)}</span></button>`};
   let h='';
-  if(!q){h=row('Jipijapa','Manabí · entrega local');for(const p in SHIP_CITIES)h+=`<div class="scp">${esc(p)}</div>`+SHIP_CITIES[p].map(c=>row(c,p)).join('')}
+  if(!q){if(!biz&&bizCity())h=row(bizCity(),(shipProv(bizCity())?shipProv(bizCity())+' · ':'')+'entrega local');for(const p in SHIP_CITIES)h+=`<div class="scp">${esc(p)}</div>`+SHIP_CITIES[p].map(c=>row(c,p)).join('')}
   else{let n=0;for(const p in SHIP_CITIES)for(const c of SHIP_CITIES[p]){if(n<80&&norm(c+' '+p).includes(q)){h+=row(c,p);n++}}
-    if(!h||!Object.values(SHIP_CITIES).some(a=>a.some(c=>norm(c)===q)))h+=`<button type="button" class="scrow" data-act="shipCityPick" data-c="${esc(raw)}"><span>Usar «${esc(raw)}» como ciudad</span><span class="muted small">escrita a mano</span></button>`}
+    if(!h||!Object.values(SHIP_CITIES).some(a=>a.some(c=>norm(c)===q)))h+=`<button type="button" class="scrow" data-act="${SHIP_PICK}" data-c="${esc(raw)}"><span>Usar «${esc(raw)}» como ciudad</span><span class="muted small">escrita a mano</span></button>`}
   box.innerHTML=h}
 function shipEditModal(){const D=shipDef(),f=(id,v,l)=>`<label class="f">${l}<input id="${id}" type="text" inputmode="decimal" autocomplete="off" value="${v===undefined||v===''?'':v}" placeholder="—"></label>`;
   modal(`${dlgHead('Valores rápidos de envío')}<p class="muted small" style="margin:0">Son los botones de valor que aparecen al elegir la empresa. Cámbielos cuando suban o bajen las tarifas.</p>
   <div><div style="font-weight:700;margin-bottom:6px">${shipLogo('coop',22)} Cooperativa</div><div class="fgrid">${[0,1,2,3].map(i=>f('se_c'+i,D.coop[i],'Botón '+(i+1))).join('')}</div></div>
   <div><div style="font-weight:700;margin-bottom:6px">${shipLogo('serv',22)} Servientrega</div><div class="fgrid">${f('se_s',D.serv,'Valor del botón')}</div></div>
-  <div><div style="font-weight:700;margin-bottom:6px">📍 Jipijapa (además de «Gratis»)</div><div class="fgrid">${f('se_j',D.jipi,'Valor del botón')}</div></div>
+  <div><div style="font-weight:700;margin-bottom:6px">📍 ${esc(bizCity()||'Su ciudad')} · entrega local (además de «Gratis»)</div><div class="fgrid">${f('se_j',D.jipi,'Valor del botón')}</div></div>
   <div class="ft"><button class="btn" data-act="shipEditReset">Restaurar</button><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="shipEditSave">Guardar</button></div>`)}
+
+
+/* ===================== VENTANA «ENVÍOS»: precios guardados por ciudad ===================== */
+const SHIP_REG={'Costa':['El Oro','Esmeraldas','Guayas','Los Ríos','Manabí','Santa Elena','Santo Domingo de los Tsáchilas'],'Sierra':['Azuay','Bolívar','Cañar','Carchi','Chimborazo','Cotopaxi','Imbabura','Loja','Pichincha','Tungurahua'],'Oriente':['Morona Santiago','Napo','Orellana','Pastaza','Sucumbíos','Zamora Chinchipe'],'Galápagos':['Galápagos']};
+const SHIP_REG_ICO={Costa:'🌊',Sierra:'⛰️',Oriente:'🌿',Galápagos:'🐢'};
+const shipRates=()=>S.cfg.shipRates=S.cfg.shipRates||{};
+function shipRate(city,co){const r=(S.cfg.shipRates||{})[norm(city||'').trim()],x=r&&r[co];return x&&x.v>0?x:null}
+function shipRateSet(city,co,v,name,cn){const k=norm(city||'').trim();if(!k)return;const R=shipRates(),r=R[k]=R[k]||{n:name||city};if(!r.n)r.n=name||city;const o={v:v>0?r2(v):null,t:Date.now()};
+  const keep=cn!==undefined?cn:(r[co]&&r[co].cn);if(co==='coop'&&keep)o.cn=keep;r[co]=o;save(true)}
+/* Cooperativas de transporte de la ciudad del negocio y hasta dónde llegan (editable). Datos de la terminal de Jipijapa; confirme con cada cooperativa. */
+const COOP_DEF0=[
+ {id:'reina',n:'Reina del Camino',d:['Guayaquil','Quito','Manta','Portoviejo','Chone','Bahía de Caráquez','Esmeraldas','Huaquillas']},
+ {id:'cjipi',n:'Cooperativa Jipijapa',d:['Guayaquil']},
+ {id:'villa',n:'Villa de Oro',d:['Manta']},
+ {id:'cacique',n:'Cacique Guale',d:['Manta']},
+ {id:'turman',n:'Turismo Manta',d:['Manta']},
+ {id:'7nov',n:'7 de Noviembre',d:[]}];
+function coopList(){const c=S.cfg.coops;if(Array.isArray(c))return c;return norm(bizCity()).trim()==='jipijapa'?COOP_DEF0:[]}
+const coopsFor=city=>{const k=norm(city||'').trim();return coopList().filter(x=>(x.d||[]).some(y=>norm(y).trim()===k))};
+/* Directorio de terminales incluido en el programa. Por ahora está vacío a propósito.
+   Para agregar una ciudad: clave = nombre de la ciudad en minúsculas y sin tildes, p. ej.
+   'manta':{t:'Terminal Terrestre de Manta',c:[{n:'Cooperativa X',d:['Quito','Guayaquil']}]} */
+const TERM_DIR={};
+const termWebUrl=c=>'https://www.google.com/search?q='+encodeURIComponent('terminal terrestre '+c+' Ecuador cooperativas destinos');
+let COOP_W=[];
+function coopMgrModal(){
+  modal(`${dlgHead('Cooperativas de '+esc(bizCity()||'su ciudad'))}<p class="muted small" style="margin:0">Las cooperativas de transporte que usa para enviar y las ciudades a las que llegan. En Venta, al elegir una ciudad, saldrán las que llegan ahí. Los destinos vienen de fuentes públicas: confírmelos con cada cooperativa y corríjalos aquí.</p>
+  <div class="cplist">${COOP_W.map((k,i)=>`<div class="cprow"><div class="cphd"><input id="cp_n${i}" value="${esc(k.n)}" placeholder="Nombre de la cooperativa" data-nocaps><button type="button" class="btn sm bad" data-act="coopDel" data-i="${i}" aria-label="Quitar cooperativa">✕</button></div><textarea id="cp_d${i}" rows="2" data-nocaps placeholder="Ciudades a las que llega, separadas por coma (Ej.: Guayaquil, Manta, Quito)">${esc((k.d||[]).join(', '))}</textarea></div>`).join('')||'<div class="muted small">Aún no hay cooperativas.</div>'}</div>
+  <div class="ft"><button class="btn" data-act="coopAdd">＋ Cooperativa</button><button class="btn" data-act="coopReset">Restaurar lista</button><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="coopSave">Guardar</button></div>`,true)}
+function coopCollect(){COOP_W=COOP_W.map((k,i)=>{const n=$('#cp_n'+i),d=$('#cp_d'+i);return n?{id:k.id,n:n.value.trim(),d:(d?d.value:'').split(/[,;\n]/).map(x=>x.trim()).filter(Boolean)}:k})}
+function coopAfter(){if(view==='envios')vEnvios();else if(view==='venta')renderShip()}
+function shipRatesMerge(rem){let ch=0;if(!rem||typeof rem!=='object')return 0;const R=shipRates();
+  for(const k in rem){const a=rem[k];if(!a||typeof a!=='object')continue;const l=R[k];if(!l){R[k]=a;ch++;continue}
+    if(!l.n&&a.n){l.n=a.n;ch++}for(const co of ['coop','serv'])if(a[co]&&(!l[co]||(a[co].t||0)>(l[co].t||0))){l[co]=a[co];ch++}}
+  return ch}
+function shipAgo(t){if(!t)return '';const d=Math.round((dayStart(dkey(Date.now()))-dayStart(dkey(t)))/864e5);return d<=0?'hoy':d===1?'ayer':d<31?'hace '+d+' días':new Date(t).toLocaleDateString('es-EC',{timeZone:TZ,day:'2-digit',month:'2-digit',year:'numeric'})}
+let EN={q:'',reg:'',only:false,focus:''};
+const enHas=c=>!!(shipRate(c,'coop')||shipRate(c,'serv'));
+function enCount(){const el=$('#enCount');if(!el)return;const R=shipRates();const n=Object.keys(R).filter(k=>R[k]&&((R[k].coop&&R[k].coop.v>0)||(R[k].serv&&R[k].serv.v>0))).length;el.textContent=n?n+' ciudad'+(n===1?'':'es')+' con precio guardado':'Aún no hay precios guardados'}
+function vEnvios(){
+  const regs=Object.keys(SHIP_REG);
+  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">📦 Envíos</h2><span class="muted small" id="enCount"></span></div>
+  <div class="enloc2"><span>📍 Su local: <b>${esc(bizCity()||'sin ciudad')}</b></span>${isOwner()?'<button type="button" class="btn sm" data-act="bizCity">Cambiar</button><button type="button" class="btn sm" data-act="coopMgr">🚌 Cooperativas</button>':''}</div>
+  ${coopPanel()}
+  <p class="muted small" style="margin:0 0 10px">Anote aquí lo que cobra cada empresa por ciudad (los precios de las cooperativas cambian en cada lugar). Se guarda al terminar de escribir (Enter o tocar fuera). En <b>Venta</b>, al elegir la ciudad aparece el <b>★ último valor guardado</b> para usarlo con un toque.</p>
+  <div class="enbar"><div class="qwrap"><input id="enq" class="big" data-inp="enList" data-nocaps value="${esc(EN.q)}" placeholder="Buscar ciudad, provincia o región…" autocomplete="off"><button type="button" class="qclr" data-act="qClear" data-t="enq" aria-label="Borrar búsqueda">✕</button></div>
+  <div class="enfil">${regs.map(r=>`<button type="button" class="shipchip${EN.reg===r?' on':''}" data-act="enReg" data-r="${r}">${SHIP_REG_ICO[r]} ${r}</button>`).join('')}<button type="button" class="shipchip${EN.only?' on':''}" data-act="enOnly">★ Solo con precio guardado</button></div></div>
+  <div id="enList"></div>`;
+  enCount();enList();
+  if(EN.focus){const k=EN.focus;EN.focus='';const i=[...document.querySelectorAll('#enList input[data-c]')].find(x=>norm(x.dataset.c).trim()===k);if(i){i.scrollIntoView({block:'center'});i.focus()}}}
+function coopPanel(){const L=coopList();if(!L.length)return `<div class="panel" style="margin-bottom:10px"><b>🚌 Cooperativas de ${esc(bizCity()||'su ciudad')}</b><div class="muted small">Aún no hay cooperativas registradas.${isOwner()?' Búsquelas o agréguelas a mano:':''}</div>${isOwner()?'<div style="margin-top:8px"><button type="button" class="btn sm pri" data-act="coopFind">🔎 Buscar la terminal de mi ciudad</button></div>':''}</div>`;
+  return `<details class="panel" style="margin-bottom:10px"><summary style="cursor:pointer;font-weight:700">🚌 Cooperativas de ${esc(bizCity())} y hasta dónde llegan <span class="muted small">(${L.length})</span></summary><div class="cpsum">${L.map(k=>`<div><b>${esc(k.n)}</b><span class="muted small">${(k.d||[]).length?esc(k.d.join(' · ')):'destinos por confirmar'}</span></div>`).join('')}</div><div class="muted small" style="margin-top:6px">Datos de fuentes públicas de la terminal; confírmelos con cada cooperativa y corríjalos en «Cooperativas».</div>${isOwner()?'<div style="margin-top:8px"><button type="button" class="btn sm" data-act="coopFind">🔎 Buscar la terminal de mi ciudad</button></div>':''}</details>`}
+function enCell(c,co,ph){const r=shipRate(c,co);
+  return `<label class="enc"><span class="enl">${shipLogo(co,18)}<em>${SHIP_CO[co]}</em></span><span class="shipin${r?' has':''}"><b>$</b><input type="text" inputmode="decimal" autocomplete="off" placeholder="${ph}" value="${r?r.v:''}" data-chg="enRate" data-c="${esc(c)}" data-k="${co}" aria-label="${SHIP_CO[co]} a ${esc(c)}"></span>${r?`<small class="muted">${shipAgo(r.t)}</small>`:''}${co==='coop'?enCoopSel(c):''}</label>`}
+function enCoopSel(c){const all=coopList();if(!all.length)return '';const L=coopsFor(c),use=L.length?L:all,R=(S.cfg.shipRates||{})[norm(c).trim()],cur=(R&&R.coop&&R.coop.cn)||'';
+  return `<select class="encoop" data-chg="enCoop" data-c="${esc(c)}" aria-label="Cooperativa a ${esc(c)}"><option value="">${L.length?'¿Cuál cooperativa?':'Cooperativa (ninguna llega registrada)'}</option>${use.map(k=>`<option${k.n===cur?' selected':''}>${esc(k.n)}</option>`).join('')}${cur&&!use.some(k=>k.n===cur)?`<option selected>${esc(cur)}</option>`:''}</select>`}
+function enRow(c){
+  if(isJipi(c)){const D=shipDef();return `<div class="enrow"><div class="enname"><b>${esc(c)}</b></div><div class="enloc"><span class="pill ok">Entrega local</span> <span class="muted small">Gratis o $${D.jipi} (se elige en Venta)</span></div></div>`}
+  const cl=coopsFor(c);return `<div class="enrow"><div class="enname"><b>${esc(c)}</b>${cl.length?`<small class="muted">🚌 ${esc(cl.map(k=>k.n).join(' · '))}</small>`:''}</div>${enCell(c,'coop','—')}${enCell(c,'serv',String(shipDef().serv))}</div>`}
+function enList(){
+  const el=$('#enq');if(el)EN.q=el.value;const box=$('#enList');if(!box)return;const raw=EN.q.trim(),q=norm(raw),D=shipDef();
+  const head=`<div class="enrow enhead"><div></div><div class="enc">${shipLogo('coop',22)}<b>Cooperativa</b></div><div class="enc">${shipLogo('serv',22)}<b>Servientrega</b> <span class="muted small">(predet. $${D.serv})</span></div></div>`;
+  const ok=(c,p,reg)=>(!q||norm(c+' '+p+' '+reg).includes(q))&&(!EN.only||enHas(c));
+  let h='',n=0;const known=new Set();
+  for(const reg in SHIP_REG){let rh='';
+    for(const p of SHIP_REG[reg]){let ph='';for(const c of SHIP_CITIES[p]||[]){known.add(norm(c).trim());if(EN.reg&&EN.reg!==reg)continue;if(ok(c,p,reg)){ph+=enRow(c);n++}}
+      if(ph)rh+=`<div class="enprov">${esc(p)}</div>${ph}`}
+    if(rh)h+=`<section class="enreg"><h3>${SHIP_REG_ICO[reg]} ${reg}</h3>${rh}</section>`}
+  if(!EN.reg){const R=shipRates(),ex=Object.keys(R).filter(k=>!known.has(k)&&R[k].n).sort().map(k=>R[k].n).filter(c=>ok(c,'Otras ciudades','otras'));
+    if(ex.length){h+=`<section class="enreg"><h3>📍 Otras ciudades</h3>${ex.map(enRow).join('')}</section>`;n+=ex.length}}
+  if(!n&&!raw)h=empty(EN.only?'Todavía no ha guardado precios. Quite el filtro y escriba los valores en cada ciudad.':'No hay ciudades para mostrar.');
+  else if(!n)h=empty('No se encontró «'+esc(raw)+'».')+`<div style="text-align:center"><button type="button" class="btn pri" data-act="enAdd" data-c="${esc(raw)}">＋ Agregar «${esc(raw)}» como ciudad</button></div>`;
+  else if(raw&&!Object.values(SHIP_CITIES).some(a=>a.some(c=>norm(c)===q)))h+=`<div style="text-align:center;margin-top:8px"><button type="button" class="btn" data-act="enAdd" data-c="${esc(raw)}">＋ Agregar «${esc(raw)}» como ciudad nueva</button></div>`;
+  box.innerHTML=(n?head:'')+h}
 
 /* ===================== ESCÁNER DE CÓDIGO DE BARRAS CON CÁMARA ===================== */
 let SC=null,SCgen=0,SCcams=[],SCcam=0,SClast={c:'',t:0},SCtorchOn=false;
@@ -2633,20 +2763,46 @@ Object.assign(A,{
   scanSwap(){if(SCcams.length<2)return;SCcam=(SCcam+1)%SCcams.length;const id=SCcams[SCcam].id;scanStop().then(()=>scanStart(id))},
   scanTorch(){try{if(!SC)return;const tf=SC.getRunningTrackCameraCapabilities().torchFeature();SCtorchOn=!SCtorchOn;tf.apply(SCtorchOn).catch(()=>{});const b=$('#scTorch');if(b)b.classList.toggle('pri',SCtorchOn)}catch(e){}},
   shipCity:shipCityModal,
-  shipCityPick(el){const c=String(el.dataset.c||'').trim();if(!c)return;const s=shipSet(),was=isJipi(s.city),now=isJipi(c);s.city=c;if(was!==now){s.co='';s.val=null}if(now)s.co='';closeModal();shipAfter()},
-  shipCo(el){const s=shipSet();s.co=el.dataset.k;s.val=null;shipAfter()},
-  shipVal(el){const s=shipSet();s.val=Math.max(0,num(el.dataset.v));shipAfter()},
+  bizCity:bizCityModal,
+  coopFind(){if(!isOwner())return toast('Solo el administrador puede hacerlo.',1);const c=bizCity();if(!c)return toast('Primero elija la ciudad de su negocio (Ajustes → Negocio).',1);
+    const e=TERM_DIR[norm(c).trim()];
+    if(e&&Array.isArray(e.c)&&e.c.length){const cur=coopList().map(x=>x),have=new Set(cur.map(x=>norm(x.n).trim()));let n=0;
+      for(const k of e.c)if(!have.has(norm(k.n).trim())){cur.push({id:'c'+uid(),n:k.n,d:(k.d||[]).slice()});n++}
+      S.cfg.coops=cur;S.cfg.bizT=Date.now();save(true);coopAfter();return toast(n?n+' cooperativa'+(n===1?'':'s')+' cargada'+(n===1?'':'s')+' de '+(e.t||'la terminal de '+c)+'. Confirme los destinos con cada una.':'Ya tiene todas las cooperativas de ese directorio.')}
+    modal(`${dlgHead('Terminal de '+esc(c))}<p style="margin:0">Todavía no tenemos la información de la terminal de <b>${esc(c)}</b> en el directorio del programa.</p><p class="muted small" style="margin:0">Puede buscarla en internet y anotar aquí las cooperativas y las ciudades a las que llegan.</p><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button><a class="btn" href="${termWebUrl(c)}" target="_blank" rel="noopener noreferrer">🔎 Buscar en internet</a><button class="btn pri" data-act="coopMgr">＋ Agregar a mano</button></div>`)},
+  coopMgr(){if(!isOwner())return toast('Solo el administrador puede editar las cooperativas.',1);COOP_W=JSON.parse(JSON.stringify(coopList()));coopMgrModal()},
+  coopAdd(){coopCollect();COOP_W.push({id:'c'+uid(),n:'',d:[]});coopMgrModal();const i=COOP_W.length-1,e=$('#cp_n'+i);if(e)e.focus()},
+  coopDel(el){coopCollect();COOP_W.splice(+el.dataset.i,1);coopMgrModal()},
+  coopReset(){S.cfg.coops=undefined;delete S.cfg.coops;COOP_W=JSON.parse(JSON.stringify(coopList()));coopMgrModal();toast('Lista restaurada. Guarde para aplicarla.')},
+  coopSave(){coopCollect();const L=COOP_W.filter(k=>k.n);S.cfg.coops=L;S.cfg.bizT=Date.now();save(true);closeModal();coopAfter();toast('Cooperativas guardadas.')},
+  shipCoop(el){const s=shipSet(),n=el.dataset.n||'';s.cn=s.cn===n?'':n;shipAfter()},
+  bizCityPick(el){if(!isOwner())return;const c=String(el.dataset.c||'').trim();if(!c)return;S.cfg.city=c;S.cfg.bizT=Date.now();save(true);closeModal();if(S.cart&&S.cart.ship){S.cart.ship.co=isJipi(S.cart.ship.city)?'':S.cart.ship.co}toast('Su negocio está en '+c+'. Ahí la entrega es local.'+(Array.isArray(S.cfg.coops)&&S.cfg.coops.length?' Revise sus cooperativas en Envíos.':''));if(view==='ajustes')vAjustes();else if(view==='envios')vEnvios();else if(view==='venta')renderShip()},
+  shipCityPick(el){const c=String(el.dataset.c||'').trim();if(!c)return;const s=shipSet(),was=isJipi(s.city),now=isJipi(c);s.city=c;s.cn='';if(was!==now){s.co='';s.val=null}if(now)s.co='';closeModal();shipAfter()},
+  shipCo(el){const s=shipSet();s.co=el.dataset.k;s.val=null;s.cn='';shipAfter()},
+  shipVal(el){const s=shipSet();s.val=Math.max(0,num(el.dataset.v));if(el.dataset.cn&&s.co==='coop'&&!s.cn)s.cn=el.dataset.cn;shipAfter()},
   shipClear(){S.cart.ship=null;shipAfter()},
+  shipSaveRate(){const s=S.cart.ship;if(!s||!s.city||!s.co)return;const v=shipCost();if(!(v>0))return toast('Escriba primero el valor del envío.',1);shipRateSet(s.city,s.co,v,'',s.co==='coop'?(s.cn||''):undefined);renderShip();toast((s.co==='coop'&&s.cn?s.cn:SHIP_CO[s.co])+' a '+s.city+': $'+v+' guardado. Se verá en la ventana Envíos.')},
+  enReg(el){EN.reg=EN.reg===el.dataset.r?'':el.dataset.r;vEnvios()},
+  enOnly(){EN.only=!EN.only;vEnvios()},
+  enAdd(el){const c=String(el.dataset.c||'').trim();if(!c)return;const R=shipRates(),k=norm(c).trim();if(!R[k])R[k]={n:c};save(true);EN.focus=k;vEnvios();toast('Ciudad agregada. Escriba sus valores.')},
   shipEdit:shipEditModal,
   shipEditReset(){delete S.cfg.shipDef;save(true);closeModal();renderShip();toast('Valores restaurados.')},
   shipEditSave(){const v=id=>num(($('#'+id)||{}).value),c=[0,1,2,3].map(i=>v('se_c'+i)).filter(x=>x>0);
     S.cfg.shipDef={coop:c.length?c:SHIP_DEF0.coop,serv:v('se_s')>0?v('se_s'):SHIP_DEF0.serv,jipi:v('se_j')>0?v('se_j'):SHIP_DEF0.jipi,t:Date.now()};
     save(true);closeModal();renderShip();toast('Valores de envío guardados.')}});
 Object.assign(CH,{
-  shipVal(el){const s=shipSet();s.val=el.value.trim()===''?null:Math.max(0,num(el.value));shipAfter()},
+  shipVal(el){const s=shipSet();s.val=el.value.trim()===''?null:Math.max(0,num(el.value));/* sin volver a dibujar el cuadro: así el clic en «Guardar» no se pierde al salir del campo */renderCart();$$('.shipchip').forEach(b=>b.classList.toggle('on',s.val!=null&&Math.abs(s.val-num(b.dataset.v))<.001));shipSaveRefresh();save(true)},
   scanCont(el){S.cfg.scanCont=el.checked;save()}});
-IN.shipLive=el=>{const s=S.cart.ship;if(!s)return;s.val=el.value.trim()===''?null:Math.max(0,num(el.value));renderCart();$$('.shipchip').forEach(b=>b.classList.toggle('on',s.val!=null&&Math.abs(s.val-num(b.dataset.v))<.001));save()};
+IN.shipLive=el=>{const s=S.cart.ship;if(!s)return;s.val=el.value.trim()===''?null:Math.max(0,num(el.value));renderCart();$$('.shipchip').forEach(b=>b.classList.toggle('on',s.val!=null&&Math.abs(s.val-num(b.dataset.v))<.001));shipSaveRefresh();save()};
 IN.shipCityList=shipCityList;
+IN.enList=enList;
+CH.enCoop=el=>{const k=norm(el.dataset.c||'').trim(),R=shipRates(),r=R[k]=R[k]||{n:el.dataset.c};const o=Object.assign({v:null},r.coop||{});o.cn=el.value;o.t=Date.now();r.coop=o;save(true);toast(el.value?'Cooperativa: '+el.value:'Cooperativa quitada.')};
+CH.enRate=el=>{const t=el.value.trim(),v=t===''?0:num(t),co=el.dataset.k,c=el.dataset.c;
+  if(t!==''&&!(v>0)){const r=shipRate(c,co);el.value=r?r.v:'';return toast('Escriba un valor mayor que 0 (o deje vacío para borrarlo).',1)}
+  const old=shipRate(c,co);if((old?old.v:0)===(v>0?r2(v):0))return;
+  shipRateSet(c,co,v);const r=shipRate(c,co),w=el.closest('.enc');el.value=r?r.v:'';
+  if(w){const bx=w.querySelector('.shipin');if(bx){bx.classList.toggle('has',!!r);bx.classList.add('saved');setTimeout(()=>bx.classList.remove('saved'),900)}let sm=w.querySelector('small');if(!sm){sm=document.createElement('small');sm.className='muted';w.appendChild(sm)}sm.textContent=r?shipAgo(r.t):''}
+  enCount()};
 
 A.puPaste=puPaste;
 A.crPlazo=el=>{const d=+el.dataset.d,i=$('#cr_due');if(i)i.value=d?addDays(today(),d):'';$$('[data-act=crPlazo]').forEach(b=>b.classList.toggle('pri',b===el))};
@@ -2692,7 +2848,7 @@ function sRows(rows){const sy=S.sync;let ch=0;
       for(const n of x.data.list||[])if(!S.sellers.includes(n)&&!(M[n]&&M[n].d)){S.sellers.push(n);ch++}
       for(const n in rm){const l=M[n],r=rm[n];if(l&&l.t>=r.t)continue;M[n]=r;const i=S.sellers.indexOf(n);
         if(r.d){if(i>=0){S.sellers.splice(i,1);S.cfg.recentSellers=(S.cfg.recentSellers||[]).filter(y=>y!==n);if(S.cfg.cur===n)S.cfg.cur='';ch++}}else if(i<0){S.sellers.push(n);ch++}}
-      if(x.data.pins){const P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{},rt=x.data.pinT||{};for(const k in x.data.pins){if(!(k in P)||(rt[k]||0)>(T[k]||0)){if(P[k]!==x.data.pins[k])ch++;P[k]=x.data.pins[k];T[k]=rt[k]||0}}}if(x.data.bancoUsers)S.cfg.bancoUsers=Object.assign({},S.cfg.bancoUsers,x.data.bancoUsers);if(x.data.prof&&(x.data.prof.t||0)>((S.cfg.prof||{}).t||0)){S.cfg.prof=x.data.prof;ch++}if(x.data.alias)S.cfg.alias=Object.assign({},x.data.alias,S.cfg.alias||{});if(x.data.banks&&(x.data.banksT||0)>(S.cfg.banksT||0)){S.cfg.banks=x.data.banks;S.cfg.bankDef=x.data.bankDef||'';S.cfg.banksT=x.data.banksT;ch++}sy.h['sellers:all']=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},M,S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{},S.cfg.banks||[],S.cfg.bankDef||''])}
+      if(x.data.pins){const P=S.cfg.pins=S.cfg.pins||{},T=S.cfg.pinT=S.cfg.pinT||{},rt=x.data.pinT||{};for(const k in x.data.pins){if(!(k in P)||(rt[k]||0)>(T[k]||0)){if(P[k]!==x.data.pins[k])ch++;P[k]=x.data.pins[k];T[k]=rt[k]||0}}}if(x.data.bancoUsers)S.cfg.bancoUsers=Object.assign({},S.cfg.bancoUsers,x.data.bancoUsers);if(x.data.prof&&(x.data.prof.t||0)>((S.cfg.prof||{}).t||0)){S.cfg.prof=x.data.prof;ch++}if(x.data.shipRates)ch+=shipRatesMerge(x.data.shipRates);if(x.data.alias)S.cfg.alias=Object.assign({},x.data.alias,S.cfg.alias||{});if(x.data.banks&&(x.data.banksT||0)>(S.cfg.banksT||0)){S.cfg.banks=x.data.banks;S.cfg.bankDef=x.data.bankDef||'';S.cfg.banksT=x.data.banksT;ch++}sy.h['sellers:all']=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},M,S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{},S.cfg.banks||[],S.cfg.bankDef||'',S.cfg.shipRates||{}])}
     ch+=sRowsLg(rows);try{ch+=applyAlias()}catch(e){}
   return ch}
 /* 6B-2: libro y cierres, solo se AGREGAN por id (nunca se sobrescribe ni se borra) */
@@ -2736,7 +2892,7 @@ async function sPush(){
   for(const k of SK)for(const o of S[k]){const key=k+':'+o.id,h=hsh(o,k==='products');if(sy.h[key]!==h)out.push({key,h,row:{id:key,kind:k,data:o,u:o._u||o.ts||0,dev:DEV}})}
   for(const key in (sy.del||{})){if(sy.h[key]==='del')continue;const p=key.indexOf(':'),k=key.slice(0,p),id=key.slice(p+1);out.push({key,h:'del',row:{id:key,kind:k,data:{id,_del:1},u:sy.del[key],dev:DEV}})}
   if(isOwner()){const sn=bizSnap(),bh=hsh(sn);if(sy.h['biz:cfg']!==bh){const bt=Date.now();S.cfg.bizT=bt;out.push({key:'biz:cfg',h:bh,row:{id:'biz:cfg',kind:'biz',data:{cfg:sn,t:bt},u:bt,dev:DEV}})}}
-  const sh=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},S.cfg.sellMeta||{},S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{},S.cfg.banks||[],S.cfg.bankDef||'']);if(sy.h['sellers:all']!==sh)out.push({key:'sellers:all',h:sh,row:{id:'sellers:all',kind:'sellers',data:{list:S.sellers,pins:S.cfg.pins||{},pinT:S.cfg.pinT||{},meta:S.cfg.sellMeta||{},bancoUsers:S.cfg.bancoUsers||{},prof:S.cfg.prof||{},alias:S.cfg.alias||{},banks:S.cfg.banks||[],bankDef:S.cfg.bankDef||'',banksT:S.cfg.banksT||0},u:Date.now(),dev:DEV}});
+  const sh=hsh([S.sellers,S.cfg.pins||{},S.cfg.pinT||{},S.cfg.sellMeta||{},S.cfg.bancoUsers||{},S.cfg.prof||{},S.cfg.alias||{},S.cfg.banks||[],S.cfg.bankDef||'',S.cfg.shipRates||{}]);if(sy.h['sellers:all']!==sh)out.push({key:'sellers:all',h:sh,row:{id:'sellers:all',kind:'sellers',data:{list:S.sellers,pins:S.cfg.pins||{},pinT:S.cfg.pinT||{},meta:S.cfg.sellMeta||{},bancoUsers:S.cfg.bancoUsers||{},prof:S.cfg.prof||{},alias:S.cfg.alias||{},banks:S.cfg.banks||[],bankDef:S.cfg.bankDef||'',banksT:S.cfg.banksT||0,shipRates:S.cfg.shipRates||{}},u:Date.now(),dev:DEV}});
   for(let i=0;i<out.length;i+=25){const c=out.slice(i,i+25);
     const r=await sFetch(S.cfg.syncUrl+'/rest/v1/records?on_conflict=id',{method:'POST',headers:{...sHdr(),Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(c.map(x=>x.row))});
     if(!r.ok)throw new Error('envío '+r.status);
@@ -2999,7 +3155,7 @@ CH.cobr=el=>{if(el.type==='date')CB.auto=false;cbBody()};
 /* ===== CONFIGURACIÓN DEL NEGOCIO COMPARTIDA: el administrador configura, los empleados la reciben solos ===== */
 /* Logo, datos del negocio, reglas de venta y todo lo del ticket. No incluye apariencia ni pantalla (son de cada equipo),
    ni establecimiento / punto de emisión / secuencial (distintos en cada equipo). */
-const BIZ_KEYS=['name','ruc','addr','tel','regimen','docType','legal','logo','ivaRate','incIva','cfLimit','footer','tk','tkLogo','requireCaja','allowNeg','waAuto','listNames','t2','t3','paper','pPaper','pPrintable','pFont','pBold','pLogo','pDpi','feed','feedMm'];
+const BIZ_KEYS=['city','coops','name','ruc','addr','tel','regimen','docType','legal','logo','ivaRate','incIva','cfLimit','footer','tk','tkLogo','requireCaja','allowNeg','waAuto','listNames','t2','t3','paper','pPaper','pPrintable','pFont','pBold','pLogo','pDpi','feed','feedMm'];
 function bizSnap(){const o={};for(const k of BIZ_KEYS)if(S.cfg[k]!==undefined)o[k]=S.cfg[k];return o}
 function bizApply(x){const d=x.data||{},sn=d.cfg;if(!sn)return 0;const t=d.t||x.u||0,sy=S.sync;
   if(t<=(S.cfg.bizT||0))return 0;
