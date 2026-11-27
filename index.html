@@ -127,6 +127,7 @@ td.wrapc{white-space:normal;min-width:180px}
 .toast{background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 16px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.25);text-align:center}
 .toast.bad{background:var(--bad);color:#fff}
 .payrow{display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:center}
+.pacct{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--surface2);border:1px solid var(--line)}.pacct .pat{flex:1;min-width:0}.pacct .pan{font-size:24px;font-weight:800;letter-spacing:.06em;overflow-wrap:anywhere;line-height:1.2;margin:2px 0}
 .payinfo{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:700;padding:10px 12px;border-radius:10px;background:var(--surface2)}
 .due{font-family:var(--font-head);font-size:34px;font-weight:700}
 .themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
@@ -1468,7 +1469,7 @@ function closeModal(){pendingAdd=false;try{scanStop()}catch(_){}const m=$('#moda
 let confirmCb=null,pendingAdd=false;
 function confirmBox(msg,cb,label,danger){confirmCb=cb;modal(`<div class="cfm ${danger?'dg':''}"><div class="cfi" aria-hidden="true">${danger?'⚠️':'❓'}</div><h3>${danger?'¿Está seguro?':'Confirmar'}</h3><p>${msg}</p></div><div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn ${danger?'bad':'pri'}" data-act="confirmYes" autofocus>${label||'Confirmar'}</button></div>`)}
 function dlgHead(t){const p=String(t).replace(/<[^>]*>/g,'');const ic=(dlgHead.IC.find(x=>x[0].test(p))||[0,'✨'])[1];return `<div class="hd"><h3><span class="hi" aria-hidden="true">${ic}</span><span>${t}</span></h3><button class="x" data-act="closeModal" aria-label="Cerrar">✕</button></div>`}
-dlgHead.IC=[[/escane/i,'📷'],[/env[ií]o/i,'📦'],[/ciudad/i,'📍'],[/banc/i,'🏦'],[/importa/i,'📥'],[/exporta/i,'📤'],[/pin|contrase/i,'🔐'],[/mi nombre|perfil/i,'🪪'],[/eliminar|quitar|borrar/i,'🗑️'],[/respaldo|copia/i,'💾'],[/producto/i,'📦'],[/cliente/i,'🧑'],[/pago|cobr|cr[eé]dito|abono/i,'💵'],[/stock|inventario|ingreso/i,'📋'],[/caja/i,'🧮'],[/precio/i,'💲'],[/ticket|recibo|comprobante|proforma|copie/i,'🧾'],[/espera/i,'⏸️'],[/nube/i,'☁️'],[/vendedor|atiende|usuario/i,'🧑‍💼']];
+dlgHead.IC=[[/escane/i,'📷'],[/env[ií]o/i,'🚚'],[/ciudad/i,'📍'],[/banc/i,'🏦'],[/importa/i,'📥'],[/exporta/i,'📤'],[/pin|contrase/i,'🔐'],[/mi nombre|perfil/i,'🪪'],[/eliminar|quitar|borrar/i,'🗑️'],[/respaldo|copia/i,'💾'],[/producto/i,'📦'],[/cliente/i,'🧑'],[/pago|cobr|cr[eé]dito|abono/i,'💵'],[/stock|inventario|ingreso/i,'📋'],[/caja/i,'🧮'],[/precio/i,'💲'],[/ticket|recibo|comprobante|proforma|copie/i,'🧾'],[/espera/i,'⏸️'],[/nube/i,'☁️'],[/vendedor|atiende|usuario/i,'🧑‍💼']];
 function empty(t){return `<div class="empty">${t}</div>`}
 
 const csvCell=v=>{v=v==null?'':String(v);return /[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
@@ -1485,8 +1486,8 @@ historial:'<path d="M4 3h16v18l-3-2-3 2-3-2-3 2-4-2z"/><path d="M8 8h8M8 12h8"/>
 productos:'<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
 inventario:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>',
 clientes:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 3-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.8 0 4.5 1.8 4.5 4.5"/>',
-envios:'<path d="M12 21.5s-7-6.1-7-11.8a7 7 0 0 1 14 0c0 5.7-7 11.8-7 11.8z"/><circle cx="12" cy="9.5" r="2.6"/>',
-proveedores:'<path d="M2 6h11v10H2zM13 9h4l4 4v3h-8"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/>',
+envios:'<path d=\"M2 6h11v10H2zM13 9h4l4 4v3h-8\"/><circle cx=\"6.5\" cy=\"18\" r=\"1.8\"/><circle cx=\"17\" cy=\"18\" r=\"1.8\"/>',
+proveedores:'<path d=\"M3 21V9l6 4V9l6 4V4h4v17z\"/><path d=\"M3 21h18M7 17h2M12 17h2M17 8h.01\"/>',
 caja:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9v.01M18 15v.01"/>',
 reportes:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
 promos:'<path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
@@ -1847,7 +1848,7 @@ function openPay(){
   ${(()=>{const q=L.filter(l=>{const p=prod(l.pid);return p.track&&l.qty>stkAv(p)});return q.length?`<div class="banner warn" style="margin:0"><span>⚠ Sin stock suficiente: ${q.map(l=>esc(l.name)).join(', ')}. Se venderá igual y el stock quedará en negativo.</span></div>`:''})()}
   ${ordSeg()}
   <div><div class="muted small" style="margin-bottom:6px">Forma de pago</div><div class="paymodes">${MODES.map(([m,n])=>`<button class="btn" data-act="payMode" data-m="${m}">${n}</button>`).join('')}</div></div>
-  <div id="payrows" style="display:grid;gap:8px">${rows}</div>${bkSel('pay_bk','','Banco que recibe (transferencia, tarjeta o QR)')}
+  <div id="payrows" style="display:grid;gap:8px">${rows}</div>${bkSel('pay_bk','','Banco que recibe (transferencia, tarjeta o QR)','data-chg="payAcct"')}<div id="payacct" hidden></div>
   <div class="quick" id="payquick">${bills.map(x=>`<button class="btn" data-act="cashQuick" data-v="${x}">${x===T.total?'Exacto':money(x)}</button>`).join('')}</div>
   <div class="muted small" id="paymixhint" style="display:none">Ej.: total $20 → Efectivo $15 y pulse "Resto" en Transferencia para completar $5.</div>
   <div class="change" id="payInfo"></div>
@@ -1871,8 +1872,20 @@ function setPayMode(m){
   payInfo();
   const f=$('#pay_'+(mix?'efectivo':m));if(f){f.focus();f.select&&f.select()}
 }
+/* Al elegir Transferencia: muestra el número de cuenta para dictárselo al cliente (completo, también para empleados) */
+function payAcct(){
+  const box=$('#payacct');if(!box)return;
+  const on=document.querySelector('.paymodes .btn.on'),v=payVals(),sel=$('#pay_bk');
+  const tr=v.transferencia>0||(on&&on.dataset.m==='transferencia');
+  const b=banks().length?bkGet((sel&&sel.value)||bkDef()):null;
+  if(!tr||!b){box.hidden=true;box.innerHTML='';return}
+  box.hidden=false;
+  box.innerHTML=b.num
+    ?`<div class="pacct">${bkLogo(b,44)}<div class="pat"><div class="muted small">Cuenta para transferir · ${esc(b.name)}</div><div class="pan">${esc(b.num)}</div><div class="muted small">${esc(b.type||'Cuenta')}${b.holder?' · '+esc(b.holder):''}</div></div><button type="button" class="btn sm" data-act="bkCopy" data-id="${b.id}" aria-label="Copiar número de cuenta">Copiar</button></div>`
+    :`<div class="pacct"><div class="pat"><div class="muted small">${esc(b.name)}: esta cuenta aún no tiene número. Agréguelo en Banco para verlo aquí.</div></div></div>`}
 function payVals(){const o={};for(const k in PAY)o[k]=r2(num(($('#pay_'+k)||{}).value));return o}
 function payInfo(){
+  payAcct();
   const T=curTotals(),v=payVals(),paid=r2(Object.values(v).reduce((a,b)=>a+b,0)),box=$('#payInfo');if(!box)return;const diff=r2(paid-T.total);
   if(diff<0){box.className='change bad';box.innerHTML=`<span>Falta</span><b>${money(-diff)}</b>`}
   else if(diff>r2(paid-v.tarjeta)){box.className='change bad';box.innerHTML=`<span>Se pasa del total por ${money(diff)}. La tarjeta no puede dar cambio; baje el monto de la tarjeta.</span>`}
@@ -2743,7 +2756,7 @@ function shipHTML(){
   let cps='';
   if(s.city&&!jp&&s.co==='coop'){const L=coopsFor(s.city);
     cps=`<div class="shipcoops"><span class="muted small">🚌 ${L.length?'Llegan a '+esc(s.city)+':':'Cooperativa:'}</span>${L.map(k=>`<button type="button" class="shipchip sm${s.cn===k.n?' on':''}" data-act="shipCoop" data-n="${esc(k.n)}">${esc(k.n)}</button>`).join('')||`<span class="muted small">ninguna registrada para esta ciudad</span>`}${isOwner()?'<button type="button" class="btn sm" data-act="coopMgr" title="Ver o editar las cooperativas y sus destinos">✎ Cooperativas</button>'+(coopList().length?'':'<button type="button" class="btn sm" data-act="coopFind">🔎 Buscar terminal</button>'):''}</div>`}
-  return `<div class="shiphd">📦 Envío</div>
+  return `<div class="shiphd">🚚 Envío</div>
   <button type="button" class="btn shipcity" data-act="shipCity">📍 <span>${s.city?esc(s.city):'Elegir ciudad'}</span> ▾</button>
   ${jp?'<span class="pill ok">Entrega local</span>':`<div class="shipcos">${co}</div>`}
   <div class="shipopts">${opts}</div><div id="shipPayW">${shipPayHTML()}</div>
@@ -2821,7 +2834,7 @@ const enHas=c=>!!(shipRate(c,'coop')||shipRate(c,'serv'));
 function enCount(){const el=$('#enCount');if(!el)return;const R=shipRates();const n=Object.keys(R).filter(k=>R[k]&&((R[k].coop&&R[k].coop.v>0)||(R[k].serv&&R[k].serv.v>0))).length;el.textContent=n?n+' ciudad'+(n===1?'':'es')+' con precio guardado':'Aún no hay precios guardados'}
 function vEnvios(){
   const regs=Object.keys(SHIP_REG);
-  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">📦 Envíos</h2><span class="muted small" id="enCount"></span></div>
+  $('#view').innerHTML=`<div class="bar"><h2 style="margin-right:auto">🚚 Envíos</h2><span class="muted small" id="enCount"></span></div>
   <div class="enloc2"><span>📍 Su local: <b>${esc(bizCity()||'sin ciudad')}</b></span>${isOwner()?'<button type="button" class="btn sm" data-act="bizCity">Cambiar</button><button type="button" class="btn sm" data-act="coopMgr">🚌 Cooperativas</button><button type="button" class="btn sm pri" data-act="coopNew">＋ Registrar cooperativa</button><button type="button" class="btn sm bad" data-act="coopRmList">🗑 Borrar cooperativa</button>':''}</div>
   ${coopPanel()}
   <p class="muted small" style="margin:0 0 10px">Anote aquí lo que cobra cada empresa por ciudad (los precios de las cooperativas cambian en cada lugar). Se guarda al terminar de escribir (Enter o tocar fuera). En <b>Venta</b>, al elegir la ciudad aparece el <b>★ último valor guardado</b> para usarlo con un toque.</p>
@@ -3412,6 +3425,7 @@ function bkSel(id,sel,label,extra){const L=banks();if(L.length<2)return '';const
 /* Resumen pequeño que se ve dentro de Caja */
 function bkMini(){const L=banks();if(!L.length)return 'Cuenta bancaria del negocio';
   return L.map(b=>`<span class="bkmini">${bkLogo(b,18)}<span>${esc(b.name.replace(/^Banco (del? )?/i,''))}</span> <b class="money">${money(bkBal(b.id))}</b></span>`).join('')+(bancoOK()?' <a href="#banco" class="small">Ver detalle</a>':'')}
+CH.payAcct=()=>payAcct();
 CH.tbAv=el=>{const a=$('#t_av');if(a&&el.value)a.textContent=money(bkBal(el.value))};
 
 function vBanco(){
