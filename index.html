@@ -127,6 +127,7 @@ td.wrapc{white-space:normal;min-width:180px}
 .toast{background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 16px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.25);text-align:center}
 .toast.bad{background:var(--bad);color:#fff}
 .payrow{display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:center}
+.frsel{display:flex;flex-wrap:wrap;gap:8px}.frsel button{display:flex;flex-direction:column;align-items:center;gap:4px;width:78px;padding:8px 4px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);cursor:pointer;font:inherit;font-size:12px}.frsel button.on{border-color:var(--accent);background:var(--accent-soft);font-weight:700}.frsel canvas{width:40px;height:40px}
 #custSug{position:fixed;z-index:90;max-height:380px;overflow:auto;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 36px -12px rgba(0,0,0,.45);padding:4px}
 #custSug .csi{display:flex;flex-direction:column;gap:1px;justify-content:center;min-height:44px;padding:7px 10px;border-radius:8px;cursor:pointer}
 #custSug .csi b{font-size:14px;overflow-wrap:anywhere}#custSug .csi span{font-size:12px;color:var(--muted)}
@@ -1821,10 +1822,14 @@ function custSync(el,v){
 const CS={i:-1,L:[]};
 function custSugHide(){const b=document.getElementById('custSug');if(b)b.remove();CS.L=[];CS.i=-1}
 function custSuggest(el){
-  const k=S.cart.customerId;if(k!=='cf'&&k!=='new'){custSugHide();return}
-  const q=norm(el.value).trim();if(q.length<2){custSugHide();return}
-  const fld=el.id==='cu_name'?'name':el.id==='cu_code'?'code':'ident',cmp=(a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'});
-  const all=S.customers.filter(c=>c.id!=='cf'&&norm((c.name||'')+' '+(c.ident||'')+' '+(c.code||'')).includes(q)),st=c=>norm(c[fld]||'').startsWith(q);
+  const fld=el.id==='cu_name'?'name':el.id==='cu_code'?'code':'ident',k=S.cart.customerId;
+  if(fld==='name'&&k!=='cf'&&k!=='new'){custSugHide();return}
+  const sq=v=>norm(v).replace(/[\s.\-_\/]/g,''),q=norm(el.value).trim(),qs=sq(el.value);
+  if(fld==='name'?q.length<2:!qs.length){custSugHide();return}
+  const cmp=(a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}),base=S.customers.filter(c=>c.id!=='cf'&&c.id!==k);
+  let all,st;
+  if(fld==='name'){all=base.filter(c=>norm((c.name||'')+' '+(c.ident||'')+' '+(c.code||'')).includes(q));st=c=>norm(c.name||'').startsWith(q)}
+  else{all=base.filter(c=>sq(c[fld]||'').includes(qs));st=c=>sq(c[fld]||'').startsWith(qs)}
   const L=all.filter(st).sort(cmp).concat(all.filter(c=>!st(c)).sort(cmp)).slice(0,8);
   if(!L.length){custSugHide();return}
   CS.L=L;CS.i=-1;let b=document.getElementById('custSug');
@@ -1834,11 +1839,12 @@ function custSuggest(el){
   b.style.width=w+'px';b.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+'px';
   if(r.bottom+h>innerHeight-8&&r.top>h){b.style.top='';b.style.bottom=(innerHeight-r.top+4)+'px'}else{b.style.bottom='';b.style.top=(r.bottom+4)+'px'}}
 function custPick(id){const c=S.customers.find(x=>x.id===id);if(!c)return;custSugHide();
+  {const a=document.activeElement;if(a&&/^cu_/.test(a.id)){CS.pk=1;try{a.blur()}finally{CS.pk=0}}}
   S.cart.customerId=c.id;S.cart.cust=emptyCust();renderCust();applyMerch(c);save();toast('Cliente: '+c.name);const q=$('#q');q&&q.focus()}
 document.addEventListener('input',e=>{const t=e.target;if(t&&/^cu_(name|code|ident)$/.test(t.id))custSuggest(t)});
 document.addEventListener('mousedown',e=>{const it=e.target.closest&&e.target.closest('#custSug .csi');if(it){e.preventDefault();custPick(it.dataset.id);return}if(!(e.target.closest&&e.target.closest('#custSug')))custSugHide()},true);
 document.addEventListener('focusout',e=>{if(e.target&&/^cu_(name|code|ident)$/.test(e.target.id))custSugHide()});
-window.addEventListener('resize',custSugHide);
+window.addEventListener('resize',()=>{const a=document.activeElement;if(document.getElementById('custSug')&&a&&/^cu_(name|code|ident)$/.test(a.id))custSuggest(a);else custSugHide()});
 document.addEventListener('keydown',e=>{const b=document.getElementById('custSug'),t=e.target;if(!b||!t||!/^cu_(name|code|ident)$/.test(t.id))return;
   const n=CS.L.length;
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();CS.i=e.key==='ArrowDown'?(CS.i+1)%n:(CS.i<=0?n-1:CS.i-1);[...b.children].forEach((x,i)=>x.classList.toggle('on',i===CS.i))}
@@ -2053,8 +2059,30 @@ function printReceipt(s){const f=document.createElement('iframe');f.style.cssTex
   f.onload=()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(e){toast('No se pudo abrir la impresión: use Descargar.',1)}setTimeout(()=>f.remove(),60000)};f.srcdoc=ticketFile(s);document.body.appendChild(f);toast('Preparando impresión… si no aparece, use Descargar.')}
 let rcpt=null;
 const LOGOIMG=new Image();const _lbw={};
-function logoBW(n){n=Math.max(32,Math.min(640,Math.round(n)||192));if(_lbw[n])return _lbw[n];if(!LOGOIMG.complete||!LOGOIMG.naturalWidth)return null;
-  try{const cv=document.createElement('canvas');cv.width=cv.height=n;const x=cv.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,n,n);x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(LOGOIMG,0,0,n,n);const d=x.getImageData(0,0,n,n),a=d.data;for(let i=0;i<a.length;i+=4){const v=.299*a[i]+.587*a[i+1]+.114*a[i+2]<150?0:255;a[i]=a[i+1]=a[i+2]=v;a[i+3]=255}x.putImageData(d,0,0);return _lbw[n]=cv.toDataURL('image/png')}catch(e){return null}}
+/* ---- Marcos (formas) para el logo del ticket ---- */
+const TKFR=[['none','Sin marco'],['circle','Círculo'],['square','Cuadrado'],['rounded','Redondeado'],['star','Estrella'],['heart','Corazón'],['hexagon','Hexágono'],['diamond','Rombo']];
+const tkFrame=()=>TKFR.some(f=>f[0]===S.cfg.tkFrame)?S.cfg.tkFrame:'none';
+function framePath(x,sh,cx,cy,R){x.beginPath();const poly=(k,a0,rf)=>{for(let i=0;i<k;i++){const a=a0+i*2*Math.PI/k,r=rf?rf(i):R;i?x.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r):x.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r)}x.closePath()};
+  if(sh==='circle')x.arc(cx,cy,R,0,Math.PI*2);
+  else if(sh==='square')x.rect(cx-R,cy-R,R*2,R*2);
+  else if(sh==='rounded'){const r=R*.32,l=cx-R,t=cy-R,w=R*2;x.moveTo(l+r,t);x.arcTo(l+w,t,l+w,t+w,r);x.arcTo(l+w,t+w,l,t+w,r);x.arcTo(l,t+w,l,t,r);x.arcTo(l,t,l+w,t,r);x.closePath()}
+  else if(sh==='star'){cy+=R*.08;poly(10,-Math.PI/2,i=>i%2?R*.5:R)}
+  else if(sh==='heart'){x.moveTo(cx,cy+R*.92);x.bezierCurveTo(cx-R*1.3,cy+R*.05,cx-R*.95,cy-R*1.05,cx,cy-R*.5);x.bezierCurveTo(cx+R*.95,cy-R*1.05,cx+R*1.3,cy+R*.05,cx,cy+R*.92);x.closePath()}
+  else if(sh==='hexagon')poly(6,-Math.PI/2);
+  else if(sh==='diamond')poly(4,-Math.PI/2);
+  else x.rect(cx-R,cy-R,R*2,R*2)}
+/* caja interior donde cabe el logo dentro de cada forma: [mitad del ancho, desplazamiento vertical] */
+const FRBOX={circle:[.8,0],square:[.88,0],rounded:[.86,0],star:[.52,.12],heart:[.6,-.06],hexagon:[.8,0],diamond:[.62,0],none:[1,0]};
+function logoFramed(n,sh,bw){const cv=document.createElement('canvas');cv.width=cv.height=n;const x=cv.getContext('2d',{willReadFrequently:true});
+  const lw=sh==='none'?0:Math.max(2,n*.045),R=n/2-lw,cx=n/2,cy=n/2,iw=LOGOIMG.naturalWidth,ih=LOGOIMG.naturalHeight,[f,dy]=FRBOX[sh]||FRBOX.none,box=2*R*f,k=Math.min(box/iw,box/ih),dw=iw*k,dh=ih*k;
+  x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
+  if(bw){x.fillStyle='#fff';x.fillRect(0,0,n,n)}
+  if(sh!=='none'){framePath(x,sh,cx,cy,R);x.fillStyle='#fff';x.fill();x.save();framePath(x,sh,cx,cy,R);x.clip()}
+  x.drawImage(LOGOIMG,cx-dw/2,cy+dy*R-dh/2,dw,dh);
+  if(sh!=='none'){x.restore();framePath(x,sh,cx,cy,R);x.lineJoin='round';x.lineWidth=lw;x.strokeStyle=bw?'#000':'#fff';x.stroke()}
+  return cv}
+function logoBW(n){n=Math.max(32,Math.min(640,Math.round(n)||192));const sh=tkFrame(),key=n+':'+sh;if(_lbw[key])return _lbw[key];if(!LOGOIMG.complete||!LOGOIMG.naturalWidth)return null;
+  try{const cv=logoFramed(n,sh,true),x=cv.getContext('2d',{willReadFrequently:true}),d=x.getImageData(0,0,n,n),a=d.data;for(let i=0;i<a.length;i+=4){const v=.299*a[i]+.587*a[i+1]+.114*a[i+2]<150?0:255;a[i]=a[i+1]=a[i+2]=v;a[i+3]=255}x.putImageData(d,0,0);return _lbw[key]=cv.toDataURL('image/png')}catch(e){return null}}
 if(LOGO)LOGOIMG.src=LOGO;
 function ticketCanvas(s){
   const W=640,P=30,c=S.cfg,ACC='#5557AE',F='-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',cv=document.createElement('canvas'),ctx=cv.getContext('2d');
@@ -2062,7 +2090,7 @@ function ticketCanvas(s){
   const wrap=(t,w,font)=>{ctx.font=font;const o=[];let l='';for(const p of String(t).split(' ')){const n=l?l+' '+p:p;if(ctx.measureText(n).width>w&&l){o.push(l);l=p}else l=n}if(l)o.push(l);return o};
   const run=dry=>{let y=0;const T=(t,x,font,col,al)=>{if(dry)return;ctx.font=font;ctx.fillStyle=col;ctx.textAlign=al||'left';ctx.fillText(t,x,y)};
     const L=P+16,R=W-P-16,IW=R-L;
-    if(!dry){rr(16,16,W-32,H-32,26,'#fff');ctx.save();ctx.beginPath();ctx.rect(16,16,W-32,150);ctx.clip();rr(16,16,W-32,150,26,ACC);ctx.restore();rr(16,100,W-32,66,0,ACC);if(LOGO&&LOGOIMG.naturalWidth)ctx.drawImage(LOGOIMG,L,40,84,84)}
+    if(!dry){rr(16,16,W-32,H-32,26,'#fff');ctx.save();ctx.beginPath();ctx.rect(16,16,W-32,150);ctx.clip();rr(16,16,W-32,150,26,ACC);ctx.restore();rr(16,100,W-32,66,0,ACC);if(LOGO&&LOGOIMG.naturalWidth)ctx.drawImage(logoFramed(252,tkFrame(),false),L,40,84,84)}
     y=70;T(c.name,L+100,'700 28px '+F,'#fff');y=100;const sub=[c.ruc&&'RUC '+c.ruc,c.tel].filter(Boolean).join(' · ');if(sub)T(sub,L+100,'15px '+F,'rgba(255,255,255,.85)');y=124;if(c.addr)T(c.addr.slice(0,48),L+100,'14px '+F,'rgba(255,255,255,.8)');
     y=200;T((s.doc||'').toUpperCase()+(s.status==='void'?' · ANULADA':''),L,'700 14px '+F,'#888');y+=30;T('N° '+s.num,L,'700 24px '+F,'#111');
     y+=26;if(tk('date'))T(fmtDT(s.ts),L,'16px '+F,'#555');
@@ -2169,8 +2197,8 @@ async function barShare(){const cv=curBar.cv,blob=await new Promise(r=>cv.toBlob
 
 function waNum(v){let d=String(v||'').replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.startsWith('0'))d='593'+d.slice(1);else if(d.length===9&&d[0]==='9')d='593'+d;return d.length>=11&&d.length<=15?d:''}
 const waClean=t=>t.replace(/▪️?/g,'•').replace(/\p{Extended_Pictographic}[\uFE0F\u200D\p{Extended_Pictographic}]*\s?/gu,'').replace(/\uFE0F/g,'');
-function waUrl(s,num){return 'https://wa.me/'+num+'?text='+encodeURIComponent(waClean(waText(s)))}
-function waOpen(s,num){const a=document.createElement('a');a.href=waUrl(s,num);a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
+function waUrl(s,num,tf){return 'https://wa.me/'+num+'?text='+encodeURIComponent(waClean((tf||waText)(s)))}
+function waOpen(s,num,tf){const a=document.createElement('a');a.href=waUrl(s,num,tf);a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
 const waHintHtml=f=>f==='imagen'?'<b>☁ Cómo se envía la imagen</b>Se abrirá el chat de esta persona con el mensaje <u>en blanco</u>. Para poner la imagen en el chat presiona <kbd>Ctrl</kbd> + <kbd>V</kbd> y luego Enviar.':f==='pdf'?'<b>☁ Cómo se envía el PDF</b>Se abrirá el chat de esta persona con el mensaje <u>en blanco</u>. Si tu navegador deja copiar el PDF, presiona <kbd>Ctrl</kbd> + <kbd>V</kbd> en el chat. Si no, el PDF se guarda en Descargas: cópialo desde los archivos (<kbd>Ctrl</kbd> + <kbd>C</kbd>) y pégalo en el chat con <kbd>Ctrl</kbd> + <kbd>V</kbd> (o arrástralo / clip 📎). En celular se envía desde el menú de compartir.':'<b>☁ Envío en texto</b>Se abrirá el chat de esta persona con el mensaje ya escrito. Solo toca Enviar.';
 const waFormat=()=>['texto','imagen','pdf'].includes(S.cfg.waFmt)?S.cfg.waFmt:'texto';
 function waChat(num){const a=document.createElement('a');a.href='https://wa.me/'+num;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
@@ -2178,19 +2206,19 @@ function waDl(blob,name){const u=URL.createObjectURL(blob),a=document.createElem
 function waNotice(title,sub,keys){const o=document.getElementById('waNote');if(o)o.remove();const d=document.createElement('div');d.id='waNote';d.className='wanote';d.setAttribute('role','status');
   d.innerHTML=`${keys?'<div class="wnk"><kbd>Ctrl</kbd><span>+</span><kbd>V</kbd></div>':'<div class="wnk">📎</div>'}<div class="wnt"><b>${esc(title)}</b><small>${esc(sub)}</small></div><button type="button" aria-label="Cerrar">✕</button>`;
   d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d);setTimeout(()=>{if(d.isConnected){d.classList.add('out');setTimeout(()=>d.remove(),320)}},16000)}
-async function waSend(s,num,fmt,auto){fmt=fmt||waFormat();
-  if(fmt==='texto')return waOpen(s,num);
-  const pdf=fmt==='pdf',name=(s.doc||'Comprobante').replace(/\s+/g,'-')+'-'+s.num+(pdf?'.pdf':'.png'),type=pdf?'application/pdf':'image/png',touch=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+async function waSend(s,num,fmt,auto,K){fmt=fmt||waFormat();K=K||{};const mkCv=K.cv||ticketCanvas;
+  if(fmt==='texto')return waOpen(s,num,K.txt);
+  const pdf=fmt==='pdf',name=(K.base||s.doc||'Comprobante').replace(/\s+/g,'-')+'-'+s.num+(pdf?'.pdf':'.png'),type=pdf?'application/pdf':'image/png',touch=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
   let cv,bp;
-  try{cv=ticketCanvas(s);bp=pdf?Promise.resolve(pdfFromCanvas(cv)):new Promise(r=>cv.toBlob(r,'image/png'));
+  try{cv=mkCv(s);bp=pdf?Promise.resolve(pdfFromCanvas(cv)):new Promise(r=>cv.toBlob(r,'image/png'));
     if(touch&&navigator.canShare){try{const f=new File([await bp],name,{type});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],title:S.cfg.name});return}}catch(e){if(e&&e.name==='AbortError')return}}
     const can=window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write&&(!ClipboardItem.supports||ClipboardItem.supports(type));
     if(can){await navigator.clipboard.write([new ClipboardItem({[type]:bp})]);waChat(num);waNotice('Presiona Ctrl + V para pegar '+(pdf?'el PDF':'la imagen'),'El chat se abrió con el mensaje en blanco. Pegue y envíe.',1);return}
-    if(auto)return waOpen(s,num);
+    if(auto)return waOpen(s,num,K.txt);
     waDl(await bp,name);waChat(num);
     waNotice(pdf?'El PDF se guardó en Descargas':'La imagen se guardó en Descargas',(pdf?'Este navegador no deja copiar PDF: ábralo desde Descargas, cópielo (Ctrl + C) y pegue en el chat con Ctrl + V. ':'No se pudo copiar. ')+'También puede arrastrarlo al chat o usar el clip 📎.',0)
   }catch(e){
-    if(auto)return waOpen(s,num);
+    if(auto)return waOpen(s,num,K.txt);
     try{waDl(await bp,name);waChat(num);waNotice('El archivo se guardó en Descargas','No se pudo copiar. Arrástrelo al chat o use el clip 📎.',0)}catch(_){toast('No se pudo preparar el archivo. Use «Descargar».',1)}}}
 function rcpFx(){const cols=['#5557AE','#22C55E','#F59E0B','#EC4899','#38BDF8','#A78BFA'];let h='';for(let i=0;i<22;i++){const a=(i/22)*Math.PI*2+Math.random()*.4,d=60+Math.random()*58;h+=`<i style="--dx:${Math.round(Math.cos(a)*d)}px;--dy:${Math.round(Math.sin(a)*d*.9)}px;--r:${Math.round(Math.random()*540-270)}deg;--c:${cols[i%cols.length]};--d:${(.18+Math.random()*.18).toFixed(2)}s"></i>`}return `<div class="cf" aria-hidden="true">${h}</div>`}
 function rcpCount(){const e=document.querySelector('#modal [data-cu]');if(!e)return;const to=+e.dataset.cu||0;if(!(to>0)||(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))return;const t0=performance.now(),D=750;const tick=n=>{const k=Math.min(1,(n-t0)/D),v=to*(1-Math.pow(1-k,3));e.textContent=money(k<1?Math.round(v*100)/100:to);if(k<1&&document.body.contains(e))requestAnimationFrame(tick)};e.textContent=money(0);requestAnimationFrame(tick)}
@@ -2272,7 +2300,7 @@ function pdCard(s){
    <ul class="pdlines">${sh}</ul>
    <div class="pdfoot"><b class="money">${money(s.total)}</b><button type="button" class="btn sm" data-act="openSale" data-id="${s.id}">🧾 Recibo</button>
    ${vd?'':`<div class="seg" role="group" aria-label="Estado de entrega"><button type="button" data-act="pdSet" data-id="${s.id}" data-v="0" class="${o.done?'':'on'}">No entregado</button><button type="button" data-act="pdSet" data-id="${s.id}" data-v="1" class="${o.done?'on':''}">Entregado</button></div>`}</div>
-   ${o.done&&o.doneTs?`<div class="muted small">Entregado el ${fmtDT(o.doneTs)}${o.by?' · '+esc(o.by):''}</div>`:''}</div>`}
+   ${o.done&&o.doneTs?`<div class="muted small" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="grow">Entregado el ${fmtDT(o.doneTs)}${o.by?' · '+esc(o.by):''}</span>${vd?'':`<button type="button" class="btn sm pri" data-act="dlvOpen" data-id="${s.id}">📤 Enviar comprobante de entrega</button>`}</div>`:''}</div>`}
 
 /* ===================== PRODUCTOS ===================== */
 const PF={q:'',f:'all',s:'name',l:''};
@@ -2625,7 +2653,7 @@ function vAjustes0(){const c=S.cfg;const T2=k=>`<input type="number" step="1" mi
   <div class="panel" data-sec="apa" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🖥 Pantalla</h3><p class="muted" style="margin:0 0 12px">Tamaño de la pantalla de venta en computadora.</p><label class="f" style="max-width:260px">Zoom de la pantalla en PC (%)<select data-cfg="zoom" data-t="n">${[60,70,80,90,100,110,125].map(z=>`<option value="${z}" ${(c.zoom||80)===z?'selected':''}>${z}%</option>`).join('')}</select></label></div>
   <div class="panel" data-sec="tick" style="margin-bottom:16px"><h3 style="margin-bottom:4px">🧾 Contenido del ticket y de WhatsApp</h3><p class="muted" style="margin:0 0 12px">Marque lo que quiere que aparezca. Los datos del negocio salen de «Datos del negocio» (si un dato está vacío, no se muestra).</p>
    <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:start" class="tkwrap"><div><div class="tkgrid">${TK_OPTS.map(([k,n])=>`<label class="ck"><input type="checkbox" data-tk="${k}" ${tk(k)?'checked':''}> ${n}</label>`).join('')}</div>
-   <label class="f" style="margin-top:12px">💬 Mensaje de agradecimiento (sale en el ticket, A4 y WhatsApp)<textarea rows="3" data-inp="tkLive" placeholder="¡Gracias por su compra!">${esc(c.footer)}</textarea></label><label class="ck" style="margin-top:10px"><input type="checkbox" data-cfg="tkLogo" data-t="b" ${c.tkLogo?'checked':''}> Imprimir el logo en el ticket <span class="muted small">(solo si su impresora de 58 mm imprime imágenes; si sale mal o no sale, déjelo apagado)</span></label><label class="f" style="margin-top:12px">Texto de la leyenda<input data-cfg="legal" data-t="s" value="${esc(c.legal||'')}" placeholder="${esc(LEGAL_DEF)}"></label></div>
+   <label class="f" style="margin-top:12px">💬 Mensaje de agradecimiento (sale en el ticket, A4 y WhatsApp)<textarea rows="3" data-inp="tkLive" placeholder="¡Gracias por su compra!">${esc(c.footer)}</textarea></label><label class="ck" style="margin-top:10px"><input type="checkbox" data-cfg="tkLogo" data-t="b" ${c.tkLogo?'checked':''}> Imprimir el logo en el ticket <span class="muted small">(solo si su impresora de 58 mm imprime imágenes; si sale mal o no sale, déjelo apagado)</span></label><div style="margin-top:10px"><div class="muted small" style="margin-bottom:6px">🖼 Marco del logo</div><div class="frsel" role="group" aria-label="Marco del logo">${TKFR.map(([k,n])=>`<button type="button" data-act="tkFrame" data-v="${k}" class="${tkFrame()===k?'on':''}" aria-pressed="${tkFrame()===k}" title="${n}"><canvas data-fr="${k}" width="64" height="64"></canvas><span>${n}</span></button>`).join('')}</div></div><label class="f" style="margin-top:12px">Texto de la leyenda<input data-cfg="legal" data-t="s" value="${esc(c.legal||'')}" placeholder="${esc(LEGAL_DEF)}"></label></div>
    <div><div class="muted small" style="margin-bottom:6px">Vista previa</div><div class="tkprev" id="tkPrev">${receiptHTML(sampleSale())}</div></div></div></div>
   <div data-sec="tick">${printerPanel()}</div><div class="panel" data-sec="tick" style="margin-bottom:16px"><h3 style="margin-bottom:4px">📄 Tamaño del comprobante</h3><p class="muted" style="margin:0 0 12px">Papel en el que se imprime el comprobante: ticket o A4.</p><label class="f" style="max-width:260px">Papel de impresión<select data-cfg="paper" data-t="s">${paperOpts()}</select></label></div><div data-sec="usr">${isOwner()?miPerfilPanel():''}${isOwner()?bancoPanel():''}${pinPanel()}${isOwner()?perfilPanel():''}</div><div data-sec="red">${isOwner()?netPanel():''}</div>${datosPanels()}
   <div class="panel" data-sec="neg"><h3 style="margin-bottom:6px">Facturación electrónica SRI</h3><p class="muted" style="margin:0">Este programa emite comprobantes internos y no se conecta al SRI. Si debe emitir facturas electrónicas autorizadas, use su facturador o el sistema gratuito del SRI y apóyese en Reportes → Exportar ventas, que incluye identificación del cliente, subtotales, IVA y forma de pago según la tabla del SRI.</p></div>`}
@@ -3132,8 +3160,107 @@ setInterval(()=>runSync(),20000);window.addEventListener('online',()=>runSync())
 A.cloudOpen=()=>modal(`${dlgHead('Sincronización en la nube')}<p class="muted small" style="margin:0 0 8px">${esc(SY.msg||'Aún sin sincronizar.')} · Equipo: <b>${DEV}</b> · Punto de emisión: <b>${esc(S.cfg.pto)}</b> (debe ser distinto en cada equipo)</p><label class="f">URL del proyecto<input id="sy_u" value="${esc(S.cfg.syncUrl||'')}" placeholder="https://xxxx.supabase.co" autocomplete="off"></label><label class="f">Clave pública (anon public)<input id="sy_k" value="${esc(S.cfg.syncKey||'')}" autocomplete="off"></label><label class="f">Código de conexión (para configurar otro equipo)<input id="sy_c" placeholder="Pegue aquí el código copiado de otro equipo" autocomplete="off"></label><div class="ft" style="justify-content:flex-start"><button class="btn sm" data-act="cloudCopy">Copiar mi código</button><button class="btn sm" data-act="cloudCode">Usar código pegado</button></div><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button><button class="btn" data-act="cloudFull">Descargar todo de nuevo</button><button class="btn pri" data-act="cloudSave">Guardar y sincronizar</button></div>`);
 A.orderSet=el=>{S.cart.order=el.dataset.v==='1';save();$$('#ordSeg button').forEach(b=>b.classList.toggle('on',b===el))};
 A.pdFil=el=>{PD.f=el.dataset.k;pdList()};
-A.pdSet=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.status!=='ok')return;const d=el.dataset.v==='1';if(!!s.order.done===d)return;s.order.done=d;s.order.doneTs=d?Date.now():0;s.order.by=d?(S.cfg.cur||''):'';save(true);pdList();bellUpdate();toast(d?'Pedido marcado como entregado.':'Pedido marcado como no entregado.')};
+/* ---- Comprobante de PEDIDO ENTREGADO (texto, imagen y PDF por WhatsApp) ---- */
+let curDl=null;
+const DLK={cv:s=>dlvCanvas(s),txt:s=>dlvText(s),base:'Pedido-entregado'};
+function dlvInfo(s){const o=s.order||{},c=S.customers.find(x=>x.id===s.customerId)||{},pe=(s.abonos||[]).filter(a=>a.ped);
+  return {o,when:o.doneTs||Date.now(),by:o.by||'',code:custCodeOf(s),tel:c.tel||'',dest:s.shipCity||'',co:(shipDet(s)||{}).co||'',
+    paidNow:r2(pe.reduce((a,x)=>a+x.amt,0)),paidM:pe.length?PAY[pe[pe.length-1].m].n:'',due:Math.max(0,s.balance||0)}}
+function dlvText(s){
+  const C=S.cfg,I=dlvInfo(s),bar='━━━━━━━━━━━━━━━',fn=firstName(s.custName),L=[];
+  L.push(`*${greet(Date.now())}${fn?', '+fn:''}* 👋`,'',`✅ *¡PEDIDO ENTREGADO!*`,`Su pedido fue entregado con éxito.`,'');
+  L.push(`🏪 *${C.name}*`);if(C.tel)L.push(`📞 ${C.tel}`);L.push(bar);
+  L.push(`📦 *Pedido N° ${s.num}*`,`📅 Pedido: ${fmtDT(s.ts)}`,`🚚 Entregado: *${fmtDT(I.when)}*`);
+  if(s.custName)L.push(`👤 Cliente: *${s.custName}*`);if(I.code)L.push(`🔖 Código: *${I.code}*`);
+  if(I.dest)L.push(`📍 Destino: *${I.dest}*`);if(I.co)L.push(`🏢 Empresa: ${I.co}`);if(I.by)L.push(`🧑‍💼 Entregó: ${I.by}`);
+  L.push(bar,'🛒 *Productos entregados*','');
+  for(const l of s.lines.filter(l=>l.qty>0))L.push(`▪️ ${l.qty} × ${l.name}  →  *${money(l.tot)}*`);
+  L.push('',bar,`💰 *TOTAL: ${money(s.total)}*`);
+  if(I.paidNow>0)L.push(`💵 Pagado al recibir: ${money(I.paidNow)}${I.paidM?' ('+I.paidM+')':''}`);
+  L.push(I.due>0?`⏳ *Saldo pendiente: ${money(I.due)}*`:`✅ *Pedido pagado por completo*`);
+  L.push('',`🙏 ${C.footer||'¡Gracias por su compra!'}`);
+  return L.join('\n')}
+function dlvCanvas(s){
+  const W=640,c=S.cfg,I=dlvInfo(s),G1='#15803D',G2='#22C55E',F='-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',cv=document.createElement('canvas'),ctx=cv.getContext('2d');
+  const rr=(x,y,w,h,r,fill)=>{ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.fillStyle=fill;ctx.fill()};
+  const wrap=(t,w,font)=>{ctx.font=font;const o=[];let l='';for(const p of String(t).split(' ')){const n=l?l+' '+p:p;if(ctx.measureText(n).width>w&&l){o.push(l);l=p}else l=n}if(l)o.push(l);return o};
+  const fit=(t,w,font)=>{ctx.font=font;t=String(t||'');if(ctx.measureText(t).width<=w)return t;while(t.length>1&&ctx.measureText(t+'…').width>w)t=t.slice(0,-1);return t+'…'};
+  const HH=356,CY=190,HL=!!(LOGO&&LOGOIMG.complete&&LOGOIMG.naturalWidth);
+  const run=(dry,H)=>{let y=0;const T=(t,x,font,col,al)=>{if(dry)return;ctx.font=font;ctx.fillStyle=col;ctx.textAlign=al||'left';ctx.fillText(t,x,y)};
+    const L=60,R=W-60,IW=R-L,CX=W/2,dash=()=>{if(dry)return;ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1.5;ctx.setLineDash([7,6]);ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(R,y);ctx.stroke();ctx.setLineDash([])};
+    if(!dry){
+      ctx.save();ctx.shadowColor='rgba(21,128,61,.18)';ctx.shadowBlur=30;ctx.shadowOffsetY=10;rr(20,20,W-40,H-40,28,'#fff');ctx.restore();
+      ctx.save();rr(20,20,W-40,H-40,28,'#fff');ctx.clip();const g=ctx.createLinearGradient(0,20,W,20+HH);g.addColorStop(0,G1);g.addColorStop(1,G2);ctx.fillStyle=g;ctx.fillRect(20,20,W-40,HH);
+      ctx.fillStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.arc(W-40,40,120,0,7);ctx.fill();ctx.beginPath();ctx.arc(50,HH+10,90,0,7);ctx.fill();
+      const cf=['#FDE047','#FFFFFF','#BBF7D0','#FCA5A5','#93C5FD','#FDBA74'];for(let i=0;i<26;i++){const a=i*2.399,rad=88+((i*37)%44),x=CX+Math.cos(a)*rad*1.9,yy=CY+Math.sin(a)*rad*.5;ctx.save();ctx.translate(x,yy);ctx.rotate(a);ctx.fillStyle=cf[i%cf.length];ctx.globalAlpha=.85;if(i%3)ctx.fillRect(-5,-2.5,10,5);else{ctx.beginPath();ctx.arc(0,0,3.5,0,7);ctx.fill()}ctx.restore()}
+      ctx.restore();
+      if(HL){ctx.save();ctx.shadowColor='rgba(0,0,0,.18)';ctx.shadowBlur=12;ctx.shadowOffsetY=3;rr(L-6,38,64,64,16,'#fff');ctx.restore();ctx.save();rr(L-2,42,56,56,13,'#fff');ctx.clip();const iw=LOGOIMG.naturalWidth,ih=LOGOIMG.naturalHeight,k=Math.min(56/iw,56/ih),dw=iw*k,dh=ih*k;ctx.drawImage(LOGOIMG,L-2+(56-dw)/2,42+(56-dh)/2,dw,dh);ctx.restore()}
+      ctx.fillStyle='rgba(255,255,255,.22)';ctx.beginPath();ctx.arc(CX,CY,62,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(CX,CY,48,0,7);ctx.fill();
+      ctx.strokeStyle=G2;ctx.lineWidth=9;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(CX-22,CY+1);ctx.lineTo(CX-6,CY+17);ctx.lineTo(CX+24,CY-15);ctx.stroke()}
+    {const nx=L+(HL?74:0),nw=R-nx;y=HL?68:72;T(fit(c.name,nw,'800 20px '+F),nx,'800 20px '+F,'#fff');const sb=[c.ruc&&'RUC '+c.ruc,c.tel].filter(Boolean).join(' · ');if(sb){y+=22;T(fit(sb,nw,'14px '+F),nx,'14px '+F,'rgba(255,255,255,.85)')}}
+    y=294;T('¡Pedido entregado!',CX,'800 36px '+F,'#fff','center');
+    y=328;T(fit((firstName(s.custName)?'Gracias, '+firstName(s.custName)+'. ':'')+'Su pedido se entregó con éxito.',IW,'16px '+F),CX,'16px '+F,'rgba(255,255,255,.92)','center');
+    y=HH+20+46;T('PEDIDO',L,'700 13px '+F,'#94A3B8');T('ENTREGADO',R,'700 13px '+F,'#94A3B8','right');
+    y+=30;T('N° '+s.num,L,'800 24px '+F,'#0F172A');T(fmtDT(I.when),R,'700 18px '+F,G1,'right');
+    const kv=(k,v)=>{if(!v)return;y+=28;T(k,L,'15px '+F,'#64748B');T(fit(v,IW-150,'600 15px '+F),R,'600 15px '+F,'#0F172A','right')};
+    y+=8;kv('Fecha del pedido',fmtDT(s.ts));kv('Cliente',s.custName);kv('Código',I.code);kv('Destino',I.dest);kv('Empresa de envío',I.co);kv('Entregó',I.by);
+    y+=24;dash();y+=36;T('Productos entregados',L,'700 17px '+F,'#0F172A');y+=4;
+    for(const l of s.lines.filter(l=>l.qty>0)){const nl=wrap(l.name,IW-170,'600 16px '+F);y+=32;
+      if(!dry){rr(L,y-21,40,28,8,'#DCFCE7')}T(l.qty+'×',L+20,'800 14px '+F,G1,'center');
+      nl.forEach((t,i)=>{if(i)y+=21;T(t,L+54,'600 16px '+F,'#1E293B')});if(!dry){ctx.font='700 16px '+F;ctx.fillStyle='#1E293B';ctx.textAlign='right';ctx.fillText(money(l.tot),R,y-(nl.length-1)*21)}}
+    y+=26;dash();
+    if(s.ship>0){y+=30;T('Envío',L,'15px '+F,'#64748B');T(money(s.ship),R,'15px '+F,'#64748B','right')}
+    y+=46;T('TOTAL',L,'800 20px '+F,'#0F172A');T(money(s.total),R,'800 34px '+F,G1,'right');
+    if(I.paidNow>0){y+=30;T('Pagado al recibir'+(I.paidM?' · '+I.paidM:''),L,'15px '+F,'#64748B');T(money(I.paidNow),R,'600 15px '+F,'#0F172A','right')}
+    y+=28;const ok=!(I.due>0);if(!dry)rr(L,y,IW,52,14,ok?'#DCFCE7':'#FEE2E2');y+=33;
+    T(ok?'✓  Pedido pagado por completo':'Saldo pendiente: '+money(I.due),CX,'700 18px '+F,ok?G1:'#B91C1C','center');y+=19;
+    y+=44;T(fit(c.footer||'¡Gracias por su compra!',IW,'600 17px '+F),CX,'600 17px '+F,G1,'center');
+    const sub=[c.tel,c.addr].filter(Boolean).join(' · ');if(sub){y+=26;T(fit(sub,IW,'13px '+F),CX,'13px '+F,'#94A3B8','center')}
+    return y+56};
+  cv.width=W*2;cv.height=10;ctx.scale(2,2);const H=run(true,0);cv.height=H*2;ctx.setTransform(2,0,0,2,0,0);
+  ctx.fillStyle='#ECFDF3';ctx.fillRect(0,0,W,H);run(false,H);return cv}
+function dlvShow(s){if(!s||!s.order)return;if(LOGO&&!(LOGOIMG.complete&&LOGOIMG.naturalWidth)&&!s._lw){s._lw=1;const go=()=>{delete s._lw;dlvShow(s)};LOGOIMG.decode().then(go,go);return}curDl=s;const url=dlvCanvas(s).toDataURL('image/png'),tel=(S.customers.find(x=>x.id===s.customerId)||{}).tel||'';
+  modal(`${dlgHead('Pedido entregado · '+esc(s.num))}<p class="muted small" style="margin:0">Envíe al cliente el comprobante de entrega.</p><img src="${url}" alt="Comprobante de pedido entregado" style="width:100%;max-height:52vh;object-fit:contain;border-radius:12px;background:#ECFDF3">
+  <div class="rcpwa"><label class="f grow">WhatsApp del cliente<input id="dl_wa" type="tel" inputmode="tel" value="${esc(tel)}" placeholder="09XXXXXXXX"></label><button class="btn pri wabtn" data-act="dlvWa">Enviar</button></div>
+  <div class="wafmt" role="group" aria-label="Formato del envío">${[['texto','📝 Texto'],['imagen','🖼 Imagen'],['pdf','📄 PDF']].map(([k,l])=>`<button type="button" data-act="waFmt" data-f="${k}" class="${waFormat()===k?'on':''}" aria-pressed="${waFormat()===k}">${l}</button>`).join('')}</div><div class="wahint" id="wahint">${waHintHtml(waFormat())}</div>
+  <div class="ft"><button class="btn" data-act="dlvPdf">📄 PDF</button><button class="btn" data-act="dlvShare">Compartir / guardar imagen</button><button class="btn" data-act="dlvCopy">📋 Copiar texto</button><button class="btn pri" data-act="closeModal">Listo</button></div>`)}
+A.dlvOpen=el=>dlvShow(S.sales.find(x=>x.id===el.dataset.id));
+A.dlvWa=()=>{const s=curDl;if(!s)return;const v=$('#dl_wa').value,n=waNum(v);if(!n)return toast('Escriba un número de WhatsApp válido (ej. 0991234567).',1);
+  const c=S.customers.find(x=>x.id===s.customerId);if(c&&c.id!=='cf'&&!c.tel){c.tel=v.trim();save(true)}waSend(s,n,undefined,false,DLK)};
+A.dlvCopy=()=>{const t=waClean(dlvText(curDl));try{navigator.clipboard.writeText(t).then(()=>toast('Texto copiado'),()=>toast('No se pudo copiar.',1))}catch(e){toast('No se pudo copiar.',1)}};
+A.dlvShare=async()=>{const s=curDl;if(!s)return;const cv=dlvCanvas(s),name='Pedido-entregado-'+s.num+'.png',blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+  try{const f=new File([blob],name,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:S.cfg.name});return}}catch(e){if(e&&e.name==='AbortError')return}waDl(blob,name);toast('Imagen guardada en Descargas.')};
+A.dlvPdf=async()=>{const s=curDl;if(!s)return;const blob=pdfFromCanvas(dlvCanvas(s)),name='Pedido-entregado-'+s.num+'.pdf';
+  try{const f=new File([blob],name,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:S.cfg.name});return}}catch(e){if(e&&e.name==='AbortError')return}waDl(blob,name);toast('PDF guardado en Descargas.')};
+function pdMark(s,d){s.order.done=d;s.order.doneTs=d?Date.now():0;s.order.by=d?(S.cfg.cur||''):''}
+A.pdSet=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.status!=='ok')return;const d=el.dataset.v==='1';if(!!s.order.done===d)return;
+  if(d&&s.credit&&s.balance>0)return pdPayModal(s);
+  let msg=d?'Pedido marcado como entregado.':'Pedido marcado como no entregado.';
+  if(!d){const A2=s.abonos||[],auto=A2.filter(a=>a.ped);if(auto.length){let back=0;for(const a of auto){back=r2(back+a.amt);const e=a.lg&&S.ledger.find(x=>x.id===a.lg);if(e)lgRev(e,'Pedido no entregado')}
+    s.abonos=A2.filter(a=>!a.ped);s.balance=r2(s.balance+back);delete s.paidTs;msg+=' La deuda del pedido ('+money(back)+') volvió a Créditos.'}}
+  pdMark(s,d);save(true);pdList();bellUpdate();toast(msg);if(d)dlvShow(s)};
+function pdPayModal(s){
+  const otra=r2(debt(s.customerId)-s.balance);
+  modal(`${dlgHead('Entregar pedido a crédito')}<div><b>${esc(s.custName||'')}</b> · N° ${esc(s.num)}<div class="muted">Saldo de este pedido: <b class="money">${money(s.balance)}</b></div>${otra>0?`<div class="muted small">Este cliente tiene además otra deuda de <b>${money(otra)}</b>; esa se mantiene en Créditos.</div>`:''}</div>
+  <div class="fgrid"><label class="f">¿Cómo pagó el saldo?<select id="pd_m">${['efectivo','transferencia','tarjeta','qr'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label>${bkSel('pd_b','','Banco (si no es efectivo)')}</div>
+  <p class="muted small" style="margin:0">Al entregar se borra solo la deuda de este pedido y el cobro se registra en Caja (efectivo) o Banco. Si luego lo vuelve a marcar como «No entregado», la deuda regresa.</p>
+  <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn" data-act="pdNoPay" data-id="${s.id}">Entregar sin cobrar</button><button class="btn pri" data-act="pdPay" data-id="${s.id}">Entregar y saldar</button></div>`)}
+A.pdNoPay=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.status!=='ok')return;pdMark(s,true);save(true);closeModal();pdList();bellUpdate();toast('Pedido entregado. La deuda sigue en Créditos.');dlvShow(s)};
+A.pdPay=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.status!=='ok'||!(s.balance>0))return closeModal();
+  const m=($('#pd_m')||{}).value||'efectivo',bkv=($('#pd_b')||{}).value||'',a=s.balance,ts=Date.now(),by=S.cfg.cur||'';
+  const e=lgAdd(m==='efectivo'?'caja':userBanco(cUser())?'banco':'porconfirmar',a,'abono','Cobro '+(s.custName||'')+' · '+s.num+' · pedido entregado'+(m==='efectivo'?'':' · '+PAY[m].n),{ref:s.id,ts,bk:m==='efectivo'?'':(m==='qr'&&bkDeuna())||bkv});
+  s.abonos=s.abonos||[];s.abonos.push({ts,m,amt:a,by,note:'Saldado al entregar el pedido',photo:'',sessionId:S.caja?S.caja.id:null,ped:1,lg:e?e.id:''});
+  s.balance=0;s.paidTs=ts;pdMark(s,true);save(true);closeModal();pdList();bellUpdate();toast('Pedido entregado y deuda saldada ('+money(a)+').');dlvShow(s)};
 IN.pdList=pdList;
+function frDraw(){document.querySelectorAll('canvas[data-fr]').forEach(c=>{const x=c.getContext('2d'),sh=c.dataset.fr;x.clearRect(0,0,64,64);
+  if(LOGO&&LOGOIMG.complete&&LOGOIMG.naturalWidth){x.drawImage(logoFramed(64,sh,true),0,0);return}
+  if(sh==='none'){x.fillStyle='#bbb';x.font='28px sans-serif';x.textAlign='center';x.fillText('—',32,42);return}
+  framePath(x,sh,32,32,27);x.lineWidth=3;x.lineJoin='round';x.strokeStyle='#555';x.stroke()})}
+A.tkFrame=el=>{S.cfg.tkFrame=el.dataset.v;save(true);$$('.frsel button').forEach(b=>{const on=b.dataset.v===el.dataset.v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});refreshPrev();
+  if(!LOGO)toast('Marco elegido. Suba el logo de su negocio en Ajustes para verlo.');else if(!S.cfg.tkLogo)toast('Marco elegido. Active «Imprimir el logo en el ticket» para que salga.');};
+{const _vA=vAjustes;vAjustes=function(){const r=_vA.apply(this,arguments);try{frDraw()}catch(e){}return r}}
+LOGOIMG.addEventListener('load',()=>{try{frDraw();refreshPrev()}catch(e){}});
+
 const pdCss=document.createElement('style');pdCss.textContent=`.pdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 .pdcard{display:grid;gap:5px;align-content:start}.pdcard.done{opacity:.72}.pdcard.pdnew{box-shadow:0 0 0 2px var(--accent)}
 .pdtop{display:flex;gap:8px;align-items:center;justify-content:space-between}.pdtop b{font-size:16px}
@@ -3245,6 +3372,7 @@ A.ocAmt=el=>{const i=$('#'+el.dataset.p+'_fondo');i.value=el.dataset.v;i.focus()
 A.ocWho=el=>{$('#'+el.dataset.p+'_who').value=el.dataset.v};
 document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const f=A[el.dataset.act];if(f){e.preventDefault();f(el,e)}});
 document.addEventListener('change',e=>{const el=e.target;
+  if(CS.pk&&/^cu_/.test(el.id||''))return;
   if(el.dataset.chg&&CH[el.dataset.chg]){CH[el.dataset.chg](el);return}
   if(el.dataset.cfg){const k=el.dataset.cfg,t=el.dataset.t;S.cfg[k]=t==='b'?el.checked:t==='n'?num(el.value):el.value;if(k==='zoom')applyZoom();if(k==='ivaRate')S.cfg.ivaRate=Math.min(100,Math.max(0,S.cfg.ivaRate));save(true);$('#bname').textContent=S.cfg.name||'STAR';headState();refreshPrev();toast('Guardado');if(k==='paper'){['pPaper','pPrintable','pFont'].forEach(x=>delete S.cfg[x]);if(view==='ajustes'&&$('#modal').hidden)vAjustes()}}
   if(el.dataset.tk){S.cfg.tk=Object.assign({},S.cfg.tk,{[el.dataset.tk]:el.checked});save(true);refreshPrev();toast('Guardado')}
@@ -3393,7 +3521,7 @@ CH.cobr=el=>{if(el.type==='date')CB.auto=false;cbBody()};
 /* ===== CONFIGURACIÓN DEL NEGOCIO COMPARTIDA: el administrador configura, los empleados la reciben solos ===== */
 /* Logo, datos del negocio, reglas de venta y todo lo del ticket. No incluye apariencia ni pantalla (son de cada equipo),
    ni establecimiento / punto de emisión / secuencial (distintos en cada equipo). */
-const BIZ_KEYS=['city','coops','name','ruc','addr','tel','regimen','docType','legal','logo','ivaRate','incIva','cfLimit','footer','tk','tkLogo','requireCaja','allowNeg','waAuto','listNames','t2','t3','paper','pPaper','pPrintable','pFont','pBold','pLogo','pDpi','feed','feedMm'];
+const BIZ_KEYS=['city','coops','name','ruc','addr','tel','regimen','docType','legal','logo','ivaRate','incIva','cfLimit','footer','tk','tkLogo','tkFrame','requireCaja','allowNeg','waAuto','listNames','t2','t3','paper','pPaper','pPrintable','pFont','pBold','pLogo','pDpi','feed','feedMm'];
 function bizSnap(){const o={};for(const k of BIZ_KEYS)if(S.cfg[k]!==undefined)o[k]=S.cfg[k];return o}
 function bizApply(x){const d=x.data||{},sn=d.cfg;if(!sn)return 0;const t=d.t||x.u||0,sy=S.sync;
   if(t<=(S.cfg.bizT||0))return 0;

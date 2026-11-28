@@ -1,5 +1,5 @@
 // Suba VERSION cada vez que publique cambios para que los equipos se actualicen
-const VERSION='starpos-v44';
+const VERSION='starpos-v49';
 const FILES=['./','./index.html','./manifest.webmanifest'];
 const EXTRA=['./favicon.png','./apple-touch-icon.png','./starpos-192.png','./starpos-512.png','./starpos-maskable-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(FILES).then(()=>Promise.all(EXTRA.map(u=>c.add(u).catch(()=>0))))).then(()=>self.skipWaiting()))});
