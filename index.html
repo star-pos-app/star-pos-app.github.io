@@ -3297,21 +3297,29 @@ A.orderSet=el=>{S.cart.order=el.dataset.v==='1';save();$$('#ordSeg button').forE
 A.pdFil=el=>{PD.f=el.dataset.k;pdList()};
 /* ---- Comprobante de PEDIDO ENTREGADO (texto, imagen y PDF por WhatsApp) ---- */
 let curDl=null;
-const DLK={cv:s=>dlvCanvas(s),txt:s=>dlvText(s),base:'Pedido-entregado'};
+const DLK={cv:s=>dlvCanvas(s),txt:s=>dlvText(s),get base(){return dlvBase(curDl)}};
+/* Si el pedido sale de la ciudad, se entrega a la empresa de envío y no al cliente: el comprobante dice «enviado». */
+function dlvEnv(s){const d=shipDet(s);if(!d||isJipi(s.shipCity))return null;
+  const serv=s.shipCo==='serv',n=String(s.shipCoN||'').trim();
+  const to=serv?'Servientrega':n?(/^coop/i.test(n)?'la '+n:/^transporte/i.test(n)?n:'la Cooperativa '+n):s.shipCo==='coop'?'la Cooperativa':'la empresa de envío';
+  const next=serv?'Pronto Servientrega se contactará con usted para darle su guía y así podrá ver dónde está su envío.':s.shipCo==='coop'?'En unos minutos le enviaremos la foto de su guía.':'Pronto le compartiremos los datos de su guía.';
+  const tel=S.cfg.tel;
+  return {to,msg:'Su pedido ya fue entregado a '+to+'. '+next,help:'¿Dudas sobre su envío? '+(tel?'Contáctenos al '+tel+'.':'Contáctese con nosotros.')}}
+const dlvBase=s=>dlvEnv(s)?'Pedido-enviado':'Pedido-entregado';
 function dlvInfo(s){const o=s.order||{},c=S.customers.find(x=>x.id===s.customerId)||{},pe=(s.abonos||[]).filter(a=>a.ped);
   return {o,when:o.doneTs||Date.now(),by:o.by||'',code:custCodeOf(s),tel:c.tel||'',dest:s.shipCity||'',co:(shipDet(s)||{}).co||'',
     paidNow:r2(pe.reduce((a,x)=>a+x.amt,0)),paidM:pe.length?PAY[pe[pe.length-1].m].n:'',due:Math.max(0,s.balance||0)}}
 function dlvText(s){
-  const C=S.cfg,I=dlvInfo(s),bar='━━━━━━━━━━━━━━━',fn=firstName(s.custName),L=[];
-  L.push(`*${greet(Date.now())}${fn?', '+fn:''}* 👋`,'',`✅ *¡PEDIDO ENTREGADO!*`,`Su pedido fue entregado con éxito.`,'');
+  const C=S.cfg,I=dlvInfo(s),bar='━━━━━━━━━━━━━━━',fn=firstName(s.custName),L=[],E=dlvEnv(s);
+  L.push(`*${greet(Date.now())}${fn?', '+fn:''}* 👋`,'',...(E?['🚚 *¡PEDIDO ENVIADO!*',E.msg,'',`💬 ${E.help}`]:['✅ *¡PEDIDO ENTREGADO!*','Su pedido fue entregado con éxito.']),'');
   L.push(`🏪 *${C.name}*`);if(C.tel)L.push(`📞 ${C.tel}`);L.push(bar);
-  L.push(`📦 *Pedido N° ${s.num}*`,`📅 Pedido: ${fmtDT(s.ts)}`,`🚚 Entregado: *${fmtDT(I.when)}*`);
+  L.push(`📦 *Pedido N° ${s.num}*`,`📅 Pedido: ${fmtDT(s.ts)}`,`🚚 ${E?'Enviado':'Entregado'}: *${fmtDT(I.when)}*`);
   if(s.custName)L.push(`👤 Cliente: *${s.custName}*`);if(I.code)L.push(`🔖 Código: *${I.code}*`);
-  if(I.dest)L.push(`📍 Destino: *${I.dest}*`);if(I.co)L.push(`🏢 Empresa: ${I.co}`);if(I.by)L.push(`🧑‍💼 Entregó: ${I.by}`);
-  L.push(bar,'🛒 *Productos entregados*','');
+  if(I.dest)L.push(`📍 Destino: *${I.dest}*`);if(I.co)L.push(`🏢 Empresa: ${I.co}`);if(I.by)L.push(`🧑‍💼 ${E?'Despachó':'Entregó'}: ${I.by}`);
+  L.push(bar,`🛒 *Productos ${E?'enviados':'entregados'}*`,'');
   for(const l of s.lines.filter(l=>l.qty>0))L.push(`▪️ ${l.qty} × ${l.name}  →  *${money(l.tot)}*`);
   L.push('',bar,`💰 *TOTAL: ${money(s.total)}*`);
-  if(I.paidNow>0)L.push(`💵 Pagado al recibir: ${money(I.paidNow)}${I.paidM?' ('+I.paidM+')':''}`);
+  if(I.paidNow>0)L.push(`💵 ${E?'Pagado':'Pagado al recibir'}: ${money(I.paidNow)}${I.paidM?' ('+I.paidM+')':''}`);
   L.push(I.due>0?`⏳ *Saldo pendiente: ${money(I.due)}*`:`✅ *Pedido pagado por completo*`);
   L.push('',`🙏 ${C.footer||'¡Gracias por su compra!'}`);
   return L.join('\n')}
@@ -3320,7 +3328,7 @@ function dlvCanvas(s){
   const rr=(x,y,w,h,r,fill)=>{ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.fillStyle=fill;ctx.fill()};
   const wrap=(t,w,font)=>{ctx.font=font;const o=[];let l='';for(const p of String(t).split(' ')){const n=l?l+' '+p:p;if(ctx.measureText(n).width>w&&l){o.push(l);l=p}else l=n}if(l)o.push(l);return o};
   const fit=(t,w,font)=>{ctx.font=font;t=String(t||'');if(ctx.measureText(t).width<=w)return t;while(t.length>1&&ctx.measureText(t+'…').width>w)t=t.slice(0,-1);return t+'…'};
-  const HH=356,CY=190,HL=!!(LOGO&&LOGOIMG.complete&&LOGOIMG.naturalWidth);
+  const HH=356,CY=190,HL=!!(LOGO&&LOGOIMG.complete&&LOGOIMG.naturalWidth),E=dlvEnv(s);
   const run=(dry,H)=>{let y=0;const T=(t,x,font,col,al)=>{if(dry)return;ctx.font=font;ctx.fillStyle=col;ctx.textAlign=al||'left';ctx.fillText(t,x,y)};
     const L=60,R=W-60,IW=R-L,CX=W/2,dash=()=>{if(dry)return;ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1.5;ctx.setLineDash([7,6]);ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(R,y);ctx.stroke();ctx.setLineDash([])};
     if(!dry){
@@ -3333,31 +3341,35 @@ function dlvCanvas(s){
       ctx.fillStyle='rgba(255,255,255,.22)';ctx.beginPath();ctx.arc(CX,CY,62,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(CX,CY,48,0,7);ctx.fill();
       ctx.strokeStyle=G2;ctx.lineWidth=9;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(CX-22,CY+1);ctx.lineTo(CX-6,CY+17);ctx.lineTo(CX+24,CY-15);ctx.stroke()}
     {const nx=L+(HL?74:0),nw=R-nx;y=HL?68:72;T(fit(c.name,nw,'800 20px '+F),nx,'800 20px '+F,'#fff');const sb=[c.ruc&&'RUC '+c.ruc,c.tel].filter(Boolean).join(' · ');if(sb){y+=22;T(fit(sb,nw,'14px '+F),nx,'14px '+F,'rgba(255,255,255,.85)')}}
-    y=294;T('¡Pedido entregado!',CX,'800 36px '+F,'#fff','center');
-    y=328;T(fit((firstName(s.custName)?'Gracias, '+firstName(s.custName)+'. ':'')+'Su pedido se entregó con éxito.',IW,'16px '+F),CX,'16px '+F,'rgba(255,255,255,.92)','center');
-    y=HH+20+46;T('PEDIDO',L,'700 13px '+F,'#94A3B8');T('ENTREGADO',R,'700 13px '+F,'#94A3B8','right');
+    y=294;T(E?'¡Pedido enviado!':'¡Pedido entregado!',CX,'800 36px '+F,'#fff','center');
+    y=328;T(fit((firstName(s.custName)?'Gracias, '+firstName(s.custName)+'. ':'')+(E?'Su pedido va en camino.':'Su pedido se entregó con éxito.'),IW,'16px '+F),CX,'16px '+F,'rgba(255,255,255,.92)','center');
+    y=HH+20;
+    if(E){const mf='600 16px '+F,hf='14px '+F,m=wrap(E.msg,IW-36,mf),h=wrap(E.help,IW-36,hf),bh=36+m.length*23+8+h.length*20;
+      y+=24;if(!dry)rr(L,y,IW,bh,14,'#ECFDF3');let ty=y+32;const by=y+bh;
+      for(const t of m){y=ty;T(t,CX,mf,'#14532D','center');ty+=23}ty+=7;
+      for(const t of h){y=ty;T(t,CX,hf,'#475569','center');ty+=20}y=by}
+    y+=46;T('PEDIDO',L,'700 13px '+F,'#94A3B8');T(E?'ENVIADO':'ENTREGADO',R,'700 13px '+F,'#94A3B8','right');
     y+=30;T('N° '+s.num,L,'800 24px '+F,'#0F172A');T(fmtDT(I.when),R,'700 18px '+F,G1,'right');
     const kv=(k,v)=>{if(!v)return;y+=28;T(k,L,'15px '+F,'#64748B');T(fit(v,IW-150,'600 15px '+F),R,'600 15px '+F,'#0F172A','right')};
-    y+=8;kv('Fecha del pedido',fmtDT(s.ts));kv('Cliente',s.custName);kv('Código',I.code);kv('Destino',I.dest);kv('Empresa de envío',I.co);kv('Entregó',I.by);
-    y+=24;dash();y+=36;T('Productos entregados',L,'700 17px '+F,'#0F172A');y+=4;
+    y+=8;kv('Fecha del pedido',fmtDT(s.ts));kv('Cliente',s.custName);kv('Código',I.code);kv('Destino',I.dest);kv('Empresa de envío',I.co);kv(E?'Despachó':'Entregó',I.by);
+    y+=24;dash();y+=36;T(E?'Productos enviados':'Productos entregados',L,'700 17px '+F,'#0F172A');y+=4;
     for(const l of s.lines.filter(l=>l.qty>0)){const nl=wrap(l.name,IW-170,'600 16px '+F);y+=32;
       if(!dry){rr(L,y-21,40,28,8,'#DCFCE7')}T(l.qty+'×',L+20,'800 14px '+F,G1,'center');
       nl.forEach((t,i)=>{if(i)y+=21;T(t,L+54,'600 16px '+F,'#1E293B')});if(!dry){ctx.font='700 16px '+F;ctx.fillStyle='#1E293B';ctx.textAlign='right';ctx.fillText(money(l.tot),R,y-(nl.length-1)*21)}}
     y+=26;dash();
     if(s.ship>0){y+=30;T('Envío',L,'15px '+F,'#64748B');T(money(s.ship),R,'15px '+F,'#64748B','right')}
     y+=46;T('TOTAL',L,'800 20px '+F,'#0F172A');T(money(s.total),R,'800 34px '+F,G1,'right');
-    if(I.paidNow>0){y+=30;T('Pagado al recibir'+(I.paidM?' · '+I.paidM:''),L,'15px '+F,'#64748B');T(money(I.paidNow),R,'600 15px '+F,'#0F172A','right')}
+    if(I.paidNow>0){y+=30;T((E?'Pagado':'Pagado al recibir')+(I.paidM?' · '+I.paidM:''),L,'15px '+F,'#64748B');T(money(I.paidNow),R,'600 15px '+F,'#0F172A','right')}
     y+=28;const ok=!(I.due>0);if(!dry)rr(L,y,IW,52,14,ok?'#DCFCE7':'#FEE2E2');y+=33;
     T(ok?'✓  Pedido pagado por completo':'Saldo pendiente: '+money(I.due),CX,'700 18px '+F,ok?G1:'#B91C1C','center');y+=19;
     y+=44;T(fit(c.footer||'¡Gracias por su compra!',IW,'600 17px '+F),CX,'600 17px '+F,G1,'center');
-    const sub=[c.tel,c.addr].filter(Boolean).join(' · ');if(sub){y+=26;T(fit(sub,IW,'13px '+F),CX,'13px '+F,'#94A3B8','center')}
     return y+56};
   cv.width=W*2;cv.height=10;ctx.scale(2,2);const H=run(true,0);cv.height=H*2;ctx.setTransform(2,0,0,2,0,0);
   ctx.fillStyle='#ECFDF3';ctx.fillRect(0,0,W,H);run(false,H);return cv}
 function dlvShow(s){if(!s||!s.order)return;if(LOGO&&!(LOGOIMG.complete&&LOGOIMG.naturalWidth)&&!s._lw){s._lw=1;const go=()=>{delete s._lw;dlvShow(s)};LOGOIMG.decode().then(go,go);return}curDl=s;const url=dlvCanvas(s).toDataURL('image/png'),tel=(S.customers.find(x=>x.id===s.customerId)||{}).tel||'';
-  modal(`${dlgHead('Pedido entregado · '+esc(s.num))}
-  <div class="dlvg"><div class="dlvimg"><img src="${url}" alt="Comprobante de pedido entregado"></div>
-  <div class="dlvct"><p class="muted small" style="margin:0">Envíe al cliente el comprobante de entrega.</p>
+  modal(`${dlgHead((dlvEnv(s)?'Pedido enviado · ':'Pedido entregado · ')+esc(s.num))}
+  <div class="dlvg"><div class="dlvimg"><img src="${url}" alt="Comprobante del pedido"></div>
+  <div class="dlvct"><p class="muted small" style="margin:0">Envíe al cliente el comprobante ${dlvEnv(s)?'de envío':'de entrega'}.</p>
   <div class="rcpwa"><label class="f grow">WhatsApp del cliente<input id="dl_wa" type="tel" inputmode="tel" value="${esc(tel)}" placeholder="09XXXXXXXX"></label><button class="btn pri wabtn" data-act="dlvWa">Enviar</button></div>
   <div class="wafmt" role="group" aria-label="Formato del envío">${[['texto','📝 Texto'],['imagen','🖼 Imagen'],['pdf','📄 PDF']].map(([k,l])=>`<button type="button" data-act="waFmt" data-f="${k}" class="${waFormat()===k?'on':''}" aria-pressed="${waFormat()===k}">${l}</button>`).join('')}</div><div class="wahint" id="wahint">${waHintHtml(waFormat())}</div>
   <div class="dlvbtns"><button class="btn sm" data-act="dlvPdf">📄 PDF</button><button class="btn sm" data-act="dlvShare" title="Compartir o guardar la imagen">📤 Compartir imagen</button><button class="btn sm" data-act="dlvCopy">📋 Copiar texto</button></div>
@@ -3367,9 +3379,9 @@ A.dlvOpen=el=>dlvShow(S.sales.find(x=>x.id===el.dataset.id));
 A.dlvWa=()=>{const s=curDl;if(!s)return;const v=$('#dl_wa').value,n=waNum(v);if(!n)return toast('Escriba un número de WhatsApp válido (ej. 0991234567).',1);
   const c=S.customers.find(x=>x.id===s.customerId);if(c&&c.id!=='cf'&&!c.tel){c.tel=v.trim();save(true)}waSend(s,n,undefined,false,DLK)};
 A.dlvCopy=()=>{const t=waClean(dlvText(curDl));try{navigator.clipboard.writeText(t).then(()=>toast('Texto copiado'),()=>toast('No se pudo copiar.',1))}catch(e){toast('No se pudo copiar.',1)}};
-A.dlvShare=async()=>{const s=curDl;if(!s)return;const cv=dlvCanvas(s),name='Pedido-entregado-'+s.num+'.png',blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+A.dlvShare=async()=>{const s=curDl;if(!s)return;const cv=dlvCanvas(s),name=dlvBase(s)+'-'+s.num+'.png',blob=await new Promise(r=>cv.toBlob(r,'image/png'));
   try{const f=new File([blob],name,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:S.cfg.name});return}}catch(e){if(e&&e.name==='AbortError')return}waDl(blob,name);toast('Imagen guardada en Descargas.')};
-A.dlvPdf=async()=>{const s=curDl;if(!s)return;const blob=pdfFromCanvas(dlvCanvas(s)),name='Pedido-entregado-'+s.num+'.pdf';
+A.dlvPdf=async()=>{const s=curDl;if(!s)return;const blob=pdfFromCanvas(dlvCanvas(s)),name=dlvBase(s)+'-'+s.num+'.pdf';
   try{const f=new File([blob],name,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:S.cfg.name});return}}catch(e){if(e&&e.name==='AbortError')return}waDl(blob,name);toast('PDF guardado en Descargas.')};
 function pdMark(s,d){s.order.done=d;s.order.doneTs=d?Date.now():0;s.order.by=d?(S.cfg.cur||''):''}
 A.pdSet=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.status!=='ok')return;const d=el.dataset.v==='1';if(!!s.order.done===d)return;
