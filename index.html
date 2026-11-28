@@ -1413,6 +1413,24 @@ body.m .enc .shipin input{width:100%}
 body.m .tntop ol{gap:9px;padding-top:9px}
 body.m .tn-stars,body.m .tn-row.first .tn-stars{font-size:9.5px;top:-9px}
 </style>
+<style id="paywide">
+.dlg.wide:has(.paygrid){max-width:900px;gap:12px}
+.paytop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.paytop .due{font-size:42px;line-height:1.05}
+.dlg .paymodes{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.dlg .paymodes .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:68px;padding:8px 4px;border-width:2px;border-radius:14px;white-space:nowrap;font-weight:700}
+.dlg .paymodes .pmi{font-size:24px;line-height:1.1}
+.dlg .paymodes .btn.on{box-shadow:0 10px 20px -10px var(--accent)}
+.paygrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.paycol{display:grid;gap:10px;min-width:0;align-content:start}
+.paygrid .bigin{font-size:34px;min-height:66px}
+#payquick .btn{flex:1 1 28%;min-height:44px;font-weight:700}
+#payrows.mix .payrow{grid-template-columns:105px minmax(0,1fr) auto}
+#payrows.mix .payrow label{grid-column:auto}
+@media(max-width:720px){.paygrid{grid-template-columns:minmax(0,1fr);gap:10px}}
+@media(max-width:480px){.dlg .paymodes{gap:4px}.dlg .paymodes .btn{font-size:10.5px;padding-inline:1px;white-space:normal;overflow-wrap:anywhere}#payrows.mix .payrow{grid-template-columns:88px minmax(0,1fr) auto}}
+</style>
+
 
 <div class="wrap">
   <header class="top"><div class="appmark" title="STAR POS · Punto de Venta"><img id="appMark" alt="" width="18" height="18" style="border-radius:5px"><span>STAR POS</span></div><div class="row">
@@ -1456,7 +1474,7 @@ const addDays=(k,n)=>dkey(dayStart(k)+n*864e5+12*36e5);
 /* ===================== datos ===================== */
 const SEED=[];
 const KEY='star_pos_v1';
-const PAY={efectivo:{n:'Efectivo',sri:'01'},tarjeta:{n:'Tarjeta',sri:'19'},transferencia:{n:'Transferencia',sri:'20'},qr:{n:'Deuna / QR',sri:'20'},credito:{n:'Crédito (fiado)',sri:'01'}};
+const PAY={efectivo:{n:'Efectivo',sri:'01'},transferencia:{n:'Transferencia',sri:'20'},qr:{n:'Deuna / QR',sri:'20'},tarjeta:{n:'Tarjeta',sri:'19'},credito:{n:'Crédito (fiado)',sri:'01'}};
 let storageOK=true, S;
 function emptyCust(){return {ident:'',code:'',name:'',tel:'',email:'',addr:''}}
 function newCart(){return {lines:[],gd:0,list:(typeof S!=='undefined'&&S&&S.cart&&!S.cart.listAuto)?S.cart.list:-1,customerId:'cf',cust:emptyCust(),ship:null}}
@@ -1811,7 +1829,7 @@ function hoyInner(){const t=today(),a=dayStart(t),b=dayEnd(t),c=rentCalc(t,t),L=
   return `<div class="panel" style="margin-bottom:16px"><div class="bar" style="margin:0 0 8px"><h3 style="margin-right:auto">📅 Hoy · ${t}</h3><span class="muted small">${c.n} venta(s)</span></div>
   <div class="tiles"><div class="tile-s" style="border-color:${gc}"><span>💰 Ganancia de hoy</span><b class="money" style="color:${gc};font-size:1.45em">${money(c.ganancia)}</b><small class="muted">suma de (precio − costo) de todo lo vendido hoy</small></div>
   <div class="tile-s"><span>Vendido hoy</span><b class="money">${money(c.vendido)}</b></div><div class="tile-s"><span>Costo de lo vendido</span><b class="money">${money(c.costo)}</b></div><div class="tile-s"><span>Ticket promedio</span><b class="money">${money(c.n?c.vendido/c.n:0)}</b></div>${c.porCobrar>0?`<div class="tile-s"><span>Por cobrar (fiado)</span><b class="money">${money(c.porCobrar)}</b></div>`:''}${best!==null?`<div class="tile-s"><span>Mejor hora</span><b>${best}:00</b></div>`:''}</div>
-  ${c.n?`<div class="two"><div class="panel"><h3 style="margin-bottom:8px">Cobrado por forma de pago</h3><table><tbody>${Object.entries(by).map(([k,v])=>`<tr><td>${PAY[k]?PAY[k].n:k}</td><td class="r money">${money(v)}</td></tr>`).join('')}</tbody></table></div>
+  ${c.n?`<div class="two"><div class="panel"><h3 style="margin-bottom:8px">Cobrado por forma de pago</h3><table><tbody>${Object.entries(by).sort((a,b)=>Object.keys(PAY).indexOf(a[0])-Object.keys(PAY).indexOf(b[0])).map(([k,v])=>`<tr><td>${PAY[k]?PAY[k].n:k}</td><td class="r money">${money(v)}</td></tr>`).join('')}</tbody></table></div>
   <div class="panel"><h3 style="margin-bottom:8px">Lo que más ganancia dejó hoy</h3><table><tbody>${top.map(p=>`<tr><td class="wrapc">${esc(p.n)}</td><td class="r">${p.q}</td><td class="r money">${money(r2(p.u))}</td></tr>`).join('')}</tbody></table></div></div>
   <div class="panel" style="margin-top:16px"><h3 style="margin-bottom:6px">Ventas por hora</h3><div class="chart">${hk.map(h=>`<div class="b" style="height:${Math.max(1,(hr[h]||0)/mx*100)}%" title="${h}:00 · ${money(hr[h]||0)}"></div>`).join('')}</div><div class="xl">${hk.map(h=>`<span>${h}</span>`).join('')}</div></div>`:`<div class="muted small">Todavía no hay ventas hoy.</div>`}</div>`}
 const hoyHTML=()=>`<div id="hoywrap">${hoyInner()}</div>`;
@@ -2010,24 +2028,26 @@ function openPay(){
   for(const l of L){const p=prod(l.pid);if(p.track&&!S.cfg.allowNeg&&l.qty>stkAv(p))return toast(`Stock insuficiente de ${p.name}.`,1)}
   if(S.cart.credit){if(c.id==='cf'){toast('Elija el cliente para vender a crédito.',1);pickCustomer();return}return openPayCredit(T,c)}
   const bills=[...new Set([T.total,Math.ceil(T.total),5,10,20,50,100,Math.ceil(T.total/50)*50].filter(x=>x>=T.total))].sort((a,b)=>a-b).slice(0,6);
-  const MODES=[['efectivo','💵 Efectivo'],['transferencia','🏦 Transferencia'],['tarjeta','💳 Tarjeta'],['qr','📱 Deuna / QR'],['mix','🔀 Combinado']];
-  const rows=['efectivo','transferencia','tarjeta','qr'].map(k=>`<div class="payrow" id="prow_${k}"><label for="pay_${k}" style="font-weight:600">${PAY[k].n}</label><input id="pay_${k}" type="text" placeholder="0.00" inputmode="decimal" data-inp="payInfo"><button class="btn sm" data-act="payRest" data-k="${k}">Resto</button></div>`).join('');
-  modal(`${dlgHead('Cobrar')}<div><div class="muted small">Total a pagar · ${esc(c.id==='cf'?'Consumidor final':c.name)}</div><div class="due money">${money(T.total)}</div></div>
+  const MODES=[['efectivo','💵 Efectivo'],['transferencia','🏦 Transferencia'],['qr','📱 Deuna / QR'],['tarjeta','💳 Tarjeta'],['mix','🔀 Combinado']];
+  const rows=['efectivo','transferencia','qr','tarjeta'].map(k=>`<div class="payrow" id="prow_${k}"><label for="pay_${k}" style="font-weight:600">${PAY[k].n}</label><input id="pay_${k}" type="text" placeholder="0.00" inputmode="decimal" data-inp="payInfo"><button class="btn sm" data-act="payRest" data-k="${k}">Resto</button></div>`).join('');
+  modal(`${dlgHead('Cobrar')}<div class="paytop"><div><div class="muted small">Total a pagar · ${esc(c.id==='cf'?'Consumidor final':c.name)}</div><div class="due money">${money(T.total)}</div></div>
   ${(()=>{const q=L.filter(l=>{const p=prod(l.pid);return p.track&&l.qty>stkAv(p)});return q.length?`<div class="banner warn" style="margin:0"><span>⚠ Sin stock suficiente: ${q.map(l=>esc(l.name)).join(', ')}. Se venderá igual y el stock quedará en negativo.</span></div>`:''})()}
-  ${ordSeg()}
-  <div><div class="muted small" style="margin-bottom:6px">Forma de pago</div><div class="paymodes">${MODES.map(([m,n])=>`<button class="btn" data-act="payMode" data-m="${m}">${n}</button>`).join('')}</div></div>
-  <div id="payrows" style="display:grid;gap:8px">${rows}</div>${bkSel('pay_bk','','Banco que recibe (transferencia, tarjeta o QR)','data-chg="payAcct"')}<div id="payacct" hidden></div>
+  ${ordSeg()}</div>
+  <div><div class="muted small" style="margin-bottom:6px">Forma de pago</div><div class="paymodes">${MODES.map(([m,n])=>{const i=n.indexOf(' ');return `<button type="button" class="btn" data-act="payMode" data-m="${m}"><span class="pmi" aria-hidden="true">${n.slice(0,i)}</span><span>${n.slice(i+1)}</span></button>`}).join('')}</div></div>
+  <div class="paygrid"><div class="paycol">
+  <div id="payrows" style="display:grid;gap:8px">${rows}</div>
   <div class="quick" id="payquick">${bills.map(x=>`<button class="btn" data-act="cashQuick" data-v="${x}">${x===T.total?'Exacto':money(x)}</button>`).join('')}</div>
   <div class="muted small" id="paymixhint" style="display:none">Ej.: total $20 → Efectivo $15 y pulse "Resto" en Transferencia para completar $5.</div>
-  <div class="change" id="payInfo"></div>
-  <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="confirmPay">Confirmar venta</button></div>`);
+  </div><div class="paycol">${bkSel('pay_bk','','Banco que recibe (transferencia, QR o tarjeta)','data-chg="payAcct"')}<div id="payacct" hidden></div>
+  <div class="change" id="payInfo"></div></div></div>
+  <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="confirmPay">Confirmar venta</button></div>`,true);
   setPayMode('efectivo');
   payInfo();
 }
 function setPayMode(m){
   const T=curTotals(),mix=m==='mix';
   document.querySelectorAll('.paymodes .btn').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
-  for(const k of ['efectivo','transferencia','tarjeta','qr']){
+  for(const k of ['efectivo','transferencia','qr','tarjeta']){
     const row=$('#prow_'+k),inp=$('#pay_'+k),show=mix||k===m;
     row.style.display=show?'':'none';
     inp.value=(!mix&&k===m)?T.total.toFixed(2):'';
@@ -2037,6 +2057,8 @@ function setPayMode(m){
   }
   $('#payquick').style.display=m==='efectivo'?'':'none';
   $('#paymixhint').style.display=mix?'':'none';
+  $('#payrows').classList.toggle('mix',mix);
+  {const b=$('#pay_bk');if(b)b.closest('label').style.display=m==='efectivo'?'none':''}
   payInfo();
   const f=$('#pay_'+(mix?'efectivo':m));if(f){f.focus();f.select&&f.select()}
 }
@@ -2084,7 +2106,7 @@ function openPayCredit(T,c){
   modal(`${dlgHead('Venta a crédito')}<div><div class="muted small">Cliente</div><b>${esc(c.name)}</b> <span class="muted">${esc(c.ident)}</span>${d>0?`<div class="muted small">Deuda anterior: <b class="money">${money(d)}</b></div>`:''}</div>
   <div class="payinfo"><span>Total de la venta</span><span class="money">${money(T.total)}</span></div>
   ${ordSeg()}
-  <div class="fgrid"><label class="f">Abono inicial<input id="cr_ab" type="text" value="${fx&&fx.ab>0?fx.ab:0}" inputmode="decimal" data-inp="crInfo" autofocus></label><label class="f">Forma del abono<select id="cr_m" onchange="var w=document.getElementById('cr_bkw');if(w)w.style.display=this.value==='efectivo'?'none':''">${['efectivo','transferencia','tarjeta','qr'].map(k=>`<option value="${k}" ${k===fm?'selected':''}>${PAY[k].n}</option>`).join('')}</select></label><div id="cr_bkw" style="${fm==='efectivo'?'display:none':''}">${bkSel('pay_bk',fx&&fx.bk,'Banco del abono')}</div><label class="f">Vence el (opcional)<input id="cr_due" type="date" min="${today()}" value="${fx&&fx.due?esc(fx.due):(S.cfg.crDays>0?addDays(today(),S.cfg.crDays):'')}"></label></div>
+  <div class="fgrid"><label class="f">Abono inicial<input id="cr_ab" type="text" value="${fx&&fx.ab>0?fx.ab:0}" inputmode="decimal" data-inp="crInfo" autofocus></label><label class="f">Forma del abono<select id="cr_m" onchange="var w=document.getElementById('cr_bkw');if(w)w.style.display=this.value==='efectivo'?'none':''">${['efectivo','transferencia','qr','tarjeta'].map(k=>`<option value="${k}" ${k===fm?'selected':''}>${PAY[k].n}</option>`).join('')}</select></label><div id="cr_bkw" style="${fm==='efectivo'?'display:none':''}">${bkSel('pay_bk',fx&&fx.bk,'Banco del abono')}</div><label class="f">Vence el (opcional)<input id="cr_due" type="date" min="${today()}" value="${fx&&fx.due?esc(fx.due):(S.cfg.crDays>0?addDays(today(),S.cfg.crDays):'')}"></label></div>
   <div class="muted small">Plazo para pagar:</div><div class="quick"><button class="btn sm" data-act="crPlazo" data-d="1">1 día</button><button class="btn sm" data-act="crPlazo" data-d="2">2 días</button><button class="btn sm" data-act="crPlazo" data-d="7">1 semana</button><button class="btn sm" data-act="crPlazo" data-d="10">10 días</button><button class="btn sm" data-act="crPlazo" data-d="15">15 días</button><button class="btn sm" data-act="crPlazo" data-d="30">1 mes</button><button class="btn sm" data-act="crPlazo" data-d="0">Sin plazo</button></div>
   <div class="quick"><button class="btn sm" data-act="crQuick" data-v="0">Sin abono</button><button class="btn sm" data-act="crQuick" data-v="0.5">50%</button></div>
   <div class="change" id="crInfo"></div>
@@ -2619,7 +2641,7 @@ function saveSup(id){const name=$('#s_name').value.trim().toUpperCase();if(!name
 
 /* ===================== CAJA ===================== */
 function cashStats(ses){
-  let by={efectivo:0,tarjeta:0,transferencia:0,qr:0,credito:0},n=0,ab=0;
+  let by={efectivo:0,transferencia:0,qr:0,tarjeta:0,credito:0},n=0,ab=0;
   for(const s of S.sales){if(s.sessionId===ses.id&&s.status==='ok'){n++;for(const p of s.pays)by[p.m]+=p.amt;by.efectivo-=s.change||0}
     if(s.status==='ok')for(const a of s.abonos||[])if(a.sessionId===ses.id){if(a.m==='efectivo')ab+=a.amt;else by[a.m]+=a.amt}}
   const ing=(ses.moves||[]).filter(m=>m.type==='ingreso').reduce((a,m)=>a+m.amt,0),egr=(ses.moves||[]).filter(m=>m.type==='egreso').reduce((a,m)=>a+m.amt,0);
@@ -2768,7 +2790,7 @@ function repBody(){
   <div class="tiles"><div class="tile-s"><span>Ventas (${L.length} tickets)</span><b class="money">${money(total)}</b></div><div class="tile-s"><span>Ticket promedio</span><b class="money">${money(total/L.length)}</b></div><div class="tile-s"><span>IVA cobrado</span><b class="money">${money(iva)}</b></div><div class="tile-s"><span>Utilidad bruta (sin IVA)</span><b class="money">${money(util)}</b></div><div class="tile-s"><span>Margen</span><b>${neto>0?(util/neto*100).toFixed(1):0}%</b></div></div>
   <div class="panel"><h3 style="margin-bottom:6px">Ventas ${month?'por mes':'por día'}</h3><div class="chart">${keys.map(k=>`<div class="b" style="height:${Math.max(1,(days[k]||0)/mx*100)}%" title="${k}: ${money(days[k]||0)}"></div>`).join('')}</div><div class="xl">${keys.map((k,i)=>`<span>${keys.length>16&&i%Math.ceil(keys.length/12)?'':k.slice(month?2:8)}</span>`).join('')}</div></div>
   <div class="panel" style="margin-bottom:16px"><div class="bar" style="margin:0 0 8px"><h3 style="margin-right:auto">Utilidad real</h3><button class="btn sm pri" data-act="expOpen">＋ Gastos</button></div><table><tbody><tr><td>Utilidad bruta (sin IVA)</td><td class="r money">${money(util)}</td></tr>${rts.length?`<tr><td>Devoluciones (${rts.length})</td><td class="r money">-${money(dM)}</td></tr>`:''}<tr><td>Gastos del negocio (${gx.length})</td><td class="r money">-${money(gT)}</td></tr><tr><td><b>Utilidad real</b></td><td class="r money"><b style="color:var(--${real<0?'bad':'ok'})">${money(real)}</b></td></tr></tbody></table></div>
-  <div class="two"><div class="panel"><h3 style="margin-bottom:8px">Por forma de pago</h3><table><tbody>${Object.entries(by).map(([k,v])=>`<tr><td>${PAY[k].n}</td><td class="r money">${money(v)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="two"><div class="panel"><h3 style="margin-bottom:8px">Por forma de pago</h3><table><tbody>${Object.entries(by).sort((a,b)=>Object.keys(PAY).indexOf(a[0])-Object.keys(PAY).indexOf(b[0])).map(([k,v])=>`<tr><td>${PAY[k].n}</td><td class="r money">${money(v)}</td></tr>`).join('')}</tbody></table></div>
   <div class="panel"><h3 style="margin-bottom:8px">Resumen tributario</h3><table><tbody><tr><td>Subtotal 0%</td><td class="r money">${money(sum(s=>s.sub0))}</td></tr><tr><td>Subtotal con IVA</td><td class="r money">${money(sum(s=>s.subIva))}</td></tr><tr><td>IVA</td><td class="r money">${money(iva)}</td></tr><tr><td><b>Total</b></td><td class="r money"><b>${money(total)}</b></td></tr></tbody></table></div></div>
   <div class="two"><div class="panel"><h3 style="margin-bottom:8px">Más vendidos (unidades)</h3><table><tbody>${top.map(p=>`<tr><td class="wrapc">${esc(p.name)}</td><td class="r">${p.q}</td><td class="r money">${money(p.v)}</td></tr>`).join('')}</tbody></table></div>
   <div class="panel"><h3 style="margin-bottom:8px">Más rentables (utilidad)</h3><table><tbody>${topU.map(p=>`<tr><td class="wrapc">${esc(p.name)}</td><td class="r money">${money(p.u)}</td></tr>`).join('')}</tbody></table></div></div>
@@ -3444,7 +3466,7 @@ A.pdSet=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.st
 function pdPayModal(s){
   const otra=r2(debt(s.customerId)-s.balance);
   modal(`${dlgHead('Entregar pedido a crédito')}<div><b>${esc(s.custName||'')}</b> · N° ${esc(s.num)}<div class="muted">Saldo de este pedido: <b class="money">${money(s.balance)}</b></div>${otra>0?`<div class="muted small">Este cliente tiene además otra deuda de <b>${money(otra)}</b>; esa se mantiene en Créditos.</div>`:''}</div>
-  <div class="fgrid"><label class="f">¿Cómo pagó el saldo?<select id="pd_m">${['efectivo','transferencia','tarjeta','qr'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label>${bkSel('pd_b','','Banco (si no es efectivo)')}</div>
+  <div class="fgrid"><label class="f">¿Cómo pagó el saldo?<select id="pd_m">${['efectivo','transferencia','qr','tarjeta'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label>${bkSel('pd_b','','Banco (si no es efectivo)')}</div>
   <p class="muted small" style="margin:0">Al entregar se borra solo la deuda de este pedido y el cobro se registra en Caja (efectivo) o Banco. Si luego lo vuelve a marcar como «No entregado», la deuda regresa.</p>
   <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn" data-act="pdNoPay" data-id="${s.id}">Entregar sin cobrar</button><button class="btn pri" data-act="pdPay" data-id="${s.id}">Entregar y saldar</button></div>`)}
 A.pdNoPay=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.status!=='ok')return;pdMark(s,true);save(true);closeModal();pdList();bellUpdate();toast('Pedido entregado. La deuda sigue en Créditos.');dlvShow(s)};
@@ -3568,10 +3590,10 @@ A.crDueSave=()=>{const s=S.sales.find(x=>x.id===window._cds),d=$('#dd_new').valu
 function collectModal(cid){
   const c=cust(cid),d=debt(cid);CR.photo='';
   modal(`${dlgHead('Registrar abono')}<div><b>${crCode(c)}${esc(c.name)}</b><div class="muted">Saldo pendiente: <b class="money">${money(d)}</b></div></div>
-  <div class="fgrid"><label class="f">Monto<input id="ab_amt" type="text" inputmode="decimal" autocomplete="off" value="${d}" autofocus></label><label class="f">Forma de pago<select id="ab_m">${['efectivo','transferencia','tarjeta','qr'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label>${bkSel('ab_b','','Banco (si no es efectivo)')}<label class="f">Fecha del abono<input id="ab_d" type="date" value="${today()}" max="${today()}"></label><label class="f">Quién recibió<input id="ab_by" value="${esc(S.cfg.cur||'')}" placeholder="Responsable"></label></div>
+  <div class="fgrid"><label class="f">Monto<input id="ab_amt" type="text" inputmode="decimal" autocomplete="off" value="${d}" autofocus></label><label class="f">Forma de pago<select id="ab_m">${['efectivo','transferencia','qr','tarjeta'].map(k=>`<option value="${k}">${PAY[k].n}</option>`).join('')}</select></label>${bkSel('ab_b','','Banco (si no es efectivo)')}<label class="f">Fecha del abono<input id="ab_d" type="date" value="${today()}" max="${today()}"></label><label class="f">Quién recibió<input id="ab_by" value="${esc(S.cfg.cur||'')}" placeholder="Responsable"></label></div>
   <label class="f">Observaciones (opcional)<input id="ab_n" placeholder="Ej.: llevó 3 cajas, paga el resto el viernes"></label>
   <label class="f">Foto del comprobante (opcional)<input id="ab_f" type="file" accept="image/*"></label><div id="ab_p" class="muted small"></div>
-  <p class="muted small" style="margin:0">El abono se aplica primero a las ventas más antiguas.${' En efectivo suma a Caja; por transferencia, tarjeta o QR suma a Banco.'}</p>
+  <p class="muted small" style="margin:0">El abono se aplica primero a las ventas más antiguas.${' En efectivo suma a Caja; por transferencia, QR o tarjeta suma a Banco.'}</p>
   <div class="ft"><button class="btn" ${CR.from==='d'?`data-act="crOpen" data-id="${cid}"`:'data-act="closeModal"'}>Cancelar</button><button class="btn pri" data-act="collectDo" data-id="${cid}">Registrar abono</button></div>`)}
 function collectDo(cid){
   const amt0=r2(num($('#ab_amt').value)),m=$('#ab_m').value,bkv=($('#ab_b')||{}).value||'';let amt=amt0;
