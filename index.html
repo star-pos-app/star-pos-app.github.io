@@ -1221,15 +1221,15 @@ body.pc .pc .shipbox{padding:6px 12px}
 .scrow{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;min-height:42px;padding:6px 12px;font-weight:600;cursor:pointer}
 .scrow:hover{border-color:var(--accent);background:var(--accent-soft)}
 .scbox{background:#000;border-radius:14px;overflow:hidden;min-height:230px}
-#scReader{width:100%}
-#scReader video{width:100%!important;height:auto!important;display:block}
-/* iPhone (WebKit): la cámara queda negra o recortada si el diálogo se anima o encoge el visor */
+#modal .scbox,#modalGhost .scbox{position:relative;width:100%;aspect-ratio:4/3;min-height:0;flex:none}
+.scbox video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.scline{position:absolute;left:8%;right:8%;top:50%;height:2px;background:#ff3b30;opacity:.8;pointer-events:none}
+.scbtns{flex-wrap:wrap}
+/* el diálogo del escáner sin animaciones ni desenfoque (iPhone) */
 #modal .dlg:has(.scbox),#modal .dlg:has(.scbox)>*,#modalGhost .dlg:has(.scbox)>*{animation:none!important;transform:none!important}
-#modal .dlg:has(.scbox){max-height:calc(100dvh - 24px);overflow-y:auto}
+#modal .dlg:has(.scbox){max-height:calc(100dvh - 24px);overflow-y:auto;-webkit-backdrop-filter:none;backdrop-filter:none}
 #modal .dlg:has(.scbox)>*{flex-shrink:0}
 #modal:has(.scbox) .scrim{-webkit-backdrop-filter:none;backdrop-filter:none;animation:none}
-#modal .dlg:has(.scbox){-webkit-backdrop-filter:none;backdrop-filter:none}
-@media(orientation:portrait){body.m .scbox{width:min(100%,38dvh);align-self:center}}
 .scmsg{padding:2px 4px;font-size:13px;text-align:center;color:var(--muted)}
 .scmsg.ok{color:var(--ok)}.scmsg.bad{color:var(--bad)}
 .scbtns{display:flex;gap:8px;flex-wrap:wrap}
@@ -2980,45 +2980,62 @@ function enList(){
   box.innerHTML=(n?head:'')+h}
 
 /* ===================== ESCÁNER DE CÓDIGO DE BARRAS CON CÁMARA ===================== */
-let SC=null,SCgen=0,SCcams=[],SCcam=0,SClast={c:'',t:0},SCtorchOn=false;
-const SC_LIBS=['https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js','https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js'];
-function scLoad(){if(window.Html5Qrcode)return Promise.resolve();
-  return new Promise((ok,no)=>{let i=0;const next=()=>{if(i>=SC_LIBS.length)return no(new Error('lib'));const t=document.createElement('script');t.src=SC_LIBS[i++];t.onload=()=>window.Html5Qrcode?ok():next();t.onerror=()=>{t.remove();next()};document.head.appendChild(t)};next()})}
+let SC=null,SCgen=0,SCcams=[],SCcam=0,SClast={c:'',t:0},SCtorchOn=false,SCdec=null;
+/* Visor propio: el video se muestra directo y la librería solo lee las imágenes */
+const SC_LIBS=['https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js','https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js'];
+function scLoad(){if(window.ZXing)return Promise.resolve();
+  return new Promise((ok,no)=>{let i=0;const next=()=>{if(i>=SC_LIBS.length)return no(new Error('lib'));const t=document.createElement('script');t.src=SC_LIBS[i++];t.crossOrigin='anonymous';t.onload=()=>window.ZXing?ok():next();t.onerror=()=>{t.remove();next()};document.head.appendChild(t)};next()})}
 function scBeep(){try{const c=scBeep.c;if(c){const o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.value=1100;g.gain.value=.07;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.09)}}catch(e){}try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}}
 function scMsg(t,k){const m=$('#scMsg');if(m){m.className='scmsg'+(k?' '+k:'');m.innerHTML=t}}
-function scanStop(){SCgen++;const s=SC;SC=null;SCtorchOn=false;if(!s)return Promise.resolve();return Promise.resolve().then(()=>s.stop()).catch(()=>{}).then(()=>{try{s.clear()}catch(e){}})}
+function scanStop(){SCgen++;const s=SC;SC=null;SCtorchOn=false;if(s){s.getTracks().forEach(t=>t.stop())}const v=$('#scVideo');if(v)v.srcObject=null;return Promise.resolve()}
 function scanOpen(){
-  modal(`${dlgHead('Escanear con la cámara')}<div class="scbox"><div id="scReader"></div></div><div id="scMsg" class="scmsg">Iniciando cámara…</div>
+  modal(`${dlgHead('Escanear con la cámara')}<div class="scbox"><video id="scVideo" autoplay muted playsinline webkit-playsinline></video><i class="scline"></i></div><div id="scMsg" class="scmsg">Iniciando cámara…</div>
   <label class="ck"><input type="checkbox" id="scCont" data-chg="scanCont" ${S.cfg.scanCont?'checked':''}> Seguir escaneando (agregar varios productos seguidos)</label>
-  <div class="scbtns"><button type="button" class="btn" id="scSwap" data-act="scanSwap" hidden>🔄 Cambiar cámara</button><button type="button" class="btn" id="scTorch" data-act="scanTorch" hidden>🔦 Linterna</button></div>
+  <div class="scbtns"><label class="btn">📸 Leer desde foto<input type="file" id="scPhoto" accept="image/*" capture="environment" hidden></label><button type="button" class="btn" id="scSwap" data-act="scanSwap" hidden>🔄 Cambiar cámara</button><button type="button" class="btn" id="scTorch" data-act="scanTorch" hidden>🔦 Linterna</button></div>
   <div class="ft"><button class="btn" data-act="closeModal">Cerrar</button></div>`);
   try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){scBeep.c=scBeep.c||new AC();scBeep.c.resume&&scBeep.c.resume()}}catch(e){}
+  $('#scPhoto').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)scPhotoRead(f)};
   scanStart()}
+async function scDecoder(){
+  if(SCdec)return SCdec;
+  if(window.BarcodeDetector){try{const want=['ean_13','ean_8','upc_a','upc_e','code_128','code_39','code_93','itf','codabar','qr_code'],has=await BarcodeDetector.getSupportedFormats(),f=want.filter(x=>has.includes(x));
+    if(f.includes('ean_13')){const d=new BarcodeDetector({formats:f});return SCdec=async c=>{const r=await d.detect(c);return r.length?r[0].rawValue:''}}}catch(e){}}
+  await scLoad();const Z=window.ZXing,B=Z.BarcodeFormat,h=new Map();
+  h.set(Z.DecodeHintType.POSSIBLE_FORMATS,[B.EAN_13,B.EAN_8,B.UPC_A,B.UPC_E,B.CODE_128,B.CODE_39,B.CODE_93,B.ITF,B.CODABAR,B.QR_CODE]);h.set(Z.DecodeHintType.TRY_HARDER,true);
+  const rd=new Z.MultiFormatReader();rd.setHints(h);
+  return SCdec=async c=>{try{return rd.decodeWithState(new Z.BinaryBitmap(new Z.HybridBinarizer(new Z.HTMLCanvasElementLuminanceSource(c)))).getText()}catch(e){return ''}finally{rd.reset()}}}
+function scDraw(c,src,w,h,fx,fy,max){const sw=w*fx,sh=h*fy,k=Math.min(1,max/sw);c.width=Math.round(sw*k);c.height=Math.round(sh*k);c.getContext('2d',{willReadFrequently:true}).drawImage(src,(w-sw)/2,(h-sh)/2,sw,sh,0,0,c.width,c.height)}
 async function scanStart(camId){
-  const g=++SCgen;
-  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)||!window.isSecureContext){scMsg('⚠ La cámara solo funciona si el programa se abre con <b>https://</b> (o localhost). Mientras tanto use el lector de barras o escriba el código.','bad');return}
-  try{await scLoad()}catch(e){if(g===SCgen)scMsg('⚠ No se pudo cargar el lector. Conéctese a internet una vez para activarlo; después funcionará también sin internet.','bad');return}
-  if(g!==SCgen||!$('#scReader'))return;
-  const H=window.Html5Qrcode,F=window.Html5QrcodeSupportedFormats;
-  const opt=Object.assign({verbose:false,useBarCodeDetectorIfSupported:true},F?{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39,F.CODE_93,F.ITF,F.CODABAR,F.QR_CODE].filter(x=>x!==undefined)}:{});
-  const cfg={fps:10,qrbox:(w,h)=>({width:Math.floor(w*.85),height:Math.floor(Math.max(70,Math.min(h*.6,w*.45)))})};
-  const go=async id=>{const sc=new H('scReader',opt);try{await sc.start(id,cfg,scanOk,()=>{})}catch(e){try{sc.clear()}catch(_){}throw e}return sc};
+  scanStop();const g=SCgen,v=$('#scVideo');if(!v)return;
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)||!window.isSecureContext){scMsg('⚠ La cámara en vivo solo funciona si el programa se abre con <b>https://</b>. Use «Leer desde foto» o escriba el código.','bad');return}
   try{
-    let sc;
-    if(camId)sc=await go(camId);
-    else{try{sc=await go({facingMode:'environment'})}catch(e1){if(e1&&/NotAllowed|Permission/i.test(e1.name+e1))throw e1;const L=await H.getCameras();if(!L||!L.length)throw e1;SCcam=0;sc=await go(L[0].id)}}
-    if(g!==SCgen){try{await sc.stop();sc.clear()}catch(e){}return}
-    SC=sc;
-    const v=$('#scReader video');
-    if(v){v.muted=true;v.setAttribute('playsinline','');v.setAttribute('autoplay','');const pl=()=>{const r=v.play();r&&r.catch(()=>{})};pl();v.onclick=pl}
-    scMsg('Apunte la cámara al código de barras y acérquelo hasta que se vea nítido.');
-    H.getCameras().then(L=>{SCcams=L||[];const b=$('#scSwap');if(b&&SCcams.length>1)b.hidden=false}).catch(()=>{});
-    /* el iPhone a veces informa la linterna un momento después de encender la cámara */
+    const size={width:{ideal:1280},height:{ideal:720}};
+    const st=await navigator.mediaDevices.getUserMedia({audio:false,video:Object.assign(camId?{deviceId:{exact:camId}}:{facingMode:{ideal:'environment'}},size)});
+    if(g!==SCgen){st.getTracks().forEach(t=>t.stop());return}
+    SC=st;v.muted=true;v.srcObject=st;
+    const play=()=>{const r=v.play();r&&r.catch(()=>{if(g===SCgen)scMsg('Toque el recuadro negro para ver la cámara.')})};
+    v.onclick=play;v.onloadedmetadata=play;play();
+    scMsg('Apunte al código de barras y acérquelo hasta que se vea nítido.');
+    navigator.mediaDevices.enumerateDevices().then(L=>{SCcams=L.filter(d=>d.kind==='videoinput'&&d.deviceId);const b=$('#scSwap');if(b&&SCcams.length>1)b.hidden=false}).catch(()=>{});
     [0,600,1500].forEach(ms=>setTimeout(()=>{if(g!==SCgen)return;const t=scTrack(),b=$('#scTorch');try{if(b&&t&&t.getCapabilities&&t.getCapabilities().torch)b.hidden=false}catch(e){}},ms));
+    setTimeout(()=>{if(g!==SCgen||(v.videoWidth&&!v.paused))return;const t=scTrack();scMsg('⚠ La cámara no entrega imagen. Use «Leer desde foto». Dato técnico: '+v.videoWidth+'×'+v.videoHeight+', estado '+v.readyState+(v.paused?', pausado':'')+(t?', '+t.readyState+(t.muted?', sin señal':''):''),'bad')},4000);
+    let dec;try{dec=await scDecoder()}catch(e){if(g===SCgen)scMsg('⚠ No se pudo cargar el lector. Conéctese a internet y vuelva a abrir el escáner.','bad');return}
+    const c=document.createElement('canvas');let n=0;
+    const tick=async()=>{if(g!==SCgen)return;
+      if(v.videoWidth&&!v.paused){try{n++;scDraw(c,v,v.videoWidth,v.videoHeight,.9,n%3?.5:1,1000);const t=await dec(c);if(g!==SCgen)return;if(t)scanOk(t)}catch(e){}}
+      if(g===SCgen)setTimeout(tick,150)};
+    tick();
   }catch(e){
     if(g!==SCgen)return;const t=String((e&&e.name)||'')+' '+String((e&&e.message)||e);
-    scMsg(/NotAllowed|Permission/i.test(t)?'⚠ La cámara está bloqueada. Permita el acceso a la cámara en el navegador (candado junto a la dirección) y vuelva a abrir el escáner.':/NotFound|Devices|no camera/i.test(t)?'⚠ No se encontró ninguna cámara en este equipo.':'⚠ No se pudo iniciar la cámara. '+esc(t.trim()),'bad')}}
-function scTrack(){const v=$('#scReader video'),s=v&&v.srcObject;return s?s.getVideoTracks()[0]:null}
+    scMsg(/NotAllowed|Permission/i.test(t)?'⚠ La cámara está bloqueada. Permita el acceso en los ajustes del navegador y vuelva a abrir el escáner.':/NotFound|no camera/i.test(t)?'⚠ No se encontró ninguna cámara en este equipo.':'⚠ No se pudo iniciar la cámara. Use «Leer desde foto». '+esc(t.trim()),'bad')}}
+async function scPhotoRead(file){
+  scMsg('Leyendo la foto…');const url=URL.createObjectURL(file);
+  try{const img=new Image();img.src=url;await img.decode();const dec=await scDecoder(),c=document.createElement('canvas');
+    for(const [fx,fy,max] of [[1,1,1600],[1,1,1000],[.7,.5,1200],[.5,.35,1000],[1,1,600]]){scDraw(c,img,img.naturalWidth,img.naturalHeight,fx,fy,max);const t=await dec(c);if(t){SClast={c:'',t:0};scanOk(t);return}}
+    scMsg('No se encontró un código en la foto. Tómela de cerca, derecha y con buena luz.','bad')}
+  catch(e){scMsg('⚠ No se pudo leer la foto. Revise su conexión e intente otra vez.','bad')}
+  finally{URL.revokeObjectURL(url)}}
+function scTrack(){return SC?SC.getVideoTracks()[0]:null}
 async function scTorchToggle(){
   const t=scTrack();if(!SC||!t)return;const on=!SCtorchOn;
   try{await t.applyConstraints({advanced:[{torch:on}]});SCtorchOn=on;const b=$('#scTorch');if(b)b.classList.toggle('pri',on)}
@@ -3038,7 +3055,7 @@ function shipAfter(){renderShip();renderCart();save(true)}
 Object.assign(A,{
   qClear(el){const t=$('#'+((el&&el.dataset.t)||'q'));if(!t)return;t.value='';t.focus();t.dispatchEvent(new Event('input',{bubbles:true}));if(t.id==='q'){const sg=$('#sugg');if(sg)sg.innerHTML=''}},
   scan:scanOpen,
-  scanSwap(){if(SCcams.length<2)return;SCcam=(SCcam+1)%SCcams.length;const id=SCcams[SCcam].id;scanStop().then(()=>scanStart(id))},
+  scanSwap(){if(SCcams.length<2)return;const t=scTrack(),cur=t&&t.getSettings&&t.getSettings().deviceId,i=SCcams.findIndex(d=>d.deviceId===cur);SCcam=((i<0?SCcam:i)+1)%SCcams.length;const b=$('#scTorch');if(b){b.hidden=true;b.classList.remove('pri')}scanStart(SCcams[SCcam].deviceId)},
   scanTorch(){scTorchToggle()},
   shipCity:shipCityModal,
   bizCity:bizCityModal,
