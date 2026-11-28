@@ -3339,15 +3339,15 @@ const pdCss=document.createElement('style');pdCss.textContent=`.pdgrid{display:g
 .pdchip.on .pdn{background:rgba(255,255,255,.28)}
 .pdclr{margin-left:auto;color:var(--bad);border-color:var(--bad)}
 .pcseg{display:flex}.pcseg button{flex:1}.pcinfo{padding:10px 12px;border-radius:12px;background:var(--bad-bg);color:var(--bad);line-height:1.45}
-.dlg.wide:has(.dlvg){max-width:680px;max-height:calc(100dvh - 24px);overflow-y:auto}
-.dlvg{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;align-items:start}
-.dlvimg{border-radius:14px;background:#ECFDF3;padding:6px;display:grid;place-items:center}
-.dlvimg img{display:block;width:100%;max-height:min(64vh,520px);object-fit:contain;border-radius:10px}
-.dlvct{display:grid;gap:10px;align-content:start;min-width:0}
-.dlvct .wahint{margin-top:0;padding:8px 10px;font-size:12px}
-.dlvbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dlvbtns .btn{padding:4px 6px;font-size:12.5px;min-height:36px}
-.dlvct .ft{margin-top:2px}
-@media(max-width:640px){.dlvg{grid-template-columns:1fr;gap:10px}.dlvimg{padding:4px}.dlvimg img{max-height:30vh}.dlvct .ft .btn{flex:1}}`;document.head.appendChild(pdCss);
+.dlg.wide:has(.dlvg){max-width:940px;max-height:calc(100dvh - 24px);overflow-y:auto}
+.dlvg{display:grid;grid-template-columns:minmax(0,clamp(280px,42%,400px)) minmax(0,1fr);gap:22px;align-items:start}
+.dlvimg{border-radius:16px;background:#ECFDF3;padding:8px;display:grid;place-items:center}
+.dlvimg img{display:block;width:100%;height:auto;max-height:calc(100dvh - 170px);object-fit:contain;border-radius:12px}
+.dlvct{display:grid;gap:14px;align-content:start;min-width:0;font-size:15px}
+.dlvct .wahint{margin-top:0;padding:11px 13px;font-size:14px;line-height:1.5}.dlvct .wafmt button{min-height:44px;font-size:15px}.dlvct .rcpwa input{min-height:46px;font-size:16px}.dlvct .wabtn{min-height:46px;padding-inline:20px;font-size:15px}
+.dlvbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dlvbtns .btn{padding:6px 8px;font-size:14px;min-height:44px}
+.dlvct .ft{margin-top:4px}.dlvct .ft .btn{min-height:46px;font-size:15px;padding-inline:28px}
+@media(max-width:700px){.dlvg{grid-template-columns:1fr;gap:12px}.dlvimg{padding:6px}.dlvimg img{width:auto;max-width:100%;max-height:46vh;margin:auto}.dlvct .ft .btn{flex:1}}`;document.head.appendChild(pdCss);
 A.syncNow=()=>runSync(true);
 A.cloudCopy=async()=>{if(!S.cfg.syncUrl||!S.cfg.syncKey)return toast('Primero configure la nube en este equipo.',1);try{await navigator.clipboard.writeText(btoa(JSON.stringify({u:S.cfg.syncUrl,k:S.cfg.syncKey})));toast('Código copiado. Péguelo en el otro equipo.')}catch(e){toast('No se pudo copiar.',1)}};
 A.cloudCode=()=>{try{const o=JSON.parse(atob($('#sy_c').value.trim()));if(!o.u||!o.k)throw 0;$('#sy_u').value=o.u;$('#sy_k').value=o.k;toast('Código listo. Toque «Guardar y sincronizar».')}catch(e){toast('Ese código no es válido.',1)}};
