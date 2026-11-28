@@ -128,7 +128,8 @@ td.wrapc{white-space:normal;min-width:180px}
 .toast.bad{background:var(--bad);color:#fff}
 .payrow{display:grid;grid-template-columns:130px 1fr auto;gap:8px;align-items:center}
 .frsel{display:flex;flex-wrap:wrap;gap:8px}.frsel button{display:flex;flex-direction:column;align-items:center;gap:4px;width:78px;padding:8px 4px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);cursor:pointer;font:inherit;font-size:12px}.frsel button.on{border-color:var(--accent);background:var(--accent-soft);font-weight:700}.frsel canvas{width:40px;height:40px}
-#custSug{position:fixed;z-index:90;max-height:380px;overflow:auto;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 36px -12px rgba(0,0,0,.45);padding:4px}
+#custSug{position:fixed;z-index:90;max-height:288px;overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px -8px rgba(0,0,0,.35);padding:4px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+#custSug::-webkit-scrollbar{width:6px}#custSug::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}#custSug::-webkit-scrollbar-button{display:none}
 #custSug .csi{display:flex;flex-direction:column;gap:1px;justify-content:center;min-height:44px;padding:7px 10px;border-radius:8px;cursor:pointer}
 #custSug .csi b{font-size:14px;overflow-wrap:anywhere}#custSug .csi span{font-size:12px;color:var(--muted)}
 #custSug .csi:hover,#custSug .csi.on{background:var(--accent-soft)}
@@ -315,14 +316,22 @@ body.m .tkwrap{grid-template-columns:1fr!important}
 .bellbtn{position:relative;border:0;background:var(--surface2);color:var(--fg);border-radius:99px;width:34px;height:30px;font-size:15px;cursor:pointer;line-height:1}
 .dot{position:absolute;top:1px;right:1px;width:11px;height:11px;border-radius:50%;border:2px solid var(--surface);display:none}
 .dot.r{background:#e5484d;display:block}.dot.y{background:#f5b301;display:block}.dot.g{background:#30a46c;display:block}
-#bellpop{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:10px;width:min(330px,calc(100vw - 20px));z-index:90;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.28);padding:6px;max-height:70vh;overflow:auto}
+#bellpop{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:10px;width:min(440px,calc(100vw - 20px));z-index:90;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.3);padding:0 0 8px;max-height:min(78vh,720px);overflow:auto;overscroll-behavior:contain}
 #bellpop[hidden]{display:none}
-.nths{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 10px 4px}.nths:first-child{padding-top:6px}
-.nt{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:10px;text-decoration:none;color:inherit;width:100%;background:none;border:0;text-align:left;font:inherit;cursor:pointer}
-.nt:hover{background:var(--surface2)}.nt i{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:none}
-.nt.r i{background:#e5484d}.nt.y i{background:#f5b301}.nt.g i{background:#30a46c}
-.ntw{position:relative}.ntw .nt{padding-right:34px}.ntx{position:absolute;right:6px;top:7px;width:24px;height:24px;border-radius:50%;border:0;background:none;color:var(--muted);font-size:13px;line-height:1;cursor:pointer;transition:background-color .15s,color .15s,transform .15s}.ntx:hover{background:var(--surface2);color:var(--bad)}.ntx:active{transform:scale(.88)}.ntf{display:flex;gap:8px;justify-content:flex-end;padding:6px 4px 2px;border-top:1px solid var(--line);margin-top:4px}
-.nt b{display:block;font-size:13.5px}.nt span{font-size:12px;color:var(--muted)}
+.nth{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:12px 12px 10px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+.nth b{font-size:17px;flex:1}.ncount{background:var(--accent);color:var(--accent-fg);border-radius:99px;padding:1px 9px;font-size:12px;font-weight:800}
+.nclr{border:0;background:none;color:var(--accent);font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:6px 8px;border-radius:8px}.nclr:hover{background:var(--surface2)}
+.nclose{width:32px;height:32px;border-radius:50%;border:0;background:var(--surface2);color:var(--fg);cursor:pointer;font-size:14px}.nclose:hover{background:var(--line)}
+.ntup{margin:10px 10px 2px;padding:12px 14px;border-radius:12px;background:var(--accent-soft);border:1px solid var(--accent);display:flex;gap:12px;align-items:center;flex-wrap:wrap}.ntup .nb{flex:1 1 190px}.ntup .nb b{font-size:15px}.ntup .btn{flex:none}
+.nths{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:16px 16px 6px}.nths em{font-style:normal;background:var(--surface2);border-radius:99px;padding:1px 8px;font-size:11px}
+.ntw{position:relative;margin:5px 10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.ntw::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#30a46c}.ntw.r::before{background:#e5484d}.ntw.y::before{background:#f5b301}
+.nt{display:flex;gap:12px;align-items:center;padding:12px 46px 12px 16px;text-decoration:none;color:inherit;width:100%;background:none;border:0;text-align:left;font:inherit;cursor:pointer}
+.nt:hover{background:var(--surface2)}.nd{width:11px;height:11px;border-radius:50%;flex:none;background:#30a46c}.nt.r .nd{background:#e5484d}.nt.y .nd{background:#f5b301}
+.nb{min-width:0;flex:1}.nb b{display:block;font-size:14.5px;line-height:1.25;overflow-wrap:anywhere}.nb span{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.3;overflow-wrap:anywhere}
+.nch{font-style:normal;color:var(--muted);font-size:22px;line-height:1}
+.ntx{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;border:0;background:none;color:var(--muted);font-size:14px;line-height:1;cursor:pointer;transition:background-color .15s,color .15s}.ntx:hover{background:var(--surface2);color:var(--bad)}.ntx:active{transform:translateY(-50%) scale(.88)}
+.nempty{text-align:center;padding:30px 16px 22px}.nempty div{font-size:30px}.nempty b{display:block;font-size:15px;margin-top:6px}.nempty span{color:var(--muted);font-size:13px}
 .pc-row{display:grid;grid-template-columns:200px minmax(0,1fr) 130px 230px 150px;gap:16px;align-items:end;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .pc-row span.l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;display:block}
 .pc-row b{font-family:var(--font-head);font-size:19px}
@@ -824,7 +833,12 @@ tbody tr{transition:background-color .12s}
 .offbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn);border-radius:8px;margin:6px 10px;padding:5px 10px;font-size:13px}
 .offbar b{letter-spacing:.03em}.offbar .btn{min-height:26px;padding:1px 10px;font-size:12px;margin-left:auto}
 .offlist{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.45}.offlist li{margin:4px 0}
-.pk-i{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.pk-i input{width:78px;min-width:0}.pk-i input:first-child{width:62px}
+.pk-i{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ptab .pt-r{grid-template-columns:1fr auto;grid-template-areas:'t i' 't m';row-gap:4px}.ptab .pt-t{grid-area:t;gap:4px}.ptab .pt-i{grid-area:i;flex-wrap:wrap;justify-content:flex-end;max-width:170px}.ptab .pt-i input{width:110px}.ptab .pt-m{grid-area:m}
+.pt-pl{width:100%;text-align:right;font-size:11px;color:var(--muted)}
+.pt-nmw{display:inline-flex;align-items:center;gap:4px;max-width:240px}.pt-nmw span{font-size:12px;opacity:.55}
+.ptab input.pt-nm{font-weight:700;font-size:14px;background:transparent;border:1px dashed transparent;padding:2px 6px;margin-left:-6px;min-height:30px;width:auto;max-width:200px;box-shadow:none}.ptab input.pt-nm:hover,.ptab input.pt-nm:focus{border-color:var(--line);background:var(--surface)}
+.pt-rg{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--muted)}.ptab .pt-rg input{width:92px;min-height:30px;padding:2px 6px;text-align:center;font-size:13px}.pk-i input{width:78px;min-width:0}.pk-i input:first-child{width:62px}
 .rwrap{margin:0 0 6px}.rstrip{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rstrip .cmini{margin:0 0 0 auto}
 .rentb{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:99px;padding:2px 12px;font-size:12.5px;min-height:26px;cursor:pointer}.rentb b{font-variant-numeric:tabular-nums}
 .rentp{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;margin-top:6px}
@@ -1431,10 +1445,11 @@ const cust=id=>S.customers.find(c=>c.id===id)||S.customers[0];
 
 /* ===================== impuestos / totales ===================== */
 function priceFor(p,li){const v=p.p[li];return v>0?v:(p.p[0]||0)}
-const tierThr=(p,i)=>i===1?S.cfg.t2:i===2?(p.dn>0?p.dn:S.cfg.t3):i===3?(p.bulto||0):i===5?(p.cn||0):1;
+const tierThr=(p,i)=>i===1?(p.mf>0?p.mf:S.cfg.t2):i===2?(p.dn>0?p.dn:S.cfg.t3):i===3?(p.bulto||0):i===5?(p.cn||0):1;
+const tierMx=(p,i)=>(p.mx&&p.mx[i]>0)?p.mx[i]:0;
 const packN=(p,i)=>i===2?(p.dn>0?p.dn:S.cfg.t3):i===3?(p.bulto||0):i===5?(p.cn||0):1;
 const r6=x=>Math.round((x+Number.EPSILON)*1e6)/1e6;
-function tierIdx(p,qty,li){if(li===-2){let b=0,m=Infinity;p.p.forEach((v,i)=>{if(v>0&&v<m){m=v;b=i}});return b}if(li>=0)return li;let b=0,bt=0,bp=p.p[0]||0;for(const i of [1,2,3,5]){const t=tierThr(p,i);if(t>0&&p.p[i]>0&&qty>=t&&(t>bt||(t===bt&&p.p[i]<bp))){b=i;bt=t;bp=p.p[i]}}return b}
+function tierIdx(p,qty,li){if(li===-2){let b=0,m=Infinity;p.p.forEach((v,i)=>{if(v>0&&v<m){m=v;b=i}});return b}if(li>=0)return li;let b=0,bt=0,bp=p.p[0]||0;for(const i of [1,2,3,5]){const t=tierThr(p,i),mx=tierMx(p,i);if(t>0&&p.p[i]>0&&qty>=t&&(!mx||qty<=mx)&&(t>bt||(t===bt&&p.p[i]<bp))){b=i;bt=t;bp=p.p[i]}}return b}
 function priceQty(p,qty,li){return priceFor(p,tierIdx(p,qty,li))}
 function reprice(l){if(l.manual)return;const p=prod(l.pid);if(p)l.price=priceQty(p,l.qty,S.cart.list)}
 function totalsFor(lines,gd){
@@ -1566,7 +1581,7 @@ function netNotifs(L){const n=netLim();
   if(n.st==='lock')L.push({l:'r',t:'Ventas bloqueadas: 24 h sin sincronizar',s:'Conéctese a internet. Toque para sincronizar.',a:'syncNow'});
   let ow=false;try{ow=isOwner()}catch(e){}
   if(ow){const lim=(S.cfg.hbWarnH||6)*36e5;for(const x of hbList()){if(x.mode==='offline')continue;const el=Date.now()-x.ts;if(el<lim)continue;
-    L.push({l:el>=NET_LOCK?'r':'y',t:(x.u||'(sin usuario)')+' lleva '+fmtHrs(el/36e5)+' sin conectarse',s:'Equipo '+(x.pto||x.dev.slice(-4))+' · última conexión '+fmtDT(x.ts),h:'#ajustes'})}}}
+    L.push({l:el>=NET_LOCK?'r':'y',t:(x.u||'(sin usuario)')+' lleva '+fmtHrs(el/36e5)+' sin conectarse',s:'Equipo '+(x.pto||x.dev.slice(-4))+' · última conexión '+fmtDT(x.ts),k:'hb:'+x.dev,h:'#ajustes'})}}}
 function netPanel(){const m=netMode(),cl=!!(S.cfg.syncUrl&&S.cfg.syncKey),dv=hbList();
   return `<div class="panel" style="margin-bottom:16px"><h3 style="margin:0 0 4px">🌐 Modo de este equipo</h3><p class="muted" style="margin:0 0 10px">Con internet: usa la nube y debe sincronizar al menos cada 24 horas; si no, se bloquean las ventas hasta conectarse. Sin internet: sin límite de tiempo, pero no se sincroniza y los administradores no ven su actividad. Cambiarlo pide el PIN del administrador (si existe).</p>
   <div class="seg">${[['online','Con internet'],['offline','Sin internet']].map(([k,n])=>`<button type="button" data-act="netMode" data-k="${k}" class="${m===k?'on':''}">${n}</button>`).join('')}</div>
@@ -1587,27 +1602,35 @@ function notifs(){
   const ped=S.sales.filter(v=>v.status==='ok'&&v.order&&!v.order.done);
   if(ped.length)L.push({l:'y',t:ped.length+' pedido(s) por entregar',s:'Toque para ver Pedidos',h:'#pedidos'});
   const hoy=S.sales.filter(v=>v.status==='ok'&&dkey(v.ts)===today());
-  if(hoy.length)L.push({l:'g',t:'Hoy: '+hoy.length+' venta(s) · '+money(hoy.reduce((a,v)=>a+vnet(v),0)),s:'Ver historial',h:'#historial'});
-  if(num(S.cfg.goalM)){const g=S.cfg.goalM/(S.cfg.goalDays||26),v=netIn(today(),today());L.push({l:v>=g?'g':'y',t:'Meta de hoy: '+money(v)+' de '+money(g),s:Math.round(v/g*100)+'%',h:'#reportes'})}
+  if(hoy.length)L.push({k:'hoy@'+today(),l:'g',t:'Hoy: '+hoy.length+' venta(s) · '+money(hoy.reduce((a,v)=>a+vnet(v),0)),s:'Ver historial',h:'#historial'});
+  if(num(S.cfg.goalM)){const g=S.cfg.goalM/(S.cfg.goalDays||26),v=netIn(today(),today());L.push({k:'meta@'+today(),l:v>=g?'g':'y',t:'Meta de hoy: '+money(v)+' de '+money(g),s:Math.round(v/g*100)+'%',h:'#reportes'})}
   if(isOwner()){const nq=(S.requests||[]).filter(r=>!r.done).length;if(nq)L.push({l:'y',t:nq+' solicitud(es) de cambio de empleados',s:'Ver en Ajustes',h:'#ajustes'})}
   if(SY.msg&&SY.msg[0]==='✓')L.push({l:'g',t:'Nube sincronizada',s:SY.msg.slice(2)});
   if(window.NEWV)L.unshift({l:'y',t:'⬆ Nueva versión disponible',s:'Toque aquí para actualizar',a:'appUpdate'});
   netNotifs(L);
   return ntFilter(L)}
-/* Avisos que se pueden borrar: se ocultan en este equipo hasta que el aviso cambie (otro número o texto) */
-const NT_KEY='star_pos_nt_dis';
-function ntLoad(){try{return JSON.parse(localStorage.getItem(NT_KEY)||'{}')||{}}catch(e){return {}}}
+/* Avisos borrables: al borrar uno queda borrado de verdad (no vuelve aunque cambien los números).
+   Solo reaparece si la situación se resuelve (deja de existir 10 min) y luego vuelve a ocurrir. */
+const NT_KEY='star_pos_nt_dis',NT_GRACE=6e5;
+function ntLoad(){try{const o=JSON.parse(localStorage.getItem(NT_KEY)||'{}')||{},r={};for(const k in o)r[k]=typeof o[k]==='number'?o[k]:1;return r}catch(e){return {}}}
 function ntSave(o){try{localStorage.setItem(NT_KEY,JSON.stringify(o))}catch(e){}}
-const ntKey=x=>String(x.t).replace(/\d+([.,]\d+)?/g,'#'),ntSig=x=>x.t+'|'+(x.s||'');
-function ntFilter(L){const d=ntLoad();return L.filter(x=>x.a==='appUpdate'||d[ntKey(x)]!==ntSig(x))}
+const ntKey=x=>x.k||String(x.t).replace(/\d+([.,]\d+)?/g,'#')+(x.l==='g'?'@'+today():'');
+function ntFilter(L){const d=ntLoad(),n=Date.now(),seen={};let ch=false;
+  const out=L.filter(x=>{if(x.a==='appUpdate')return true;const k=ntKey(x);if(k in d){seen[k]=1;if(n-d[k]>6e4){d[k]=n;ch=true}return false}return true});
+  for(const k in d)if(!seen[k]&&n-d[k]>NT_GRACE){delete d[k];ch=true}
+  if(ch)ntSave(d);return out}
 function bellUpdate(){const L=notifs(),d=$('#bellDot');try{const bb=document.querySelector('.bellbtn');bb&&bb.classList.toggle('upd',!!window.NEWV)}catch(e){}if(d)d.className='dot '+(L.some(x=>x.l==='r')?'r':L.some(x=>x.l==='y')?'y':L.length?'g':'');
   const p=$('#bellpop');if(p&&!p.hidden)bellDraw(L)}
 function bellDraw(L){const p=$('#bellpop');L=L||notifs();
-  const hid=Object.keys(ntLoad()).length;
-  const SEC=[['ped','📋 Pedidos'],['cre','💳 Créditos'],['inv','📦 Inventario'],['ven','🧾 Ventas y metas'],['sis','⚙️ Sistema']],sec=x=>x.h==='#pedidos'?'ped':x.h==='#creditos'?'cre':x.h==='#inventario'?'inv':(x.h==='#historial'||x.h==='#reportes')?'ven':'sis';
-  const row=(x,i)=>`<div class="ntw">${x.h?`<a class="nt ${x.l}" href="${x.h}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></a>`:`<button class="nt ${x.l}" data-act="bellDo" data-i="${i}"><i></i><div><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div></button>`}${x.a==='appUpdate'?'':`<button class="ntx" data-act="bellDel" data-i="${i}" title="Borrar aviso" aria-label="Borrar aviso">✕</button>`}</div>`;
-  const del=L.filter(x=>x.a!=='appUpdate').length;
-  p.innerHTML=(L.length?SEC.map(([k,n])=>{const it=L.map((x,i)=>[x,i]).filter(([x])=>sec(x)===k);return it.length?`<div class="nths">${n}</div>`+it.map(([x,i])=>row(x,i)).join(''):''}).join(''):'<div class="muted small" style="padding:10px">Todo en orden, sin avisos.</div>')+((del>1||hid)?`<div class="ntf">${del>1?'<button class="btn sm" data-act="bellClear">Borrar todos</button>':''}${hid?'<button class="btn sm" data-act="bellReset">Mostrar borrados</button>':''}</div>`:'');window._nt=L}
+  const SEC=[['cre','💳','Créditos'],['ped','📋','Pedidos'],['inv','📦','Inventario'],['ven','🧾','Ventas y metas'],['sis','⚙️','Sistema']],
+    sec=x=>x.h==='#pedidos'?'ped':x.h==='#creditos'?'cre':x.h==='#inventario'?'inv':(x.h==='#historial'||x.h==='#reportes')?'ven':'sis',rk={r:0,y:1,g:2};
+  const row=(x,i)=>{const inn=`<i class="nd"></i><div class="nb"><b>${esc(x.t)}</b><span>${esc(x.s||'')}</span></div>${x.h?'<em class="nch">›</em>':''}`;
+    return `<div class="ntw ${x.l}">${x.h?`<a class="nt ${x.l}" href="${x.h}">${inn}</a>`:`<button class="nt ${x.l}" data-act="bellDo" data-i="${i}">${inn}</button>`}<button class="ntx" data-act="bellDel" data-i="${i}" title="Borrar aviso" aria-label="Borrar aviso">✕</button></div>`};
+  const all=L.map((x,i)=>[x,i]),up=all.filter(([x])=>x.a==='appUpdate'),rest=all.filter(([x])=>x.a!=='appUpdate'),del=rest.length;
+  const head=`<div class="nth"><b>🔔 Avisos</b>${del?`<span class="ncount">${del}</span>`:''}${del>1?'<button class="nclr" data-act="bellClear">Borrar todos</button>':''}<button class="nclose" data-act="bell" aria-label="Cerrar">✕</button></div>`;
+  const upH=up.map(([x,i])=>`<div class="ntup"><div class="nb"><b>⬆ Nueva versión disponible</b><span>Hay mejoras listas. Guarde su venta en curso y actualice.</span></div><button class="btn pri" data-act="bellDo" data-i="${i}">Actualizar ahora</button></div>`).join('');
+  const body=SEC.map(([k,ic,n])=>{const it=rest.filter(([x])=>sec(x)===k).sort((a,b)=>rk[a[0].l]-rk[b[0].l]);return it.length?`<div class="nths"><span>${ic} ${n}</span><em>${it.length}</em></div>`+it.map(([x,i])=>row(x,i)).join(''):''}).join('');
+  p.innerHTML=head+upH+(del?body:(up.length?'':'<div class="nempty"><div>✅</div><b>Todo en orden</b><span>No hay avisos pendientes.</span></div>'));window._nt=L}
 document.addEventListener('click',e=>{const p=$('#bellpop');if(!p||p.hidden)return;if(e.target.closest('#bellpop a')||(!e.target.closest('#bellpop')&&!e.target.closest('#bell')))p.hidden=true},true);
 setInterval(()=>{$('#clock').textContent=new Date().toLocaleString('es-EC',{timeZone:TZ,weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})},1000);
 
@@ -1722,10 +1745,10 @@ function vVentaM(){
    <div class="panel"><label class="f" style="margin-bottom:10px">Lista de precios<select id="plist" data-chg="setList">${plOpts()}</select></label><div class="tot" id="totals"></div><div class="acts" style="margin-top:10px"><button class="btn" data-act="hold">En espera${S.held.length?' · '+S.held.length:''}</button><button class="btn" data-act="proforma">Proforma${pfCount()?' · '+pfCount():''}</button><button class="btn bad" data-act="clearCart">Cancelar venta</button></div></div>
    <div class="vbar"><div class="vtop"><div><span class="muted small">Total</span><br><b id="barTot">$0.00</b></div><div id="ptype"></div></div><button class="btn pri" data-act="pay">Cobrar</button></div></div>`;
   renderCust();renderCart();renderShip()}
-function tiersOf(p){if(!p)return[];return [0,1,2,3,5,4].filter(i=>p.p[i]>0).map(i=>({i,n:S.cfg.listNames[i],price:p.p[i],from:tierThr(p,i)}))}
-function tiersChips(l,idx){const p=prod(l.pid),T=tiersOf(p);if(T.length<2)return '';return `<div class="tiers">${T.map(t=>`<button data-act="tierPick" data-i="${idx}" data-v="${t.price}" title="${t.i?'Desde '+t.from+' u. · ':''}Tocar para usar este precio en esta venta" class="${Math.abs(l.price-t.price)<.0001?'on':''}">${esc(t.n)} ${pmoney(t.price)}${t.i?` <small>(${t.from}+)</small>`:''}</button>`).join('')}</div>`}
+function tiersOf(p){if(!p)return[];return [0,1,2,3,5,4].filter(i=>p.p[i]>0).map(i=>({i,n:S.cfg.listNames[i],price:p.p[i],from:tierThr(p,i),to:tierMx(p,i)}))}
+function tiersChips(l,idx){const p=prod(l.pid),T=tiersOf(p);if(T.length<2)return '';return `<div class="tiers">${T.map(t=>`<button data-act="tierPick" data-i="${idx}" data-v="${t.price}" title="${t.i?'Desde '+t.from+(t.to?' hasta '+t.to:'')+' u. · ':''}Tocar para usar este precio en esta venta" class="${Math.abs(l.price-t.price)<.0001?'on':''}">${esc(t.n)} ${pmoney(t.price)}${t.i&&t.i!==4?` <small>(${t.to?t.from+'–'+t.to:t.from+'+'})</small>`:''}</button>`).join('')}</div>`}
 function tiersModal(idx){const l=S.cart.lines[idx],p=l&&prod(l.pid),T=tiersOf(p);if(!T.length)return toast('Este producto tiene un solo precio.');
-  modal(`${dlgHead('Precios de '+esc(p.name))}<div class="muted small">Toque un precio para usarlo solo en esta venta.</div><div style="display:grid;gap:8px">${T.map(t=>`<div style="display:grid;gap:4px"><button class="btn" style="display:flex;justify-content:space-between;align-items:center;min-height:48px;text-align:left;${Math.abs(l.price-t.price)<.0001?'border-color:var(--accent);background:var(--accent-soft)':''}" data-act="tierPick" data-i="${idx}" data-v="${t.price}"><span>${esc(t.n)}${t.i&&t.i!==4?`<br><span class="muted small">desde ${t.from} unidades</span>`:''}</span><b class="money" style="font-size:18px">${pmoney(t.price)}</b></button>${[2,3,5].includes(t.i)&&t.from>0?`<button class="btn sm" data-act="packQty" data-i="${idx}" data-n="${t.from}">Poner ${t.from} unidades (1 ${esc(t.n.toLowerCase())}) = ${money(r2(t.from*t.price))}</button>`:''}</div>`).join('')}</div><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button></div>`)}
+  modal(`${dlgHead('Precios de '+esc(p.name))}<div class="muted small">Toque un precio para usarlo solo en esta venta.</div><div style="display:grid;gap:8px">${T.map(t=>`<div style="display:grid;gap:4px"><button class="btn" style="display:flex;justify-content:space-between;align-items:center;min-height:48px;text-align:left;${Math.abs(l.price-t.price)<.0001?'border-color:var(--accent);background:var(--accent-soft)':''}" data-act="tierPick" data-i="${idx}" data-v="${t.price}"><span>${esc(t.n)}${t.i&&t.i!==4?`<br><span class="muted small">desde ${t.from}${t.to?' hasta '+t.to:''} unidades</span>`:''}</span><b class="money" style="font-size:18px">${pmoney(t.price)}</b></button>${[2,3,5].includes(t.i)&&t.from>0?`<button class="btn sm" data-act="packQty" data-i="${idx}" data-n="${t.from}">Poner ${t.from} unidades (1 ${esc(t.n.toLowerCase())}) = ${money(r2(t.from*t.price))}</button>`:''}</div>`).join('')}</div><div class="ft"><button class="btn" data-act="closeModal">Cerrar</button></div>`)}
 function cartC(L){
   if(!L.lines.length)return `<div class="empty" style="padding:60px 16px"><div style="font-family:var(--font-head);font-size:20px;color:var(--fg);margin-bottom:6px">Listo para vender</div>Escanee o busque un producto arriba.</div>`;
   return `<table class="ct2"><thead><tr><th>Clave</th><th class="r">Cantidad</th><th>Descripción</th><th class="r">Precio</th><th class="r">Dto %</th><th class="r">Importe</th><th></th></tr></thead><tbody>`+L.lines.map((l,i)=>`<tr>
@@ -1835,9 +1858,13 @@ function custSuggest(el){
   CS.L=L;CS.i=-1;let b=document.getElementById('custSug');
   if(!b){b=document.createElement('div');b.id='custSug';b.setAttribute('role','listbox');document.body.appendChild(b)}
   b.innerHTML=L.map(c=>`<div class="csi" role="option" data-id="${c.id}"><b>${esc(c.name)}</b><span>${esc([c.code,c.ident,c.tel].filter(Boolean).join(' · '))}</span></div>`).join('');
-  const r=el.getBoundingClientRect(),w=Math.min(Math.max(r.width,300),innerWidth-16),h=Math.min(L.length*48+8,380);
-  b.style.width=w+'px';b.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+'px';
-  if(r.bottom+h>innerHeight-8&&r.top>h){b.style.top='';b.style.bottom=(innerHeight-r.top+4)+'px'}else{b.style.bottom='';b.style.top=(r.bottom+4)+'px'}}
+  /* En PC la pantalla usa zoom (html{zoom}); un elemento fixed se escala con ese zoom y quedaba corrido hacia arriba, encima del campo. Se mide el factor real y se corrige. */
+  b.style.maxHeight='';b.style.bottom='';b.style.left='100px';b.style.top='100px';
+  const s=b.getBoundingClientRect().left/100||1,r=el.getBoundingClientRect(),vw=innerWidth/s,vh=innerHeight/s,rl=r.left/s,rt=r.top/s,rb=r.bottom/s;
+  const w=Math.min(Math.max(r.width/s,300),vw-16),h=Math.min(L.length*48+8,288),below=vh-rb-12,above=rt-12;
+  b.style.width=w+'px';b.style.left=Math.max(8,Math.min(rl,vw-w-8))+'px';
+  if(below<h&&above>below){b.style.top='';b.style.bottom=(vh-rt+4)+'px';b.style.maxHeight=Math.max(120,Math.min(h,above))+'px'}
+  else{b.style.bottom='';b.style.top=(rb+4)+'px';b.style.maxHeight=Math.max(120,Math.min(h,below))+'px'}}
 function custPick(id){const c=S.customers.find(x=>x.id===id);if(!c)return;custSugHide();
   {const a=document.activeElement;if(a&&/^cu_/.test(a.id)){CS.pk=1;try{a.blur()}finally{CS.pk=0}}}
   S.cart.customerId=c.id;S.cart.cust=emptyCust();renderCust();applyMerch(c);save();toast('Cliente: '+c.name);const q=$('#q');q&&q.focus()}
@@ -2074,12 +2101,13 @@ function framePath(x,sh,cx,cy,R){x.beginPath();const poly=(k,a0,rf)=>{for(let i=
 /* caja interior donde cabe el logo dentro de cada forma: [mitad del ancho, desplazamiento vertical] */
 const FRBOX={circle:[.8,0],square:[.88,0],rounded:[.86,0],star:[.52,.12],heart:[.6,-.06],hexagon:[.8,0],diamond:[.62,0],none:[1,0]};
 function logoFramed(n,sh,bw){const cv=document.createElement('canvas');cv.width=cv.height=n;const x=cv.getContext('2d',{willReadFrequently:true});
-  const lw=sh==='none'?0:Math.max(2,n*.045),R=n/2-lw,cx=n/2,cy=n/2,iw=LOGOIMG.naturalWidth,ih=LOGOIMG.naturalHeight,[f,dy]=FRBOX[sh]||FRBOX.none,box=2*R*f,k=Math.min(box/iw,box/ih),dw=iw*k,dh=ih*k;
+  /* la imagen LLENA el marco (sin bordes ni espacios en blanco); el marco es solo un recorte transparente */
+  const R=n/2,cx=n/2,cy=n/2,iw=LOGOIMG.naturalWidth,ih=LOGOIMG.naturalHeight,k=sh==='none'?Math.min(n/iw,n/ih):Math.max(n/iw,n/ih),dw=iw*k,dh=ih*k;
   x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
   if(bw){x.fillStyle='#fff';x.fillRect(0,0,n,n)}
-  if(sh!=='none'){framePath(x,sh,cx,cy,R);x.fillStyle='#fff';x.fill();x.save();framePath(x,sh,cx,cy,R);x.clip()}
-  x.drawImage(LOGOIMG,cx-dw/2,cy+dy*R-dh/2,dw,dh);
-  if(sh!=='none'){x.restore();framePath(x,sh,cx,cy,R);x.lineJoin='round';x.lineWidth=lw;x.strokeStyle=bw?'#000':'#fff';x.stroke()}
+  if(sh!=='none'){x.save();framePath(x,sh,cx,cy,R);x.clip()}
+  x.drawImage(LOGOIMG,cx-dw/2,cy-dh/2,dw,dh);
+  if(sh!=='none')x.restore();
   return cv}
 function logoBW(n){n=Math.max(32,Math.min(640,Math.round(n)||192));const sh=tkFrame(),key=n+':'+sh;if(_lbw[key])return _lbw[key];if(!LOGOIMG.complete||!LOGOIMG.naturalWidth)return null;
   try{const cv=logoFramed(n,sh,true),x=cv.getContext('2d',{willReadFrequently:true}),d=x.getImageData(0,0,n,n),a=d.data;for(let i=0;i<a.length;i+=4){const v=.299*a[i]+.587*a[i+1]+.114*a[i+2]<150?0:255;a[i]=a[i+1]=a[i+2]=v;a[i+3]=255}x.putImageData(d,0,0);return _lbw[key]=cv.toDataURL('image/png')}catch(e){return null}}
@@ -2282,9 +2310,9 @@ function vPedidos(){
   <div id="pdBody"></div>`;
   pdList()}
 function pdList(){
-  const inp=$('#pdq');if(inp)PD.q=inp.value;const q=norm(PD.q).trim(),all=pedList().filter(s=>s.status==='ok'),pend=all.filter(s=>!s.order.done).length,done=all.length-pend;
-  const fil=$('#pdFil');if(fil)fil.innerHTML=[['pend','⏳ Por entregar ('+pend+')'],['done','✅ Entregados ('+done+')'],['all','Todos ('+pedList().length+')']].map(([k,n])=>`<button type="button" class="shipchip${PD.f===k?' on':''}" data-act="pdFil" data-k="${k}">${n}</button>`).join('');
-  const L=pedList().filter(s=>pedMatch(s,q)&&(PD.f==='all'||(s.status==='ok'&&(PD.f==='done')===!!s.order.done)));
+  const inp=$('#pdq');if(inp)PD.q=inp.value;const q=norm(PD.q).trim(),vis=pedList().filter(s=>!s.order.hid),all=vis.filter(s=>s.status==='ok'),pend=all.filter(s=>!s.order.done).length,done=all.length-pend;
+  const fil=$('#pdFil');if(fil)fil.innerHTML=[['pend','🚚 Por entregar',pend],['done','✅ Entregados',done],['all','📋 Todos',vis.length]].map(([k,n,c])=>`<button type="button" class="shipchip pdchip${PD.f===k?' on':''}" data-act="pdFil" data-k="${k}">${n}<span class="pdn">${c}</span></button>`).join('')+(PD.f==='done'&&done?`<button type="button" class="shipchip pdchip pdclr" data-act="pdClear">🗑 Borrar historial</button>`:'');
+  const L=vis.filter(s=>pedMatch(s,q)&&(PD.f==='all'||(s.status==='ok'&&(PD.f==='done')===!!s.order.done)));
   const cn=$('#pdCount');if(cn)cn.textContent=L.length+' pedido(s)';
   const b=$('#pdBody');if(!b)return;
   b.innerHTML=L.length?`<div class="pdgrid">${L.map(pdCard).join('')}</div>`:empty(q?'No se encontró ningún pedido con esa búsqueda.':PD.f==='done'?'Todavía no hay pedidos entregados.':PD.f==='pend'?'No hay pedidos por entregar. Para crear uno, en Venta toque «¿Es un pedido?» antes de cobrar.':'Aún no hay pedidos.');
@@ -2293,14 +2321,14 @@ function pdCard(s){
   const o=s.order,vd=s.status==='void',c=S.customers.find(x=>x.id===s.customerId)||{},cod=s.custCode||c.code||'',idn=(s.custTipo!=='codigo'&&s.custIdent)?s.custIdent:'';
   const ln=(s.lines||[]).filter(l=>l.qty>0),sh=ln.slice(0,3).map(l=>`<li><b>${l.qty}×</b> ${esc(l.name)}</li>`).join('')+(ln.length>3?`<li class="muted">+${ln.length-3} más…</li>`:'');
   const st=vd?'<span class="pill bad">Anulada</span>':s.balance>0?`<span class="pill warn">Debe ${money(s.balance)}</span>`:'<span class="pill ok">Pagada</span>';
-  return `<div class="panel pdcard${o.done?' done':''}" data-pid="${s.id}">
-   <div class="pdtop"><b>${esc(s.custName||'Consumidor final')}</b>${st}</div>
-   <div class="muted small">${[cod?'Cód. '+esc(cod):'',idn?'C.I./RUC '+esc(idn):''].filter(Boolean).join(' · ')||'Sin código ni cédula'}</div>
-   <div class="muted small">N° ${esc(s.num)} · ${fmtDT(s.ts)}${s.shipCity?' · 📍 '+esc(s.shipCity):''}</div>
+  const ini=esc(((s.custName||'C').trim().charAt(0)||'C').toUpperCase());
+  const act=vd?'':o.done?`<span class="pill ok pdok">✅ Entregado</span><button type="button" class="btn sm" data-act="pdSet" data-id="${s.id}" data-v="0" title="Volver a «Por entregar»">↩ Deshacer</button>`:`<button type="button" class="btn pdgo" data-act="pdSet" data-id="${s.id}" data-v="1">🚚 Entregar</button>`;
+  return `<div class="panel pdcard${o.done?' done':''}${vd?' void':''}" data-pid="${s.id}">
+   <div class="pdtop"><span class="pdav" aria-hidden="true">${ini}</span><div class="pdwho"><b>${esc(s.custName||'Consumidor final')}</b><span class="muted small">${[cod?'Cód. '+esc(cod):'',idn?'C.I./RUC '+esc(idn):''].filter(Boolean).join(' · ')||'Sin código ni cédula'}</span></div>${st}</div>
+   <div class="pdmeta muted small"><span>🧾 N° ${esc(s.num)}</span><span>🕒 ${fmtDT(s.ts)}</span>${s.shipCity?'<span>📍 '+esc(s.shipCity)+'</span>':''}</div>
    <ul class="pdlines">${sh}</ul>
-   <div class="pdfoot"><b class="money">${money(s.total)}</b><button type="button" class="btn sm" data-act="openSale" data-id="${s.id}">🧾 Recibo</button>
-   ${vd?'':`<div class="seg" role="group" aria-label="Estado de entrega"><button type="button" data-act="pdSet" data-id="${s.id}" data-v="0" class="${o.done?'':'on'}">No entregado</button><button type="button" data-act="pdSet" data-id="${s.id}" data-v="1" class="${o.done?'on':''}">Entregado</button></div>`}</div>
-   ${o.done&&o.doneTs?`<div class="muted small" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="grow">Entregado el ${fmtDT(o.doneTs)}${o.by?' · '+esc(o.by):''}</span>${vd?'':`<button type="button" class="btn sm pri" data-act="dlvOpen" data-id="${s.id}">📤 Enviar comprobante de entrega</button>`}</div>`:''}</div>`}
+   <div class="pdfoot"><b class="money">${money(s.total)}</b><button type="button" class="btn sm" data-act="openSale" data-id="${s.id}">🧾 Recibo</button>${act}</div>
+   ${o.done&&o.doneTs?`<div class="pdinfo muted small"><span class="grow">Entregado el ${fmtDT(o.doneTs)}${o.by?' · '+esc(o.by):''}</span>${vd?'':`<button type="button" class="btn sm pri" data-act="dlvOpen" data-id="${s.id}">📤 Enviar comprobante</button>`}<button type="button" class="btn sm bad" data-act="pdHide" data-id="${s.id}" title="Quitar del historial de entregas">🗑</button></div>`:''}</div>`}
 
 /* ===================== PRODUCTOS ===================== */
 const PF={q:'',f:'all',s:'name',l:''};
@@ -2332,8 +2360,14 @@ function lineOpts(cur){const L=[...new Set(S.products.map(x=>(x.line||'').trim()
   return (cur?'':'<option value="" selected>— Elegir línea —</option>')+L.map(x=>`<option value="${esc(x)}"${x===cur?' selected':''}>${esc(x)}</option>`).join('')+'<option value="__new">➕ Nueva línea…</option>'}
 function lineVal(){const v=$('#e_line').value;return v==='__new'?$('#e_newline').value.trim():v}
 const PK_I=[2,3,5];
-function pkRow(p,i){const n=packN(p,i),idn=i===2?'e_dn':i===3?'e_bulto':'e_cn',v=p.p[i]>0&&n>0?r6(p.p[i]*n):'';
-  return `<div class="pt-r pt-${i}"><div class="pt-t"><b>${esc(S.cfg.listNames[i])}</b><small>Unidades que trae y precio de la ${esc(S.cfg.listNames[i].toLowerCase())} completa</small></div><div class="pt-i pk-i"><input id="${idn}" type="number" step="1" min="0" value="${n||''}" placeholder="u." data-inp="margin" aria-label="Unidades por ${esc(S.cfg.listNames[i])}"><span>u. · $</span><input id="e_pp${i}" type="number" step="any" min="0" value="${v}" data-inp="margin" aria-label="Precio de la ${esc(S.cfg.listNames[i])}"></div><div class="pt-m" id="m_p${i}"></div></div>`}
+function pkRow(p,i){const pk=PK_I.includes(i),nm=S.cfg.listNames[i],mx=tierMx(p,i)||'',n=pk?packN(p,i):0,idn=i===2?'e_dn':i===3?'e_bulto':'e_cn',v=pk?(p.p[i]>0&&n>0?r6(p.p[i]*n):''):(p.p[i]||0);
+  const NM=`<label class="pt-nmw" title="Toque para cambiar el nombre (cambia en todos los productos)"><input class="pt-nm" data-cfglist="${i}" size="${Math.max(6,nm.length+1)}" value="${esc(nm)}" aria-label="Nombre de este precio"><span aria-hidden="true">✏️</span></label>`;
+  const TO=`hasta <input id="e_t${i}" type="number" step="1" min="0" value="${mx}" placeholder="sin límite" aria-label="Hasta cuántas unidades">`;
+  const RG=i===0?`<small>Desde 1 unidad · precio base (se usa cuando ningún otro aplica)</small>`
+    :i===4?`<small>⭐ Solo clientes aliados, sin importar la cantidad</small>`
+    :i===1?`<div class="pt-rg">Desde <input id="e_f1" type="number" step="1" min="1" value="${p.mf>0?p.mf:S.cfg.t2}" aria-label="Desde cuántas unidades"> ${TO} unidades</div>`
+    :`<div class="pt-rg">El paquete trae <input id="${idn}" type="number" step="1" min="0" value="${n||''}" placeholder="?" data-inp="margin" aria-label="Unidades que trae"> unidades</div><div class="pt-rg">Precio válido ${TO} unidades</div>`;
+  return `<div class="pt-r pt-${i}"><div class="pt-t">${NM}${RG}</div><div class="pt-i">${pk?'<small class="pt-pl">Precio del paquete</small>':''}<span>$</span><input id="${pk?'e_pp':'e_p'}${i}" type="number" step="any" min="0" value="${v}" data-inp="margin" aria-label="Precio ${esc(nm)}"></div><div class="pt-m" id="m_p${i}"></div></div>`}
 function uPrice(i){if(!PK_I.includes(i))return num(($('#e_p'+i)||{}).value);const n=num(($('#'+(i===2?'e_dn':i===3?'e_bulto':'e_cn'))||{}).value),pp=num(($('#e_pp'+i)||{}).value);return n>0&&pp>0?pp/n:0}
 function editProd(id){
   const p=id?prod(id):{id:'',code:'',name:'',line:'INVENTARIO',cost:0,p:[0,0,0,0,0,0],dn:0,cn:0,iva:false,track:false,stock:0,min:0,active:true,bulto:0,boxCode:'',supplier:''};
@@ -2341,10 +2375,10 @@ function editProd(id){
    <label class="f">Código de barras / interno<input id="e_code" value="${esc(p.code)}" ${id?'':'autofocus'}></label><label class="f" style="grid-column:span 2">Descripción<input id="e_name" value="${esc(p.name)}"></label>
    <label class="f">Línea<select id="e_line" onchange="$('#e_newline').hidden=this.value!=='__new';if(!$('#e_newline').hidden)$('#e_newline').focus()">${lineOpts(p.line)}</select><input id="e_newline" placeholder="Nombre de la nueva línea" hidden style="margin-top:6px"></label><label class="f">Costo<input id="e_cost" type="number" step="any" min="0" value="${p.cost}" data-inp="margin"></label></div>
    <div class="bar" style="margin:0;gap:8px"><button type="button" class="btn sm" data-act="genCode">🔢 Generar código</button><button type="button" class="btn sm" data-act="barLabel">🏷 Etiqueta con código de barras</button></div>
-      <div><div style="font-weight:700">Precios de venta</div><div class="muted small" style="margin:2px 0 8px">El sistema elige solo el precio según las unidades que lleve el cliente. Deje en 0 los que no use.</div>
-   <div class="ptab">${[0,1,2,5,3,4].map(i=>PK_I.includes(i)?pkRow(p,i):`<div class="pt-r pt-${i}"><div class="pt-t"><b>${esc(S.cfg.listNames[i])}</b><small>${tierWhen(i)}</small></div><div class="pt-i"><span>$</span><input id="e_p${i}" type="number" step="any" min="0" value="${p.p[i]||0}" data-inp="margin" aria-label="${esc(S.cfg.listNames[i])}"></div><div class="pt-m" id="m_p${i}"></div></div>`).join('')}</div>
+      <div><div style="font-weight:700">Precios de venta</div><div class="muted small" style="margin:2px 0 8px">El sistema elige solo el precio según las unidades que lleve el cliente. Deje en 0 los que no use. Toque un nombre ✏️ para cambiarlo. «Hasta» vacío = sin límite.</div>
+   <div class="ptab">${[0,1,2,5,3,4].map(i=>pkRow(p,i)).join('')}</div>
    <div class="fgrid" style="margin-top:10px"><label class="f" style="grid-column:span 3">Código de barras de la caja o bulto (opcional)<input id="e_box" value="${esc(p.boxCode||'')}" placeholder="Solo si la caja trae un código distinto"></label></div>
-   <div class="muted small" style="margin-top:6px">Al escanear el código de la caja se agregan las unidades del bulto y se descuentan del stock. Docena, caja y bulto: escriba cuántas unidades trae y el precio del paquete completo; el sistema calcula el precio de cada unidad con todos los decimales. El precio ⭐ Aliado se aplica solo a clientes aliados y nunca es mayor que el más bajo de los otros.</div><div id="mg" class="muted small" style="margin-top:4px"></div><details class="ptools" ontoggle="if(this.open&&!$('#pc_u').value)pcFill()"><summary>🧮 Calculadora de precios (cuánto quiero ganar)</summary>${pcalcHTML()}</details></div>
+   <div class="muted small" style="margin-top:6px">Al escanear el código de la caja se agregan las unidades del bulto y se descuentan del stock. Docena, caja y bulto: escriba cuántas unidades trae el paquete y cuánto cobra por el paquete completo; el sistema calcula el precio de cada unidad. Si el cliente lleva más de lo que dice «hasta», se usa el siguiente precio que aplique (o el de Unidad). El precio ⭐ Aliado se aplica solo a clientes aliados y nunca es mayor que el más bajo de los otros.</div><div id="mg" class="muted small" style="margin-top:4px"></div><details class="ptools" ontoggle="if(this.open&&!$('#pc_u').value)pcFill()"><summary>🧮 Calculadora de precios (cuánto quiero ganar)</summary>${pcalcHTML()}</details></div>
    <div><label class="f">Proveedor (opcional)<select id="e_sup">${supOpts(p.supplier)}</select></label><div style="display:flex;gap:6px;margin-top:6px"><input id="e_newsup" placeholder="Agregar proveedor nuevo" style="min-height:34px"><button class="btn sm" data-act="addSupInline" style="white-space:nowrap">Agregar</button></div></div>
    <div style="display:grid;gap:8px"><div style="display:grid;gap:6px"><span class="muted small" style="font-weight:700">¿Este producto lleva IVA?</span><input type="checkbox" id="e_iva" hidden ${p.iva?'checked':''}><div class="seg" id="ivaSeg" style="justify-self:start"><button type="button" data-act="ivaSet" data-v="0" class="${p.iva?'':'on'}">Sin IVA</button><button type="button" data-act="ivaSet" data-v="1" class="${p.iva?'on':''}">Con IVA ${S.cfg.ivaRate}%</button></div><span class="muted small">Por defecto va sin IVA (en RIMPE déjelo así).</span></div><label class="ck"><input type="checkbox" id="e_active" ${p.active?'checked':''}> Disponible para la venta</label><label class="ck"><input type="checkbox" id="e_track" ${p.track?'checked':''}> Controlar inventario</label></div>
    <div class="fgrid"><label class="f">${id?'Stock actual (use Inventario para ajustar)':'Stock inicial'}<input id="e_stock" type="number" step="1" value="${p.stock}" ${id?'disabled':''}></label><label class="f">Stock mínimo (alerta)<input id="e_min" type="number" step="1" min="0" value="${p.min||0}"></label></div>
@@ -2354,6 +2388,8 @@ function saveProd(id){
   const code=$('#e_code').value.trim(),name=$('#e_name').value.trim().toUpperCase();if(!code||!name)return toast('Código y descripción son obligatorios.',1);
   if(S.products.some(p=>p.code.toLowerCase()===code.toLowerCase()&&p.id!==id))return toast('Ya existe un producto con ese código.',1);
   const d={code,name,line:lineVal(),cost:num($('#e_cost').value),p:[0,1,2,3,4,5].map(i=>uPrice(i)),dn:Math.max(0,Math.floor(num($('#e_dn').value))),cn:Math.max(0,Math.floor(num($('#e_cn').value))),iva:$('#e_iva').checked,active:$('#e_active').checked,track:$('#e_track').checked,min:num($('#e_min').value),bulto:Math.max(0,Math.floor(num($('#e_bulto').value))),boxCode:$('#e_box').value.trim(),supplier:$('#e_sup').value};
+  {const f1=Math.max(1,Math.floor(num($('#e_f1').value)))||S.cfg.t2;d.mf=f1===S.cfg.t2?0:f1;d.mx=[0,1,2,3,4,5].map(i=>Math.max(0,Math.floor(num(($('#e_t'+i)||{}).value))));
+   for(const i of [1,2,3,5]){const fr=i===1?f1:i===2?d.dn:i===3?d.bulto:d.cn;if(d.mx[i]&&fr>0&&d.mx[i]<fr)return toast(`En «${S.cfg.listNames[i]}», «hasta» (${d.mx[i]}) no puede ser menor que «desde» (${fr}).`,1)}}
   for(const [i,nm,u] of [[2,'docena',d.dn],[3,'bulto',d.bulto],[5,'caja',d.cn]])if(num($('#e_pp'+i).value)>0&&!(u>0))return toast('Indique cuántas unidades trae la '+nm+'.',1);
   if(d.boxCode){if(d.bulto<1)return toast('Para usar código de caja indique las unidades por bulto.',1);if(d.boxCode.toLowerCase()===code.toLowerCase()||S.products.some(x=>x.id!==id&&(x.code.toLowerCase()===d.boxCode.toLowerCase()||(x.boxCode||'').toLowerCase()===d.boxCode.toLowerCase())))return toast('Ese código de caja ya está usado por otro producto.',1)}
   if(id)Object.assign(prod(id),d);else{const np={id:'p'+uid(),stock:0,...d};np.stock=num($('#e_stock').value);S.products.push(np);if(pendingAdd){pendingAdd=false;S._add=np}if(np.track&&np.stock)S.moves.push({id:uid(),ts:Date.now(),pid:np.id,name:np.name,type:'ajuste',qty:np.stock,ref:'Stock inicial'})}
@@ -3050,9 +3086,8 @@ A.pfOpen=el=>{const pf=pfLoad().items.find(x=>x.id===el.dataset.id);pf?showProfo
 A.pfDel=el=>{const o=pfLoad();o.items=o.items.filter(x=>x.id!==el.dataset.id);pfSave(o);pfList()};
 A.bell=()=>{const p=$('#bellpop');if(p.hidden){bellDraw();p.hidden=false}else p.hidden=true};
 A.appUpdate=()=>{const go=()=>{try{closeModal()}catch(e){}location.reload()};if(S.cart&&S.cart.lines&&S.cart.lines.length)confirmBox('Hay una venta en curso. Si actualiza ahora, la venta puede perderse. ¿Actualizar de todos modos?',go,'Actualizar',1);else go()};
-A.bellDel=el=>{const x=(window._nt||[])[+el.dataset.i];if(!x)return;const d=ntLoad();d[ntKey(x)]=ntSig(x);ntSave(d);bellUpdate()};
-A.bellClear=()=>{const d=ntLoad();(window._nt||[]).forEach(x=>{if(x.a!=='appUpdate')d[ntKey(x)]=ntSig(x)});ntSave(d);bellUpdate()};
-A.bellReset=()=>{ntSave({});bellUpdate()};
+A.bellDel=el=>{const x=(window._nt||[])[+el.dataset.i];if(!x||x.a==='appUpdate')return;const d=ntLoad();d[ntKey(x)]=Date.now();ntSave(d);bellUpdate()};
+A.bellClear=()=>{const d=ntLoad(),n=Date.now();(window._nt||[]).forEach(x=>{if(x.a!=='appUpdate')d[ntKey(x)]=n});ntSave(d);bellUpdate()};
 A.bellDo=el=>{const x=(window._nt||[])[+el.dataset.i];$('#bellpop').hidden=true;if(x&&x.a&&A[x.a])A[x.a]()};
 A.hrng=el=>{const k=el.dataset.k,t=today();H.auto=false;H.q='';H.t=t;H.f=k==='hoy'?t:k==='ayer'?(H.t=addDays(t,-1),addDays(t,-1)):k==='7'?addDays(t,-6):k==='mes'?t.slice(0,8)+'01':'2000-01-01';vHistorial()};
 A.trackToggle=el=>{const p=prod(el.dataset.id);if(!p)return;p.track=!p.track;save(true);toast(p.track?'Control de stock activado.':'Control de stock desactivado.');render()};
@@ -3220,10 +3255,14 @@ function dlvCanvas(s){
   cv.width=W*2;cv.height=10;ctx.scale(2,2);const H=run(true,0);cv.height=H*2;ctx.setTransform(2,0,0,2,0,0);
   ctx.fillStyle='#ECFDF3';ctx.fillRect(0,0,W,H);run(false,H);return cv}
 function dlvShow(s){if(!s||!s.order)return;if(LOGO&&!(LOGOIMG.complete&&LOGOIMG.naturalWidth)&&!s._lw){s._lw=1;const go=()=>{delete s._lw;dlvShow(s)};LOGOIMG.decode().then(go,go);return}curDl=s;const url=dlvCanvas(s).toDataURL('image/png'),tel=(S.customers.find(x=>x.id===s.customerId)||{}).tel||'';
-  modal(`${dlgHead('Pedido entregado · '+esc(s.num))}<p class="muted small" style="margin:0">Envíe al cliente el comprobante de entrega.</p><img src="${url}" alt="Comprobante de pedido entregado" style="width:100%;max-height:52vh;object-fit:contain;border-radius:12px;background:#ECFDF3">
+  modal(`${dlgHead('Pedido entregado · '+esc(s.num))}
+  <div class="dlvg"><div class="dlvimg"><img src="${url}" alt="Comprobante de pedido entregado"></div>
+  <div class="dlvct"><p class="muted small" style="margin:0">Envíe al cliente el comprobante de entrega.</p>
   <div class="rcpwa"><label class="f grow">WhatsApp del cliente<input id="dl_wa" type="tel" inputmode="tel" value="${esc(tel)}" placeholder="09XXXXXXXX"></label><button class="btn pri wabtn" data-act="dlvWa">Enviar</button></div>
   <div class="wafmt" role="group" aria-label="Formato del envío">${[['texto','📝 Texto'],['imagen','🖼 Imagen'],['pdf','📄 PDF']].map(([k,l])=>`<button type="button" data-act="waFmt" data-f="${k}" class="${waFormat()===k?'on':''}" aria-pressed="${waFormat()===k}">${l}</button>`).join('')}</div><div class="wahint" id="wahint">${waHintHtml(waFormat())}</div>
-  <div class="ft"><button class="btn" data-act="dlvPdf">📄 PDF</button><button class="btn" data-act="dlvShare">Compartir / guardar imagen</button><button class="btn" data-act="dlvCopy">📋 Copiar texto</button><button class="btn pri" data-act="closeModal">Listo</button></div>`)}
+  <div class="dlvbtns"><button class="btn sm" data-act="dlvPdf">📄 PDF</button><button class="btn sm" data-act="dlvShare" title="Compartir o guardar la imagen">📤 Compartir imagen</button><button class="btn sm" data-act="dlvCopy">📋 Copiar texto</button></div>
+  <div class="ft"><button class="btn pri" data-act="closeModal">Listo</button></div></div></div>`,true)}
+
 A.dlvOpen=el=>dlvShow(S.sales.find(x=>x.id===el.dataset.id));
 A.dlvWa=()=>{const s=curDl;if(!s)return;const v=$('#dl_wa').value,n=waNum(v);if(!n)return toast('Escriba un número de WhatsApp válido (ej. 0991234567).',1);
   const c=S.customers.find(x=>x.id===s.customerId);if(c&&c.id!=='cf'&&!c.tel){c.tel=v.trim();save(true)}waSend(s,n,undefined,false,DLK)};
@@ -3252,8 +3291,29 @@ A.pdPay=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order||s.st
   s.abonos=s.abonos||[];s.abonos.push({ts,m,amt:a,by,note:'Saldado al entregar el pedido',photo:'',sessionId:S.caja?S.caja.id:null,ped:1,lg:e?e.id:''});
   s.balance=0;s.paidTs=ts;pdMark(s,true);save(true);closeModal();pdList();bellUpdate();toast('Pedido entregado y deuda saldada ('+money(a)+').');dlvShow(s)};
 IN.pdList=pdList;
+/* ---- Borrar historial de entregas: solo quita el pedido de esta lista; la venta, el cobro y la deuda NO se tocan ---- */
+const PC={m:'day',d:'',mo:''};
+const pcDone=()=>pedList().filter(s=>s.status==='ok'&&s.order.done&&!s.order.hid);
+const pcSel=()=>pcDone().filter(s=>{const k=dkey(s.order.doneTs||s.ts);return PC.m==='all'||(PC.m==='day'?k===PC.d:k.slice(0,7)===PC.mo)});
+const pcWhat=()=>PC.m==='all'?'de <b>todo el historial</b>':PC.m==='day'?'del día <b>'+(PC.d?PC.d.split('-').reverse().join('/'):'—')+'</b>':'del mes de <b>'+(PC.mo?new Date(PC.mo+'-01T12:00:00').toLocaleDateString('es-EC',{month:'long',year:'numeric'}):'—')+'</b>';
+function pcInfo(){const n=pcSel().length,i=$('#pcInfo'),g=$('#pcGo');if(i)i.innerHTML=n?`Se quitarán <b>${n}</b> entrega${n===1?'':'s'} ${pcWhat()}.`:`No hay entregas ${pcWhat()}.`;if(g)g.disabled=!n}
+function pcRender(){$$('#modal .pcseg button').forEach(b=>{const on=b.dataset.m===PC.m;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+  const x=$('#pcIn');if(x)x.innerHTML=PC.m==='day'?`<label class="f">Día de entrega<input type="date" id="pc_d" data-inp="pcIn" value="${PC.d}"></label>`:PC.m==='month'?`<label class="f">Mes de entrega<input type="month" id="pc_mo" data-inp="pcIn" value="${PC.mo}"></label>`:'';pcInfo()}
+IN.pcIn=el=>{if(el.id==='pc_d')PC.d=el.value;else PC.mo=el.value;pcInfo()};
+A.pdClear=()=>{PC.m='day';PC.d=dkey(Date.now());PC.mo=PC.d.slice(0,7);
+  modal(`${dlgHead('Borrar historial de entregas')}
+  <div class="seg pcseg" role="group" aria-label="Qué borrar"><button type="button" data-act="pcMode" data-m="day">📅 Un día</button><button type="button" data-act="pcMode" data-m="month">🗓 Un mes</button><button type="button" data-act="pcMode" data-m="all">📚 Todo</button></div>
+  <div id="pcIn"></div><div class="pcinfo" id="pcInfo"></div>
+  <p class="hint">Solo se quitan de la lista de <b>Entregados</b>. Las ventas, los cobros y las deudas siguen en Historial, Caja y Créditos. Para borrar uno por uno use el botón 🗑 de cada pedido.</p>
+  <div class="ft"><button class="btn" data-act="closeModal">Cancelar</button><button class="btn bad" id="pcGo" data-act="pdClearGo">🗑 Borrar…</button></div>`);pcRender()};
+A.pcMode=el=>{PC.m=el.dataset.m;pcRender()};
+A.pdClearGo=()=>{const L=pcSel();if(!L.length)return;const ids=L.map(s=>s.id),w=pcWhat();
+  confirmBox(`Va a borrar del historial <b>${L.length}</b> entrega${L.length===1?'':'s'} ${w}.<br><br>La venta, el cobro y la deuda <b>no se tocan</b>; solo desaparecen de esta lista.<br><b>Esta acción no se puede deshacer.</b>`,()=>{
+    let n=0;for(const s of S.sales)if(ids.includes(s.id)&&s.order){s.order.hid=1;n++}save(true);pdList();toast(n+' entrega'+(n===1?'':'s')+' borrada'+(n===1?'':'s')+' del historial.')},'Sí, borrar',1)};
+A.pdHide=el=>{const s=S.sales.find(x=>x.id===el.dataset.id);if(!s||!s.order)return;
+  confirmBox(`¿Borrar del historial la entrega de <b>${esc(s.custName||'Consumidor final')}</b> · N° ${esc(s.num)}?<br><br>La venta, el cobro y la deuda <b>no se tocan</b>; solo desaparece de esta lista.<br><b>No se puede deshacer.</b>`,()=>{s.order.hid=1;save(true);pdList();toast('Entrega borrada del historial.')},'Sí, borrar',1)};
 function frDraw(){document.querySelectorAll('canvas[data-fr]').forEach(c=>{const x=c.getContext('2d'),sh=c.dataset.fr;x.clearRect(0,0,64,64);
-  if(LOGO&&LOGOIMG.complete&&LOGOIMG.naturalWidth){x.drawImage(logoFramed(64,sh,true),0,0);return}
+  if(LOGO&&LOGOIMG.complete&&LOGOIMG.naturalWidth){x.drawImage(logoFramed(64,sh,false),0,0);return}
   if(sh==='none'){x.fillStyle='#bbb';x.font='28px sans-serif';x.textAlign='center';x.fillText('—',32,42);return}
   framePath(x,sh,32,32,27);x.lineWidth=3;x.lineJoin='round';x.strokeStyle='#555';x.stroke()})}
 A.tkFrame=el=>{S.cfg.tkFrame=el.dataset.v;save(true);$$('.frsel button').forEach(b=>{const on=b.dataset.v===el.dataset.v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});refreshPrev();
@@ -3261,12 +3321,33 @@ A.tkFrame=el=>{S.cfg.tkFrame=el.dataset.v;save(true);$$('.frsel button').forEach
 {const _vA=vAjustes;vAjustes=function(){const r=_vA.apply(this,arguments);try{frDraw()}catch(e){}return r}}
 LOGOIMG.addEventListener('load',()=>{try{frDraw();refreshPrev()}catch(e){}});
 
-const pdCss=document.createElement('style');pdCss.textContent=`.pdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.pdcard{display:grid;gap:5px;align-content:start}.pdcard.done{opacity:.72}.pdcard.pdnew{box-shadow:0 0 0 2px var(--accent)}
-.pdtop{display:flex;gap:8px;align-items:center;justify-content:space-between}.pdtop b{font-size:16px}
-.pdlines{list-style:none;margin:4px 0;padding:0;font-size:13px;display:grid;gap:2px}
-.pdfoot{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px}.pdfoot .money{font-size:18px;margin-right:auto}
-.pdfoot .seg{flex:1 1 210px}.pdfoot .seg button{flex:1}`;document.head.appendChild(pdCss);
+const pdCss=document.createElement('style');pdCss.textContent=`.pdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.pdcard{display:grid;gap:9px;align-content:start;padding:14px;border-left:5px solid var(--warn);transition:transform .18s var(--ease),box-shadow .18s}
+.pdcard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.pdcard.done{border-left-color:var(--ok)}.pdcard.void{border-left-color:var(--bad);opacity:.7}.pdcard.pdnew{box-shadow:0 0 0 2px var(--accent)}
+.pdtop{display:flex;gap:10px;align-items:center}
+.pdav{flex:none;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font:800 17px var(--font-head);background:var(--warn-bg);color:var(--warn)}
+.pdcard.done .pdav{background:var(--ok-bg);color:var(--ok)}
+.pdwho{min-width:0;flex:1;display:grid;gap:1px}.pdwho b{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdmeta{display:flex;flex-wrap:wrap;gap:3px 12px}
+.pdlines{list-style:none;margin:0;padding:8px 11px;font-size:13px;display:grid;gap:3px;background:var(--surface2);border-radius:10px}
+.pdfoot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pdfoot .money{font-size:21px;margin-right:auto;font-family:var(--font-head)}
+.pdgo{background:var(--ok)!important;border-color:var(--ok)!important;color:var(--surface)!important;font-weight:800;min-height:40px;padding:6px 20px;box-shadow:0 8px 18px -10px var(--ok)}
+.pdok{font-size:12px;padding:5px 11px}
+.pdinfo{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-top:9px;border-top:1px dashed var(--line)}
+.pdchip{display:inline-flex;align-items:center;gap:7px}.pdn{min-width:22px;padding:0 6px;border-radius:99px;background:rgba(127,127,127,.2);font-size:12px;line-height:20px;text-align:center}
+.pdchip.on .pdn{background:rgba(255,255,255,.28)}
+.pdclr{margin-left:auto;color:var(--bad);border-color:var(--bad)}
+.pcseg{display:flex}.pcseg button{flex:1}.pcinfo{padding:10px 12px;border-radius:12px;background:var(--bad-bg);color:var(--bad);line-height:1.45}
+.dlg.wide:has(.dlvg){max-width:680px;max-height:calc(100dvh - 24px);overflow-y:auto}
+.dlvg{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;align-items:start}
+.dlvimg{border-radius:14px;background:#ECFDF3;padding:6px;display:grid;place-items:center}
+.dlvimg img{display:block;width:100%;max-height:min(64vh,520px);object-fit:contain;border-radius:10px}
+.dlvct{display:grid;gap:10px;align-content:start;min-width:0}
+.dlvct .wahint{margin-top:0;padding:8px 10px;font-size:12px}
+.dlvbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dlvbtns .btn{padding:4px 6px;font-size:12.5px;min-height:36px}
+.dlvct .ft{margin-top:2px}
+@media(max-width:640px){.dlvg{grid-template-columns:1fr;gap:10px}.dlvimg{padding:4px}.dlvimg img{max-height:30vh}.dlvct .ft .btn{flex:1}}`;document.head.appendChild(pdCss);
 A.syncNow=()=>runSync(true);
 A.cloudCopy=async()=>{if(!S.cfg.syncUrl||!S.cfg.syncKey)return toast('Primero configure la nube en este equipo.',1);try{await navigator.clipboard.writeText(btoa(JSON.stringify({u:S.cfg.syncUrl,k:S.cfg.syncKey})));toast('Código copiado. Péguelo en el otro equipo.')}catch(e){toast('No se pudo copiar.',1)}};
 A.cloudCode=()=>{try{const o=JSON.parse(atob($('#sy_c').value.trim()));if(!o.u||!o.k)throw 0;$('#sy_u').value=o.u;$('#sy_k').value=o.k;toast('Código listo. Toque «Guardar y sincronizar».')}catch(e){toast('Ese código no es válido.',1)}};
@@ -3301,8 +3382,10 @@ function crList(){
 function crCard(x){
   const c=x.c,paid=r2(x.orig-x.debt),pc=x.orig>0?Math.round(paid/x.orig*100):100,nx=x.open.map(s=>s.due).filter(Boolean).sort()[0];
   const od=x.over.length?Math.max(...x.over.map(crOverDays)):0;
-  return `<div class="panel" style="margin-bottom:10px;display:grid;gap:8px;${od?'border:2px solid var(--bad);background:var(--bad-bg)':''}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b class="grow" data-act="crOpen" data-id="${c.id}" style="cursor:pointer;${od?'color:var(--bad)':''}">${crCode(c)}${esc(c.name)}</b>${od?`<span class="pill bad">⚠ Vencido hace ${od} día${od>1?'s':''}</span>`:''}${x.debt>0?`<b class="money">${money(x.debt)}</b>`:'<span class="pill ok">pagado</span>'}</div>
-  ${x.debt>0?`<div class="prog"><i style="width:${pc}%"></i></div><div class="muted small">Pagado ${money(paid)} de ${money(x.orig)} (${pc}%)${nx?' · vence '+esc(nx):''}</div>`:`<div class="muted small">${x.L.length} crédito(s) pagado(s)</div>`}
+  const ag=x.open.length?Math.max(0,...x.open.map(s=>Math.round((dayStart(today())-dayStart(dkey(s.ts)))/864e5))):0;
+  const agTxt=ag>0?'Debe hace '+ag+' día'+(ag>1?'s':''):'Deuda de hoy';
+  return `<div class="panel" style="margin-bottom:10px;display:grid;gap:8px;${od?'border:2px solid var(--bad);background:var(--bad-bg)':''}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b class="grow" data-act="crOpen" data-id="${c.id}" style="cursor:pointer;${od?'color:var(--bad)':''}">${crCode(c)}${esc(c.name)}</b>${od?`<span class="pill bad">⚠ Vencido hace ${od} día${od>1?'s':''}</span>`:(x.debt>0?`<span class="pill ${ag>0?'warn':'ok'}">${agTxt}</span>`:'')}${x.debt>0?`<b class="money">${money(x.debt)}</b>`:'<span class="pill ok">pagado</span>'}</div>
+  ${x.debt>0?`<div class="prog"><i style="width:${pc}%"></i></div><div class="muted small">Pagado ${money(paid)} de ${money(x.orig)} (${pc}%)${nx?' · vence '+esc(nx):''}${!od&&ag>0?' · '+agTxt.toLowerCase():''}${!nx?' · sin fecha límite (abra Detalle para asignarla)':''}</div>`:`<div class="muted small">${x.L.length} crédito(s) pagado(s)</div>`}
   <div class="bar" style="margin:0"><button class="btn sm" data-act="crOpen" data-id="${c.id}">Detalle</button>${x.debt>0?`<button class="btn sm pri" data-act="collect" data-id="${c.id}">Abonar</button><button class="btn sm" data-act="crRemind" data-id="${c.id}">Recordar</button>`:''}</div></div>`}
 function crDetail(cid){
   const c=cust(cid),L=crSales(cid,true).slice().reverse(),d=debt(cid);
@@ -3310,8 +3393,15 @@ function crDetail(cid){
   ${L.map(s=>{const p=crPaid(s),o=crOrig(s),pc=o>0?Math.round(p/o*100):100,A=s.abonos||[],st=s.balance<=0?'ok':crOver(s)?'bad':'warn';return `<div class="panel" style="display:grid;gap:6px;margin-top:8px"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><b class="grow">${esc(s.num)}</b><span class="pill ${st}">${st==='ok'?'pagado':st==='bad'?'vencido hace '+crOverDays(s)+' d':'pendiente'}</span></div><div class="prog"><i style="width:${pc}%"></i></div>
   <div class="small muted">Abierto: ${fmtDT(s.ts)}${s.due?' · vence '+esc(s.due):''}${s.paidTs?' · terminó de pagar: '+fmtDT(s.paidTs):''}<br>Crédito ${money(o)} · pagado ${money(p)} · <b>saldo ${money(s.balance)}</b>${s.seller?' · vendió '+esc(s.seller):''}</div>
   ${A.map((a,i)=>`<div class="small" style="border-top:1px solid var(--line);padding-top:4px">${fmtDT(a.ts)} · <b>${money(a.amt)}</b> · ${esc(PAY[a.m]?PAY[a.m].n:a.m)}${a.by?' · recibió '+esc(a.by):''}${a.note?`<div class="muted">${esc(a.note)}</div>`:''}${a.photo?` <button class="btn sm" data-act="crPhoto" data-s="${s.id}" data-i="${i}">Ver foto</button>`:''}</div>`).join('')}
+  ${s.balance>0?(s.due?`<div class="small" style="border-top:1px solid var(--line);padding-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>📅 Fecha límite de pago: <b>${esc(s.due)}</b> 🔒</span><button class="btn sm" data-act="crDueAsk" data-s="${s.id}" data-id="${cid}">Cambiar fecha</button></div>`:`<div class="small" style="border-top:1px solid var(--line);padding-top:6px;display:grid;gap:6px"><div class="muted">📅 Este crédito no tiene fecha límite de pago. Puede asignarle una si lo desea.</div><div class="bar" style="margin:0"><input type="date" id="dd_${s.id}" min="${today()}"><button class="btn sm pri" data-act="crDueNew" data-s="${s.id}" data-id="${cid}">Guardar fecha</button></div></div>`):''}
   <div><button class="btn sm" data-act="crInv" data-s="${s.id}">Ver factura</button> <button class="btn sm" data-act="crReload" data-s="${s.id}" title="Cargar esta factura en Ventas para corregirla">Recargar factura</button>${s.balance<=0&&A.some(a=>a.photo)?` <button class="btn sm" data-act="crClean" data-s="${s.id}">Quitar fotos</button>`:''}</div></div>`}).join('')}
   <div class="ft"><button class="btn" data-act="closeModal">Cerrar</button>${d>0?`<button class="btn" data-act="crRemind" data-id="${cid}">Recordar</button><button class="btn pri" data-act="collect" data-id="${cid}">Abonar</button>`:''}</div>`,1)}
+A.crDueNew=el=>{const s=S.sales.find(x=>x.id===el.dataset.s),i=$('#dd_'+el.dataset.s),d=i&&i.value;if(!s||s.due||s.balance<=0)return;if(!d)return toast('Elija la fecha límite.',1);if(d<today())return toast('La fecha no puede ser anterior a hoy.',1);
+  s.due=d;save(true);toast('Fecha límite guardada.');crDetail(el.dataset.id);if($('#crbody'))crList()};
+A.crDueAsk=el=>{const s=S.sales.find(x=>x.id===el.dataset.s);if(!s)return;window._cds=s.id;window._cdc=el.dataset.id;const NEEDPIN=!isOwner()&&anyAdminPin();
+  modal(`${dlgHead('Cambiar fecha límite')}<div class="muted small">Esta fecha ya está fijada (${esc(s.due)}). ${NEEDPIN?'Para cambiarla escriba el PIN del dueño de la tienda.':'¿Está seguro de que quiere hacer este cambio?'}</div><label class="f">Nueva fecha límite<input id="dd_new" type="date" value="${esc(s.due)}"></label>${NEEDPIN?pwf('dd_pin','PIN del dueño'):''}<div class="ft"><button class="btn" data-act="crOpen" data-id="${esc(el.dataset.id)}">Cancelar</button><button class="btn pri" data-act="crDueSave">${NEEDPIN?'Guardar':'Sí, cambiar'}</button></div>`)};
+A.crDueSave=()=>{const s=S.sales.find(x=>x.id===window._cds),d=$('#dd_new').value;if(!s)return;if(!d)return toast('Elija la fecha.',1);if(!isOwner()&&anyAdminPin()){if(Date.now()<PINF.until)return toast('Demasiados intentos. Espere unos segundos.',1);if(!adminAuth(String($('#dd_pin').value||'').trim())){PINF.n++;if(PINF.n>=5){PINF.n=0;PINF.until=Date.now()+30000;toast('5 intentos fallidos. Espere 30 segundos.',1)}else toast('PIN del dueño incorrecto.',1);shakeDlg();return}PINF.n=0}
+  s.due=d;save(true);toast('Fecha límite cambiada.');crDetail(window._cdc);if($('#crbody'))crList()};
 function collectModal(cid){
   const c=cust(cid),d=debt(cid);CR.photo='';
   modal(`${dlgHead('Registrar abono')}<div><b>${crCode(c)}${esc(c.name)}</b><div class="muted">Saldo pendiente: <b class="money">${money(d)}</b></div></div>
@@ -3406,9 +3496,27 @@ function labelTables(){$$('#view table, #modal table').forEach(t=>{const H=[...t
 new MutationObserver(labelTables).observe(document.body,{childList:true,subtree:true});
 window.addEventListener('hashchange',route);
 var _route0=1;try{route();_route0=0}catch(e){}/* si la pantalla inicial usa código que se define más abajo (ej. #banco), se repite al final */
-if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller){window.NEWV=true;try{bellUpdate()}catch(e){}toast('⬆ Nueva versión disponible. Toque la campana 🔔 para actualizar.')}})})}).catch(()=>{});
-  /* busca versiones nuevas cada 10 min y al volver a la app */
-  const chk=()=>{navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{})};setInterval(chk,6e5);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})}
+/* ===== Actualizaciones: aviso confiable + sonido ===== */
+let NT_AC=null,NT_PEND=0;
+function ntAudio(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;NT_AC=NT_AC||new AC();if(NT_AC.state==='suspended')NT_AC.resume();return NT_AC}catch(e){return null}}
+function ntChime(){try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(e){}const c=ntAudio();if(!c)return;if(c.state!=='running'){NT_PEND=1;return}
+  const t0=c.currentTime+.03;[[659.25,0],[880,.17],[1318.5,.34]].forEach(([f,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t0+d);g.gain.linearRampToValueAtTime(.3,t0+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+d+.55);o.connect(g);g.connect(c.destination);o.start(t0+d);o.stop(t0+d+.6)})}
+/* los navegadores solo dejan sonar tras un toque/tecla: se "desbloquea" con el primero y suena el aviso pendiente */
+['pointerdown','keydown','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{const c=ntAudio();if(c&&NT_PEND)c.resume().then(()=>{if(NT_PEND&&c.state==='running'){NT_PEND=0;ntChime()}}).catch(()=>{})},{passive:true}));
+function ntFound(){if(window.NEWV)return;window.NEWV=true;try{bellUpdate()}catch(e){}toast('⬆ Nueva versión disponible. Toque la campana 🔔 para actualizar.');ntChime()}
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
+  const hadCtl=!!navigator.serviceWorker.controller;let PAGE_V=null;
+  /* versión con la que se abrió esta pantalla (el caché activo lleva el nombre de la versión) */
+  try{caches.keys().then(k=>{PAGE_V=k.find(x=>/^starpos-/.test(x))||null}).catch(()=>{})}catch(e){}
+  const swVer=()=>fetch('sw.js',{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/VERSION\s*=\s*['"]([^'"]+)['"]/.exec(t);return m?m[1]:null}).catch(()=>null);
+  navigator.serviceWorker.register('sw.js').then(r=>{
+    if(r.waiting&&navigator.serviceWorker.controller)ntFound();
+    r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if((w.state==='installed'||w.state==='activated')&&navigator.serviceWorker.controller)ntFound()})})}).catch(()=>{});
+  /* si otro SW toma el control mientras la app está abierta, hay versión nueva */
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadCtl)ntFound()});
+  /* busca versiones nuevas: cada 2 min, al volver a la app, al enfocar y al recuperar internet (sin cerrar el programa) */
+  const chk=()=>{navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{});if(!window.NEWV&&PAGE_V)swVer().then(v=>{if(v&&v!==PAGE_V)ntFound()})};
+  setInterval(chk,12e4);setTimeout(chk,15e3);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()});window.addEventListener('focus',chk);window.addEventListener('online',chk)}
 
 /* ===== PIN (solo para acciones delicadas) ===== */
 let AUTH={n:'',t:0};const phash=p=>'p'+hsh('star|'+p);
